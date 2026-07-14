@@ -409,11 +409,9 @@ textarea { resize: vertical; min-height: 60px; }
 .modal-overlay {
   position: fixed; inset: 0; z-index: 300;
   background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.2s;
-  visibility: hidden;
+  display: none; align-items: center; justify-content: center;
 }
-.modal-overlay.open { opacity: 1; pointer-events: all; visibility: visible; }
+.modal-overlay.open { display: flex; }
 .modal-box {
   background: var(--card2); border: 1px solid var(--border);
   border-radius: 16px; padding: 24px; width: 620px; max-width: 92vw;
@@ -1186,7 +1184,7 @@ textarea { resize: vertical; min-height: 60px; }
       <div class="page" id="page-history">
         <div style="max-width:900px">
           <div class="history-header">
-            <h2 style="font-size:17px">&#128218; Lịch sử tao video</h2>
+            <h2 style="font-size:17px">&#128218; Lịch sử tạo video</h2>
             <input class="history-search" placeholder="&#128269; Tìm theo tên xe..." oninput="filterHistory(this.value)">
           </div>
           <div class="history-grid" id="historyGrid">
@@ -1379,102 +1377,102 @@ textarea { resize: vertical; min-height: 60px; }
 <script>
 // ── PROMPT TEMPLATES ────────────────────────────────────────────────
 let PROMPT_TEMPLATES = {
-  hook: `Vai tro: Ban la chuyen gia content TikTok xe dien hang dau Viet Nam.
+  hook: `Vai tro: Bạn là chuyên gia content TikTok xe điện hàng đầu Việt Nam.
 Nhiem vu: Viet 5 hook mo dau viral (3-5 giay dau tien) cho video xe {TEN_XE}{MAU_XE}.
 Yeu cau:
-- Moi hook phai tao cam giac "phai xem tiep" ngay lap tuc
-- Dung cac dang: cau hoi gay soc, tuyen bo tao bao, tinh huong bat ngo, so sanh doc dao
+- Mỗi hook phải tạo cảm giác "phải xem tiếp" ngay lap tuc
+- Dùng các dạng: câu hỏi gây sốc, tuyên bố táo bạo, tình huống bất ngờ, so sánh độc đáo
 - Phu hop platform: {PLATFORM}
-- Ngan gon, manh, khong vuot 10 tu moi hook
-- Cuoi moi hook them goi y hieu ung / am thanh nen
-Format: Danh so 1-5, ghi ro: [Hook] + [Goi y hieu ung]`,
+- Ngắn gọn, mạnh, không vượt 10 từ mỗi hook
+- Cuối mỗi hook thêm gợi ý hiệu ứng / âm thanh nền
+Format: Đánh số 1-5, ghi rõ: [Hook] + [Gợi ý hiệu ứng]`,
 
-  script: `Vai tro: Scriptwriter chuyen nghiep cho cua hang xe dien Cong Khang Bike Hai Phong.
+  script: `Vai tro: Scriptwriter chuyên nghiệp cho cửa hàng xe điện Công Khang Bike Hải Phòng.
 Nhiem vu: Viet script hoan chinh {THOI_LUONG} cho video {TEN_XE}{MAU_XE}.
-Cau truc bat buoc:
-1. Hook (0-3 giay): Cau mo dau gay soc
-2. Gioi thieu (3-8 giay): Ten xe, diem noi bat: {DIEM_NOI_BAT}
-3. Demo (8-20 giay): Mieu ta canh quay thuc te
-4. Social proof (20-25 giay): Khach hang phan hoi
-5. CTA (25-30 giay): Keu goi den shop
-Ghi chu: Viet loi thoai tu nhien, khong doc nhu robot.`,
+Cấu trúc bắt buộc:
+1. Hook (0-3 giây): Câu mở đầu gây sốc
+2. Giới thiệu (3-8 giây): Tên xe, điểm nổi bật: {DIEM_NOI_BAT}
+3. Demo (8-20 giây): Miêu tả cảnh quay thực tế
+4. Social proof (20-25 giây): Khách hàng phản hồi
+5. CTA (25-30 giây): Kêu gọi đến shop
+Ghi chú: Viết lời thoại tự nhiên, không đọc như robot.`,
 
-  funny: `Vai tro: Comedian content creator chuyen mang xe dien len TikTok.
+  funny: `Vai tro: Comedian content creator chuyên mang xe điện lên TikTok.
 Nhiem vu: Viet kich ban hai huoc gioi thieu xe {TEN_XE}{MAU_XE} cho {DOI_TUONG}.
-Phong cach: Hai huoc Gen Z, dung meme, tinh huong cuoc song hang ngay.
-- Co tinh huong: 1 nhan vat dang gap van de (ket xe, het tien xang)
+Phong cách: Hài hước Gen Z, dùng meme, tình huống cuộc sống hàng ngày.
+- Có tình huống: 1 nhân vật đang gặp vấn đề (kẹt xe, hết tiền xăng)
 - Xe {TEN_XE} xuat hien la giai phap
-- Ket thuc bang CTA nhe nhang
+- Kết thúc bằng CTA nhẹ nhàng
 - {THOI_LUONG}`,
 
-  compare: `Vai tro: Chuyen gia phan tich xe dien.
+  compare: `Vai tro: Chuyên gia phân tích xe điện.
 Nhiem vu: Viet noi dung so sanh {TEN_XE}{MAU_XE} voi dong tuong duong.
-Cac muc:
-1. Gia ban vs gia tri nhan duoc
-2. Thong so ky thuat (pin, toc do, trong luong)
-3. Thiet ke & mau sac
-4. Bao hanh & dich vu
-5. Danh gia tong the
-Format: Bang so sanh hoac bullet points.`,
+Các mục:
+1. Giá bán vs giá trị nhận được
+2. Thông số kỹ thuật (pin, tốc độ, trọng lượng)
+3. Thiết kế & màu sắc
+4. Bảo hành & dịch vụ
+5. Đánh giá tổng thể
+Format: Bảng so sánh hoặc bullet points.`,
 
-  tech: `Vai tro: Ky su xe dien giai thich de hieu.
-Nhiem vu: Giai thich thong so ky thuat xe {TEN_XE}{MAU_XE} cho nguoi khong chuyen.
+  tech: `Vai tro: Kỹ sư xe điện giải thích dễ hiểu.
+Nhiem vu: Giải thích thông số kỹ thuật xe {TEN_XE}{MAU_XE} cho người không chuyên.
 Thong so: {DIEM_NOI_BAT}
-Cach tiep can:
-- So sanh voi thu quen thuoc (VD: pin nhu 5 dien thoai)
-- Neu loi ich thuc te
-- Them FAQ
-Format: Moi thong so 2-3 cau, viet nhu giang cho ban be.`,
+Cách tiếp cận:
+- So sánh với thứ quen thuộc (VD: pin như 5 điện thoại)
+- Nêu lợi ích thực tế
+- Thêm FAQ
+Format: Mỗi thông số 2-3 câu, viết như giảng cho bạn bè.`,
 
-  promo: `Vai tro: Marketing manager Cong Khang Bike Hai Phong.
+  promo: `Vai tro: Marketing manager Công Khang Bike Hải Phòng.
 Nhiem vu: Viet noi dung quang cao khuyen mai xe {TEN_XE}{MAU_XE}.
 Thong tin: {DIEM_NOI_BAT}
 Yeu cau:
-- Tao urgency: thoi han, so luong gioi han
-- Nhan manh gia tri: tinh toan tiet kiem
-- Social proof ngan
-- CTA ro rang
+- Tạo urgency: thời hạn, số lượng giới hạn
+- Nhấn mạnh giá trị: tính toán tiết kiệm
+- Social proof ngắn
+- CTA rõ ràng
 - {THOI_LUONG}
-Format: Caption + 3 bien the cho TikTok/Facebook/Zalo.`,
+Format: Caption + 3 biến thể cho TikTok/Facebook/Zalo.`,
 
-  faq: `Vai tro: Tu van ban hang xe dien.
-Nhiem vu: Tao 10 cau hoi thuong gap (FAQ) ve xe {TEN_XE}{MAU_XE}.
+  faq: `Vai tro: Tư vấn bán hàng xe điện.
+Nhiem vu: Tạo 10 câu hỏi thường gặp (FAQ) về xe {TEN_XE}{MAU_XE}.
 Chu de:
-1. Gia & thanh toan
-2. Pin & pham vi su dung
-3. Bao hanh & sua chua
-4. So sanh voi xe xang
+1. Giá & thanh toán
+2. Pin & phạm vi sử dụng
+3. Bảo hành & sửa chữa
+4. So sánh với xe xăng
 5. Phu hop voi {DOI_TUONG}
 Format: Q: [Cau hoi] / A: [Tra loi 2-3 cau]`,
 
-  trend: `Vai tro: TikTok trend expert xe dien.
-Nhiem vu: Tao kich ban bat trend cho xe {TEN_XE}{MAU_XE} tren {PLATFORM}.
-Cac dang trend:
-- POV: Ban vua mua xe {TEN_XE}
-- Before/After: truoc va sau khi co xe
+  trend: `Vai tro: TikTok trend expert xe điện.
+Nhiem vu: Tạo kịch bản bắt trend cho xe {TEN_XE}{MAU_XE} tren {PLATFORM}.
+Các dạng trend:
+- POV: Bạn vừa mua xe {TEN_XE}
+- Before/After: trước và sau khi có xe
 - Things I wish I knew before buying
 Yeu cau:
-- 3 concept cu the, chi tiet cach quay
-- Goi y hashtag (10-15 hashtag)`,
+- 3 concept cụ thể, chi tiết cách quay
+- Gợi ý hashtag (10-15 hashtag)`,
 
   cta: `Vai tro: Conversion specialist.
-Nhiem vu: Viet 10 CTA manh cho video xe {TEN_XE}{MAU_XE}.
-Phan loai:
-- 3 CTA cho binh luan
-- 3 CTA cho nhan tin / lien he
-- 2 CTA cho den shop
-- 2 CTA cho chia se
-Moi CTA: Ngan (duoi 15 tu), co dong tu hanh dong, tao urgency.`,
+Nhiem vu: Viết 10 CTA mạnh cho video xe {TEN_XE}{MAU_XE}.
+Phân loại:
+- 3 CTA cho bình luận
+- 3 CTA cho nhắn tin / liên hệ
+- 2 CTA cho đến shop
+- 2 CTA cho chia sẻ
+Mỗi CTA: Ngắn (dưới 15 từ), có động từ hành động, tạo urgency.`,
 
   review: `Vai tro: Content strategist social proof.
-Nhiem vu: Viet kich ban review cam nhan khach hang ve xe {TEN_XE}{MAU_XE}.
+Nhiem vu: Viết kịch bản review cảm nhận khách hàng về xe {TEN_XE}{MAU_XE}.
 Cau truc:
-1. Gioi thieu ngan (hoc sinh/di lam/giao hang)
-2. Ly do chon xe (gia, thiet ke, pin)
-3. Cam nhan sau {THOI_LUONG}: thich gi, van de gi
-4. Khuyen ai nen/khong nen mua
-5. Danh gia tong the (1-5 sao)
-Viet chan thuc, co ca mat han che de tang tin cay.`,
+1. Giới thiệu ngắn (học sinh/đi làm/giao hàng)
+2. Lý do chọn xe (giá, thiết kế, pin)
+3. Cảm nhận sau {THOI_LUONG}: thích gì, vấn đề gì
+4. Khuyên ai nên/không nên mua
+5. Đánh giá tổng thể (1-5 sao)
+Viết chân thực, có cả mặt hạn chế để tăng tin cậy.`,
 };
 
 const _DEFAULT_TEMPLATES = Object.freeze(Object.assign({}, PROMPT_TEMPLATES));
@@ -1591,6 +1589,14 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDropdowns();
   setTimeout(checkStatus, 2000);
   setInterval(checkStatus, 15000);
+// Đóng modal bằng phím Esc
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    ['voiceStyleModal','voiceoverModal','musicModal'].forEach(id => {
+      document.getElementById(id)?.classList.remove('open');
+    });
+  }
+});
   loadHistory();
   document.querySelectorAll('.model-opt').forEach(el => {
     el.addEventListener('click', () => {
@@ -1627,9 +1633,9 @@ async function checkStatus() {
     document.getElementById('ffmpegDot').className = 'dot ' + (d.ffmpeg ? 'ok' : 'warn');
     if (document.getElementById('settingApiDot')) {
       document.getElementById('settingApiDot').className = 'dot ' + (ok ? 'ok' : 'err');
-      document.getElementById('settingApiStatus').textContent = ok ? 'Ket noi OK' : 'Loi ket noi';
+      document.getElementById('settingApiStatus').textContent = ok ? 'Kết nối OK' : 'Lỗi kết nối';
       document.getElementById('settingFfmpegDot').className = 'dot ' + (d.ffmpeg ? 'ok' : 'warn');
-      document.getElementById('settingFfmpegStatus').textContent = d.ffmpeg ? 'San sang' : 'Chua cai';
+      document.getElementById('settingFfmpegStatus').textContent = d.ffmpeg ? 'Sẵn sàng' : 'Chưa cài';
     }
   } catch(e) {
     document.getElementById('apiBadge').className = 'api-badge offline';
@@ -1913,6 +1919,7 @@ function autoFill(selId, val, badgeId, prefix) {
 // ── MODALS ────────────────────────────────────────────────────────────
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeModalClick(id, e) { if (e.target.id === id) closeModal(id); }
+function openMusicPicker() { document.getElementById('musicModal').classList.add('open'); }
 
 // ── ANALYZE ───────────────────────────────────────────────────────────
 async function doAnalyze() {
@@ -2039,7 +2046,7 @@ function showRenderResult(url, filename) {
   const wrap = document.getElementById('renderVideoWrap');
   wrap.style.display = 'block';
   document.getElementById('renderVideoPlayer').src = url;
-  document.getElementById('renderDlRow').innerHTML = `<a class="render-dl-btn primary" href="${url}" download="${filename}">&#128229; Tai ve</a>`;
+  document.getElementById('renderDlRow').innerHTML = `<a class="render-dl-btn primary" href="${url}" download="${filename}">&#128229; Tải về</a>`;
 }
 
 // ── SUBTITLE ──────────────────────────────────────────────────────────
@@ -2062,7 +2069,7 @@ async function doSubtitleThenVoice() {
 // ── THUMBNAIL ─────────────────────────────────────────────────────────
 async function doThumbnail() {
   if (!S.videoPath) { toast('Chưa có video', 'err'); return; }
-  railProgress(30, 'Dang tao thumbnail...');
+  railProgress(30, 'Đang tạo thumbnail...');
   try {
     const d = await postJSON('/api/thumbnail', { video_path: S.videoPath, ten_xe: document.getElementById('xe').value });
     if (d.ok) toast('Thumbnail: ' + d.url, 'ok');
@@ -2200,11 +2207,11 @@ function vsRenderPattern(p) {
   const pt = p.pattern;
   box.textContent = [
     'Tone: '+(pt.tone||'-'),
-    'Xung ho: '+(pt.address_style||'-'),
-    'Emoji: '+(pt.uses_emoji?'Co ('+pt.emoji_freq+')':'Khong'),
-    'Cau TB: '+(pt.avg_sentence_len||0)+' ky tu',
+    'Xưng hô: '+(pt.address_style||'-'),
+    'Emoji: '+(pt.uses_emoji?'Có ('+pt.emoji_freq+')':'Không'),
+    'Câu TB: '+(pt.avg_sentence_len||0)+' ký tự',
     'CTA: '+(pt.preferred_cta||'-'),
-    pt.common_phrases&&pt.common_phrases.length?'Cum tu: '+pt.common_phrases.join(', '):'',
+    pt.common_phrases&&pt.common_phrases.length?'Cụm từ: '+pt.common_phrases.join(', '):'',
     p.style_prompt?'\nStyle:\n'+p.style_prompt:'',
   ].filter(Boolean).join('\n');
   wrap.style.display='block';
@@ -2248,9 +2255,9 @@ async function vsUploadFileObj(file) {
   zone.classList.add('uploading');
   prog.style.display = 'block';
   icon.textContent = '⏳';
-  txt.innerHTML = '<strong style="color:var(--accent2)">' + file.name + '</strong><br><span style="font-size:11px">Dang transcribe bang Whisper AI...</span>';
+  txt.innerHTML = '<strong style="color:var(--accent2)">' + file.name + '</strong><br><span style="font-size:11px">Đang transcribe bằng Whisper AI...</span>';
   bar.style.width = '30%';
-  msg.textContent = 'Dang tai len...';
+  msg.textContent = 'Đang tải lên...';
 
   const label = document.getElementById('vsNewLabel').value.trim() || file.name.replace(/\.[^.]+$/, '').slice(0, 40);
   const fd = new FormData();
@@ -2259,7 +2266,7 @@ async function vsUploadFileObj(file) {
 
   try {
     bar.style.width = '60%';
-    msg.textContent = 'Whisper dang doc loi thoai...';
+    msg.textContent = 'Whisper đang đọc lời thoại...';
 
     const r = await fetch(_API + '/api/voice_style/' + _vsSlot + '/add_from_file?label=' + encodeURIComponent(label), {
       method: 'POST', body: fd
@@ -2268,7 +2275,7 @@ async function vsUploadFileObj(file) {
     bar.style.width = '100%';
 
     if (d.ok) {
-      msg.textContent = '✅ Thanh cong! ' + (d.transcript?.length || 0) + ' ky tu trich xuat duoc';
+      msg.textContent = '✅ Thành công! ' + (d.transcript?.length || 0) + ' ký tự trích xuất được';
       icon.textContent = '✅';
       txt.innerHTML = '<strong style="color:#34d399">Da them vao mau!</strong><br>'
         + '<span style="font-size:11px;color:var(--muted)">' + (d.transcript || '').slice(0, 120) + '...</span>';
@@ -2279,7 +2286,7 @@ async function vsUploadFileObj(file) {
     } else {
       icon.textContent = '❌';
       const isWhisperMissing = d.message.includes('Whisper');
-      txt.innerHTML = '<strong style="color:#f87171">' + (isWhisperMissing ? 'Chua cai Whisper' : 'That bai') + '</strong><br>'
+      txt.innerHTML = '<strong style="color:#f87171">' + (isWhisperMissing ? 'Chưa cài Whisper' : 'Thất bại') + '</strong><br>'
         + '<span style="font-size:11px;color:var(--muted)">'
         + (isWhisperMissing
           ? 'Chay: <code style="color:#a78bfa">pip install openai-whisper torch</code>'
@@ -2289,7 +2296,7 @@ async function vsUploadFileObj(file) {
     }
   } catch(e) {
     icon.textContent = '❌';
-    txt.innerHTML = '<span style="color:#f87171">Loi ket noi: ' + e.message + '</span>';
+    txt.innerHTML = '<span style="color:#f87171">Lỗi kết nối: ' + e.message + '</span>';
     toast('❌ ' + e.message, 'err');
   } finally {
     setTimeout(() => {
@@ -2316,7 +2323,7 @@ async function vsAnalyze() {
   try {
     const d = await fetch(_API + '/api/voice_style/'+_vsSlot+'/analyze', {method:'POST'}).then(r=>r.json());
     if (d.ok) { toast('AI đã học xong giọng điệu!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
-    else toast(d.message||'Loi phan tich', 'err');
+    else toast(d.message||'Lỗi phân tích', 'err');
   } catch(e) { toast(e.message, 'err'); }
   setLoading(btn, false);
 }
@@ -2333,7 +2340,7 @@ async function vsRename() {
 }
 
 async function vsClear() {
-  if (!confirm('Xoa toan bo mau va ket qua hoc?')) return;
+  if (!confirm('Xóa toàn bộ mẫu và kết quả học?')) return;
   try {
     await fetch(_API + '/api/voice_style/'+_vsSlot+'/clear', {method:'POST'}).then(r=>r.json());
     toast('Đã xóa toàn bộ', 'ok');
@@ -2405,3 +2412,4 @@ function setPreviewVol(v) {
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
