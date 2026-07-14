@@ -1567,7 +1567,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function checkStatus() {
   try {
-    const d = await fetch('/api/status').then(r => r.json());
+    const d = await fetch(_API + '/api/status').then(r => r.json());
     const ok = d.api;
     document.getElementById('apiBadge').className = 'api-badge' + (ok ? '' : ' offline');
     document.getElementById('apiBadge').textContent = ok ? '● Online' : '● Offline';
@@ -1587,7 +1587,7 @@ async function checkStatus() {
 
 async function loadDropdowns() {
   try {
-    const d = await fetch('/api/config').then(r => r.json());
+    const d = await fetch(_API + '/api/config').then(r => r.json());
     const xeEl = document.getElementById('xe');
     xeEl.innerHTML = '<option value="">-- Chon xe --</option>' +
       d.xe_list.map(x => `<option value="${x}">${x}</option>`).join('');
@@ -1846,7 +1846,7 @@ async function doAnalyze() {
   fd.append('file', S.pendingFile);
   try {
     railProgress(50, 'AI dang phan tich video...');
-    const d = await fetch('/api/analyze', { method:'POST', body: fd }).then(r => r.json());
+    const d = await fetch(_API + '/api/analyze', { method:'POST', body: fd }).then(r => r.json());
     railProgress(100, '');
     S.videoPath = d.video_path;
     if (d.duration) document.getElementById('videoDuration').textContent = d.duration + 's';
@@ -2070,7 +2070,7 @@ async function openVoiceStyle() {
 
 async function vsLoadAll() {
   try {
-    const d = await fetch('/api/voice_style/all').then(r => r.json());
+    const d = await fetch(_API + '/api/voice_style/all').then(r => r.json());
     for (const p of d.profiles) {
       _vsProfiles[p.slot] = p;
       const lbl = document.getElementById('vsTabLabel_' + p.slot);
@@ -2089,7 +2089,7 @@ async function vsSelectSlot(slot) {
   ['person_1','person_2','person_3'].forEach(s =>
     document.getElementById('vsTab_'+s).classList.toggle('active', s===slot));
   try {
-    const p = await fetch('/api/voice_style/'+slot).then(r=>r.json());
+    const p = await fetch(_API + '/api/voice_style/'+slot).then(r=>r.json());
     _vsProfiles[slot] = p;
     document.getElementById('vsNameInput').value = p.display_name||'';
     vsRenderSamples(p.samples||[]);
@@ -2183,7 +2183,7 @@ async function vsUploadFileObj(file) {
     bar.style.width = '60%';
     msg.textContent = 'Whisper dang doc loi thoai...';
 
-    const r = await fetch('/api/voice_style/' + _vsSlot + '/add_from_file?label=' + encodeURIComponent(label), {
+    const r = await fetch(_API + '/api/voice_style/' + _vsSlot + '/add_from_file?label=' + encodeURIComponent(label), {
       method: 'POST', body: fd
     });
     const d = await r.json();
@@ -2226,7 +2226,7 @@ async function vsUploadFileObj(file) {
 
 async function vsDeleteSample(idx) {
   try {
-    const d = await fetch('/api/voice_style/'+_vsSlot+'/sample/'+idx, {method:'DELETE'}).then(r=>r.json());
+    const d = await fetch(_API + '/api/voice_style/'+_vsSlot+'/sample/'+idx, {method:'DELETE'}).then(r=>r.json());
     if (d.ok) { toast(d.message, 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
     else toast(d.message, 'err');
   } catch(e) { toast(e.message, 'err'); }
@@ -2236,7 +2236,7 @@ async function vsAnalyze() {
   const btn = document.getElementById('btnVsAnalyze');
   setLoading(btn, true);
   try {
-    const d = await fetch('/api/voice_style/'+_vsSlot+'/analyze', {method:'POST'}).then(r=>r.json());
+    const d = await fetch(_API + '/api/voice_style/'+_vsSlot+'/analyze', {method:'POST'}).then(r=>r.json());
     if (d.ok) { toast('AI da hoc xong giong dieu!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
     else toast(d.message||'Loi phan tich', 'err');
   } catch(e) { toast(e.message, 'err'); }
@@ -2257,7 +2257,7 @@ async function vsRename() {
 async function vsClear() {
   if (!confirm('Xoa toan bo mau va ket qua hoc?')) return;
   try {
-    await fetch('/api/voice_style/'+_vsSlot+'/clear', {method:'POST'}).then(r=>r.json());
+    await fetch(_API + '/api/voice_style/'+_vsSlot+'/clear', {method:'POST'}).then(r=>r.json());
     toast('Da xoa toan bo', 'ok');
     vsSelectSlot(_vsSlot); vsLoadAll();
   } catch(e) { toast(e.message, 'err'); }
