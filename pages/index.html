@@ -1539,8 +1539,8 @@ const S = {
 // ── INIT ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadDropdowns();
-  checkStatus();
-  setInterval(checkStatus, 10000);
+  setTimeout(checkStatus, 2000);
+  setInterval(checkStatus, 15000);
   loadHistory();
   document.querySelectorAll('.model-opt').forEach(el => {
     el.addEventListener('click', () => {
