@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# API keys / secrets
+config_local.py
+.env.local
+
+# Output files
+outputs/
+temp/
+*.mp4
+*.sqlite
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# FFmpeg
+ffmpeg/
+
+# Cloudflared
+cloudflared.exe
