@@ -1677,15 +1677,6 @@ async function loadDropdowns() {
     const d = await fetch(_API + '/api/config').then(r => r.json());
     if (d.xe_list && d.xe_list.length) fillSelects(d);
   } catch(e) { /* fallback data already loaded */ }
-}">${x}</option>`).join('');
-    const mauEl = document.getElementById('mau');
-    mauEl.innerHTML = '<option value="">-- Chọn màu --</option>' +
-      d.mau_list.map(m => `<option value="${m}">${m}</option>`).join('');
-    const loaiEl = document.getElementById('loai');
-    loaiEl.innerHTML = d.loai_list.map(l => `<option value="${l}">${l}</option>`).join('');
-    const dtEl = document.getElementById('doituong');
-    dtEl.innerHTML = d.doi_tuong_list.map(dt => `<option value="${dt}">${dt}</option>`).join('');
-  } catch(e) {}
 }
 
 function showPage(id, el) {
