@@ -2274,7 +2274,7 @@ function vsToggleActive() {
     const p = _vsProfiles[_vsSlot];
     if (!p||!p.analyzed) { toast('Can phan tich truoc! Bam Phan tich & Hoc', 'err'); return; }
     _vsActiveSlot = _vsSlot;
-    const name = p.display_name || _vsSlot;
+    const name = p.display_name || ot;
     document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> ' + name + ' &#10003;';
     toast('Se dung giong: ' + name, 'ok');
   }
@@ -2284,6 +2284,48 @@ function vsToggleActive() {
   btn.style.color = isActive ? '#34d399' : '';
 }
 
-// ── VOICEOVER ─────────────────────────────────────────────────────────
+// ── VOICEOVER ─────────────────────────────────────────────────────
 function openVoiceover() {
-  document.getElementById('voiceoverModal').classList
+  document.getElementById('voiceoverModal').classList.add('open');
+}
+
+function fillVoiceFromScript() {
+  const src = document.getElementById('scriptBox');
+  const dst = document.getElementById('voiceText');
+  if (src && dst) dst.value = src.value || src.textContent.trim();
+}
+
+async function sendVoiceover() {
+  const text = document.getElementById('voiceText').value.trim();
+  if (!text) { toast('Nhap noi dung can doc', 'err'); return; }
+  const voice = document.getElementById('voiceSelect').value;
+  const btn = document.getElementById('btnVoiceSend');
+  setLoading(btn, true);
+  try {
+    const res = await postJSON('/api/voiceover', { text, voice });
+    if (res.audio_url || res.audio_path) {
+      const url = res.audio_url || (_API + res.audio_path);
+      const audio = document.getElementById('voiceAudio');
+      audio.src = url;
+      document.getElementById('voiceResultBox').style.display = '';
+      const dlBtn = document.getElementById('voiceDownloadBtn');
+      dlBtn.href = url;
+      dlBtn.style.display = 'inline-flex';
+      toast('Da tao giong doc!', 'ok');
+    }
+  } catch(e) { toast(e.message, 'err'); }
+  setLoading(btn, false);
+}
+
+function seekPreview(v) {
+  const video = document.getElementById('videoPreview');
+  if (video && video.duration) video.currentTime = (v / 100) * video.duration;
+}
+
+function setPreviewVol(v) {
+  const video = document.getElementById('videoPreview');
+  if (video) video.volume = parseFloat(v);
+}
+</script>
+</body>
+</html>
