@@ -1,0 +1,2287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script src="/config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKB Video Tool</title>
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0c0c1e;
+  --sidebar: #10102a;
+  --card: #14143a;
+  --card2: #1a1a48;
+  --border: rgba(120,80,255,0.18);
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --accent-glow: rgba(124,58,237,0.25);
+  --text: #e2e8f0;
+  --muted: #8892a4;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --radius: 12px;
+  --sidebar-w: 220px;
+}
+html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; overflow: hidden; }
+
+/* ── SCROLLBAR ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 3px; }
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.app { display: flex; height: 100vh; }
+
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 20px 0; flex-shrink: 0;
+}
+.sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.sidebar-logo .brand { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+.sidebar-logo .tagline { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px; cursor: pointer; color: var(--muted);
+  font-size: 13.5px; font-weight: 500; transition: all 0.15s;
+  border-left: 3px solid transparent; text-decoration: none;
+}
+.nav-item:hover { color: var(--text); background: rgba(124,58,237,0.08); }
+.nav-item.active { color: #fff; background: rgba(124,58,237,0.15); border-left-color: var(--accent2); }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-divider { height: 1px; background: var(--border); margin: 12px 20px; }
+.sidebar-footer { margin-top: auto; padding: 16px 20px 0; border-top: 1px solid var(--border); }
+.status-dot { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.dot.ok { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.dot.warn { background: var(--warning); }
+.dot.err { background: var(--error); }
+
+/* ── MAIN ────────────────────────────────────────────────────── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── HEADER ──────────────────────────────────────────────────── */
+.header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--sidebar); flex-shrink: 0;
+}
+.header-title { font-size: 16px; font-weight: 600; color: #fff; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.model-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+  padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
+  color: #c4b5fd; transition: all 0.15s;
+}
+.model-badge:hover { background: rgba(124,58,237,0.35); }
+.model-dropdown {
+  position: absolute; top: 54px; right: 20px; z-index: 200;
+  background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 6px; min-width: 260px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.model-dropdown.open { display: block; }
+.model-opt { padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: background 0.1s; }
+.model-opt:hover { background: rgba(124,58,237,0.15); }
+.model-opt.selected { background: rgba(124,58,237,0.25); color: #c4b5fd; }
+.model-opt .opt-name { font-weight: 600; margin-bottom: 2px; }
+.model-opt .opt-tip { font-size: 11px; color: var(--muted); }
+.api-badge {
+  display: flex; align-items: center; gap: 5px; font-size: 12px;
+  padding: 5px 10px; border-radius: 20px;
+  background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3);
+}
+.api-badge.offline { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.3); }
+
+/* ── CONTENT AREA ────────────────────────────────────────────── */
+.content-area { flex: 1; overflow: hidden; padding: 14px 14px 0 16px; display: flex; flex-direction: column; }
+
+/* ── PAGE VIEWS ──────────────────────────────────────────────── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── GENERATE PAGE GRID ──────────────────────────────────────── */
+.gen-grid {
+  display: grid;
+  grid-template-columns: 355px 1fr 192px;
+  gap: 16px;
+  align-items: start;
+  height: calc(100vh - 74px);
+}
+/* Left col scrolls independently */
+.gen-left {
+  overflow-y: auto;
+  height: 100%;
+  padding-right: 4px;
+  padding-bottom: 20px;
+}
+/* Center col: sticky, always visible */
+.gen-center {
+  position: sticky;
+  top: 0;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── CARDS ───────────────────────────────────────────────────── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+}
+.card-title {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.step-badge {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ── UPLOAD ZONE ─────────────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed rgba(124,58,237,0.4); border-radius: 10px;
+  padding: 22px 16px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: rgba(124,58,237,0.05); position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--accent2); background: rgba(124,58,237,0.12); }
+.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-icon { font-size: 26px; margin-bottom: 6px; }
+.upload-text { color: var(--muted); font-size: 13px; }
+.upload-text strong { color: var(--accent2); }
+.upload-info { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.file-selected { margin-top: 8px; font-size: 12px; color: var(--success); display: none; }
+
+/* ── UPLOAD TABS ─────────────────────────────────────────────── */
+.upload-tabs {
+  display: flex; gap: 0; border-radius: 8px; overflow: hidden;
+  border: 1px solid var(--border); margin-bottom: 10px;
+}
+.utab {
+  flex: 1; padding: 7px 0; font-size: 12px; font-weight: 600;
+  background: transparent; border: none; color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.utab:first-child { border-right: 1px solid var(--border); }
+.utab.active { background: rgba(124,58,237,0.2); color: #c4b5fd; }
+.utab:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
+
+/* ── SCENE LIST ──────────────────────────────────────────────── */
+.scene-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.scene-item {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 9px; transition: border-color 0.15s;
+}
+.scene-item:hover { border-color: rgba(124,58,237,0.4); }
+.scene-item.drag-over { border-color: var(--accent2); background: rgba(124,58,237,0.12); }
+.scene-num {
+  width: 22px; height: 22px; border-radius: 50%; background: rgba(124,58,237,0.25);
+  color: #c4b5fd; font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.scene-thumb {
+  width: 42px; height: 28px; border-radius: 4px; object-fit: cover;
+  background: rgba(255,255,255,0.08); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; overflow: hidden;
+}
+.scene-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.scene-info { flex: 1; min-width: 0; }
+.scene-name {
+  font-size: 11.5px; color: var(--text); font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.scene-size { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.scene-move-btns { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.smove {
+  width: 18px; height: 14px; border-radius: 3px; border: none;
+  background: rgba(255,255,255,0.07); color: var(--muted);
+  cursor: pointer; font-size: 8px; display: flex; align-items: center;
+  justify-content: center; transition: all 0.12s; padding: 0;
+}
+.smove:hover { background: rgba(124,58,237,0.3); color: #fff; }
+.smove:disabled { opacity: 0.25; cursor: default; }
+.scene-del {
+  width: 22px; height: 22px; border-radius: 5px; border: none;
+  background: rgba(239,68,68,0.1); color: #f87171;
+  cursor: pointer; font-size: 12px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; transition: all 0.15s;
+}
+.scene-del:hover { background: rgba(239,68,68,0.25); }
+
+.scene-add-zone {
+  border: 1.5px dashed rgba(124,58,237,0.35); border-radius: 8px;
+  padding: 10px; text-align: center; cursor: pointer;
+  color: var(--muted); font-size: 12px; transition: all 0.2s;
+  background: rgba(124,58,237,0.03); position: relative;
+}
+.scene-add-zone:hover, .scene-add-zone.dragover {
+  border-color: var(--accent2); background: rgba(124,58,237,0.1); color: #c4b5fd;
+}
+.scene-add-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.scene-count-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10.5px; color: var(--accent2); font-weight: 600;
+  background: rgba(124,58,237,0.15); border-radius: 20px;
+  padding: 2px 8px; margin-bottom: 6px;
+}
+
+/* ── SCENE PREVIEW NAV ───────────────────────────────────────── */
+.scene-preview-nav {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 6px 4px 0; gap: 8px;
+}
+.scene-preview-nav.visible { display: flex; }
+.spnav-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 7px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05); color: var(--muted);
+  cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.15s;
+}
+.spnav-btn:hover:not(:disabled) { border-color: var(--accent2); color: #c4b5fd; background: rgba(124,58,237,0.15); }
+.spnav-btn:disabled { opacity: 0.3; cursor: default; }
+.spnav-label {
+  font-size: 12px; color: var(--accent2); font-weight: 700;
+  text-align: center; flex: 1;
+}
+.spnav-name {
+  font-size: 10px; color: var(--muted); text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 140px;
+}
+
+/* ── FORM ELEMENTS ───────────────────────────────────────────── */
+.form-row { margin-bottom: 9px; }
+.form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: block; }
+select, input[type=text], textarea {
+  width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 11px; color: var(--text); font-size: 13px;
+  font-family: inherit; outline: none; transition: border-color 0.15s;
+}
+select:focus, input:focus, textarea:focus { border-color: var(--accent2); }
+select option { background: #1a1a3e; }
+textarea { resize: vertical; min-height: 60px; }
+.duration-pills { display: flex; gap: 5px; flex-wrap: wrap; }
+.pill {
+  padding: 4px 11px; border-radius: 20px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04); color: var(--muted); cursor: pointer;
+  font-size: 12px; transition: all 0.15s;
+}
+.pill:hover { border-color: var(--accent); color: var(--text); }
+.pill.active { background: rgba(124,58,237,0.25); border-color: var(--accent); color: #c4b5fd; }
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.15s; width: 100%; margin-bottom: 7px;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent2); box-shadow: 0 0 20px var(--accent-glow); }
+.btn-secondary { background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: rgba(255,255,255,0.1); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.loading::after {
+  content: ''; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── PROGRESS BAR ────────────────────────────────────────────── */
+.progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 8px 0; display: none; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.4s; }
+.progress-bar.active { display: block; }
+.progress-label { font-size: 11px; color: var(--muted); text-align: center; }
+
+/* ── RIGHT PANEL ─────────────────────────────────────────────── */
+.preview-video {
+  width: 100%; aspect-ratio: 9/16; max-height: 300px;
+  background: #06061a; border-radius: 10px; object-fit: contain; border: 1px solid var(--border);
+}
+.video-placeholder {
+  width: 100%; height: 180px;
+  background: linear-gradient(135deg, #0f0f2a 0%, #1a0a3a 100%);
+  border-radius: 10px; border: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 13px; gap: 8px;
+}
+.video-placeholder .ph-icon { font-size: 30px; opacity: 0.4; }
+
+/* ── OUTPUT TABS ─────────────────────────────────────────────── */
+.tab-nav {
+  display: flex; gap: 3px; margin-bottom: 10px;
+  background: rgba(0,0,0,0.2); padding: 4px; border-radius: 8px;
+}
+.tab-btn {
+  flex: 1; padding: 5px 6px; border-radius: 6px; border: none; background: transparent;
+  color: var(--muted); font-size: 12px; cursor: pointer; transition: all 0.15s; font-weight: 500;
+}
+.tab-btn.active { background: var(--card2); color: var(--text); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.output-box {
+  background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 11px; font-size: 13px; line-height: 1.65; color: var(--text);
+  min-height: 90px; max-height: 240px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+}
+.copy-btn {
+  display: flex; align-items: center; gap: 6px; margin-top: 7px;
+  padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); font-size: 12px; cursor: pointer;
+  transition: all 0.15s; width: auto;
+}
+.copy-btn:hover { color: var(--text); border-color: var(--accent); }
+
+/* ── ANALYSIS BOX ────────────────────────────────────────────── */
+.analysis-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.analysis-box {
+  background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px; font-size: 12px; color: var(--muted); min-height: 70px; max-height: 140px;
+  overflow-y: auto; white-space: pre-wrap; line-height: 1.5;
+}
+.analysis-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ── BADGE ───────────────────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-success { background: rgba(16,185,129,0.15); color: #34d399; }
+.badge-processing { background: rgba(99,102,241,0.15); color: #818cf8; }
+.badge-error { background: rgba(239,68,68,0.1); color: #f87171; }
+
+/* ── TOAST ───────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  background: var(--card2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 11px 16px; font-size: 13px; max-width: 300px;
+  transform: translateY(80px); opacity: 0; transition: all 0.3s;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok { border-color: rgba(16,185,129,0.4); color: #34d399; }
+.toast.err { border-color: rgba(239,68,68,0.3); color: #f87171; }
+
+/* ── ACTION RAIL ─────────────────────────────────────────────── */
+.action-rail {
+  position: sticky; top: 0;
+  height: calc(100vh - 74px);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 0; padding-bottom: 20px;
+}
+.rail-section { padding: 14px 0 2px; }
+.rail-section:first-child { padding-top: 0; }
+.rail-title {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 0 2px 7px;
+  display: flex; align-items: center; gap: 6px;
+}
+.rail-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.rail-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 11px; border-radius: 8px;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); font-size: 12px; cursor: pointer;
+  width: 100%; margin-bottom: 5px;
+  transition: all 0.15s; text-align: left; font-weight: 500;
+}
+.rail-btn:hover { border-color: var(--accent); background: rgba(124,58,237,0.1); color: #c4b5fd; }
+.rail-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.rail-btn.rail-primary { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.45); color: #c4b5fd; }
+.rail-btn.rail-primary:hover { background: rgba(124,58,237,0.28); }
+.rail-btn.rail-green:hover { border-color: var(--success); background: rgba(16,185,129,0.08); color: #34d399; }
+.rail-btn.rail-yellow:hover { border-color: var(--warning); background: rgba(245,158,11,0.08); color: #fbbf24; }
+.rail-btn.rail-red:hover { border-color: var(--error); background: rgba(239,68,68,0.08); color: #f87171; }
+.rail-icon { font-size: 14px; flex-shrink: 0; }
+
+/* ── MODAL ───────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; width: 620px; max-width: 92vw;
+  max-height: 84vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  transform: translateY(20px); transition: transform 0.25s;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 0; line-height: 1; }
+.modal-close:hover { color: var(--text); }
+.modal-result {
+  background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px; font-size: 13px; line-height: 1.7;
+  white-space: pre-wrap; min-height: 80px; max-height: 380px; overflow-y: auto;
+  color: var(--text);
+}
+.modal-hint { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.modal-actions { margin-top: 14px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.modal-actions .btn { width: auto; margin: 0; }
+.modal-file-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.06);
+  color: var(--text); cursor: pointer; text-decoration: none; transition: all 0.15s;
+}
+.modal-file-btn:hover { border-color: var(--accent); background: rgba(124,58,237,0.12); }
+
+/* ── HISTORY PAGE ────────────────────────────────────────────── */
+.history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.history-search {
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 14px; color: var(--text); font-size: 13px;
+  width: 250px; outline: none;
+}
+.history-search:focus { border-color: var(--accent); }
+.history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.history-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; cursor: pointer; transition: all 0.2s;
+}
+.history-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.15); }
+.history-thumb {
+  width: 100%; aspect-ratio: 9/16; max-height: 130px; object-fit: cover;
+  background: linear-gradient(135deg, #0f0f2a, #1a0a3a);
+  display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 24px;
+}
+.history-info { padding: 9px 11px; }
+.history-xe { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.history-date { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+.empty-state .empty-icon { font-size: 44px; margin-bottom: 10px; opacity: 0.4; }
+
+/* ── RENDER PROGRESS CARD ────────────────────────────────────── */
+.render-card { flex-shrink: 0; }
+.render-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.render-pct {
+  font-size: 28px; font-weight: 800; color: var(--accent2);
+  line-height: 1; letter-spacing: -1px;
+}
+.render-pct span { font-size: 14px; font-weight: 500; color: var(--muted); }
+.render-status { font-size: 12px; color: var(--muted); text-align: right; line-height: 1.4; }
+.render-bar-wrap { height: 6px; background: var(--border); border-radius: 4px; margin-bottom: 12px; overflow: hidden; }
+.render-bar-fill {
+  height: 100%; width: 0%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), #06b6d4);
+  background-size: 200% 100%;
+  transition: width 0.5s ease;
+}
+.render-bar-fill.animated { animation: barShimmer 1.5s linear infinite; }
+@keyframes barShimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+.render-steps { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.render-step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--muted); padding: 5px 8px;
+  border-radius: 6px; transition: all 0.2s;
+}
+.render-step.active { color: var(--text); background: rgba(124,58,237,0.1); }
+.render-step.done { color: var(--success); }
+.render-step.error { color: var(--error); }
+.step-dot {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 9px; transition: all 0.3s;
+}
+.render-step.active .step-dot { border-color: var(--accent2); background: rgba(124,58,237,0.2); animation: pulse 1s ease-in-out infinite; }
+.render-step.done .step-dot { border-color: var(--success); background: rgba(16,185,129,0.15); }
+.render-step.done .step-dot::after { content: '✓'; color: var(--success); }
+.render-step.error .step-dot { border-color: var(--error); background: rgba(239,68,68,0.15); }
+.render-step.error .step-dot::after { content: '✕'; color: var(--error); }
+.render-step:not(.active):not(.done):not(.error) .step-dot::after { content: ''; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,0.4)} 50%{box-shadow:0 0 0 5px rgba(168,85,247,0)} }
+
+.render-video-wrap {
+  width: 100%; border-radius: 10px; overflow: hidden;
+  background: #06061a; border: 1px solid var(--border);
+  display: none; position: relative;
+}
+.render-video-wrap video { width: 100%; max-height: 220px; object-fit: contain; display: block; }
+.render-dl-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.render-dl-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 7px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.05);
+  color: var(--text); cursor: pointer; text-decoration: none; transition: all 0.15s;
+}
+.render-dl-btn:hover { border-color: var(--accent); background: rgba(124,58,237,0.1); }
+.render-dl-btn.primary { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: #34d399; }
+.render-dl-btn.primary:hover { background: rgba(16,185,129,0.25); }
+
+/* ── PLATFORM PILLS WITH ICONS ───────────────────────────────── */
+.platform-row { display: flex; gap: 4px; margin-bottom: 7px; flex-wrap: nowrap; }
+.plat-pill {
+  display: flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04); color: var(--muted); cursor: pointer;
+  font-size: 9.5px; font-weight: 500; transition: all 0.15s; white-space: nowrap;
+}
+.plat-pill:hover { border-color: var(--accent); color: var(--text); }
+.plat-pill.active { background: rgba(124,58,237,0.22); border-color: var(--accent); color: #c4b5fd; }
+.plat-pill svg { width: 10px; height: 10px; flex-shrink: 0; }
+
+/* ── PROMPT TEXTAREA ─────────────────────────────────────────── */
+.prompt-textarea {
+  width: 100%; min-height: 360px; resize: vertical;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 11px; color: var(--text); font-size: 13px;
+  font-family: inherit; outline: none; transition: border-color 0.15s;
+  line-height: 1.6; flex: 1;
+}
+.prompt-textarea:focus { border-color: var(--accent2); }
+
+/* ── PROMPT TOGGLE BTN ───────────────────────────────────────── */
+.prompt-toggle-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.35);
+  color: #c4b5fd; cursor: pointer; transition: all 0.15s;
+}
+.prompt-toggle-btn:hover { background: rgba(124,58,237,0.22); border-color: rgba(124,58,237,0.6); color: #fff; }
+.prompt-toggle-btn.open { background: rgba(124,58,237,0.22); border-color: var(--accent2); color: #fff; }
+.toggle-arrow { font-size: 11px; transition: transform 0.2s; display: inline-block; }
+.toggle-arrow.rotated { transform: rotate(180deg); }
+
+/* ── PROMPT CHIPS ────────────────────────────────────────────── */
+.prompt-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 2px; }
+.prompt-chip {
+  padding: 5px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+  background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3);
+  color: #c4b5fd; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.prompt-chip:hover {
+  background: rgba(124,58,237,0.25); border-color: rgba(124,58,237,0.6);
+  color: #fff; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(124,58,237,0.2);
+}
+.prompt-chip:active { transform: translateY(0); }
+.prompt-chip.active { background: rgba(124,58,237,0.35); border-color: var(--accent2); color: #fff; }
+
+/* ── PROMPT EDIT BAR ─────────────────────────────────────────── */
+.prompt-edit-bar {
+  display: none; align-items: center; justify-content: space-between;
+  background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
+  border-radius: 8px; padding: 5px 8px; margin-bottom: 6px; gap: 8px;
+}
+.prompt-edit-bar.visible { display: flex; }
+.prompt-active-label {
+  font-size: 10.5px; color: #a78bfa; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+}
+.prompt-edit-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.pedit-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; border: 1px solid;
+  background: transparent;
+}
+.pedit-btn.save { border-color: rgba(16,185,129,0.4); color: #34d399; }
+.pedit-btn.save:hover { background: rgba(16,185,129,0.15); border-color: #34d399; }
+.pedit-btn.reset { border-color: rgba(239,68,68,0.3); color: #f87171; }
+.pedit-btn.reset:hover { background: rgba(239,68,68,0.1); border-color: #f87171; }
+.pedit-btn.edit { border-color: rgba(124,58,237,0.4); color: #c4b5fd; }
+.pedit-btn.edit:hover { background: rgba(124,58,237,0.18); border-color: #a78bfa; }
+.prompt-textarea.editing {
+  border-color: rgba(16,185,129,0.5) !important;
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.12);
+}
+
+/* ── SIDEBAR HIDDEN ──────────────────────────────────────────── */
+.sidebar { display: none !important; }
+
+/* ── HEADER LOGO ─────────────────────────────────────────────── */
+.header { padding: 8px 20px !important; gap: 0 !important; }
+.header-logo {
+  display: flex; align-items: center; gap: 9px;
+  flex-shrink: 0; text-decoration: none;
+}
+.logo-wordmark { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; line-height: 1; }
+.logo-sub { font-size: 10px; color: var(--muted); font-weight: 400; letter-spacing: 0.03em; }
+
+/* ── HEADER NAV TABS ─────────────────────────────────────────── */
+.header-nav { display: flex; gap: 3px; margin: 0 20px; }
+.nav-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 8px;
+  color: var(--muted); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+  border: 1px solid transparent; text-decoration: none;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text); background: rgba(124,58,237,0.1); }
+.nav-tab.active { color: #fff; background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.45); }
+
+/* ── HEADER STATUS ───────────────────────────────────────────── */
+.header-status { display: flex; align-items: center; gap: 14px; margin-right: 10px; }
+.status-dot { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+
+/* ── MUSIC PICKER MODAL ──────────────────────────────────────── */
+.music-modal-box {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 16px; width: 680px; max-width: 95vw;
+  max-height: 88vh; display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  transform: translateY(20px); transition: transform 0.25s;
+}
+.modal-overlay.open .music-modal-box { transform: translateY(0); }
+.music-modal-head {
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.music-modal-head h2 { font-size: 15px; font-weight: 700; }
+.music-tab-bar { display: flex; gap: 0; padding: 10px 20px 0; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.music-tab {
+  padding: 7px 18px; font-size: 13px; font-weight: 600;
+  color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s;
+}
+.music-tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+.music-search-row { padding: 10px 20px; flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
+.music-search {
+  flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 12px; color: var(--text); font-size: 13px;
+  outline: none; transition: border-color 0.15s;
+}
+.music-search:focus { border-color: var(--accent2); }
+.music-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.music-list { flex: 1; overflow-y: auto; padding: 6px 12px; }
+.music-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 8px; border-radius: 8px; transition: background 0.12s; cursor: pointer;
+}
+.music-item:hover { background: rgba(124,58,237,0.08); }
+.music-item.selected { background: rgba(124,58,237,0.18); }
+.music-item.playing { background: rgba(168,85,247,0.15); }
+.music-play-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+  color: #c4b5fd; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 12px; flex-shrink: 0; transition: all 0.15s;
+}
+.music-play-btn:hover { background: rgba(124,58,237,0.4); color: #fff; }
+.music-play-btn.playing { background: var(--accent2); color: #fff; border-color: var(--accent2); animation: pulsePlay 1s ease-in-out infinite; }
+@keyframes pulsePlay { 0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,0.4)} 50%{box-shadow:0 0 0 6px rgba(168,85,247,0)} }
+.music-name { flex: 1; font-size: 12.5px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music-check {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 1.5px solid var(--border); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0; font-size: 10px;
+}
+.music-check.checked { background: var(--accent); border-color: var(--accent); color: #fff; }
+.music-mini-player { padding: 10px 20px; border-top: 1px solid var(--border); flex-shrink: 0; display: none; }
+.music-mini-player.visible { display: block; }
+.mini-now { font-size: 11px; color: var(--muted); margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-now strong { color: var(--accent2); }
+.mini-controls { display: flex; align-items: center; gap: 10px; }
+.mini-vol { flex: 1; accent-color: var(--accent2); }
+.mini-progress { flex: 2; accent-color: var(--accent); }
+.music-footer {
+  padding: 12px 20px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.music-selected-info { font-size: 12px; color: var(--muted); }
+.music-selected-info strong { color: var(--accent2); }
+
+/* ── VOICE STYLE MODAL ───────────────────────────────────────── */
+.vs-slot-tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.vs-slot-tab {
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.vs-slot-tab.active { background: rgba(124,58,237,0.25); border-color: var(--accent2); color: #c4b5fd; }
+.vs-slot-tab .vs-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted); margin-right: 5px; vertical-align: middle;
+}
+.vs-slot-tab.has-samples .vs-dot { background: #34d399; }
+.vs-slot-tab.analyzed .vs-dot { background: var(--accent2); }
+.vs-profile-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.vs-name-input {
+  flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  border-radius: 7px; padding: 5px 9px; color: var(--text); font-size: 13px; font-weight: 600;
+}
+.vs-name-input:focus { border-color: var(--accent2); outline: none; }
+.vs-samples-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; max-height: 160px; overflow-y: auto; }
+.vs-sample-item {
+  display: flex; align-items: flex-start; gap: 7px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 7px; padding: 7px 9px; font-size: 12px;
+}
+.vs-sample-text { flex: 1; color: var(--text); line-height: 1.5;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.vs-sample-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.vs-sample-del {
+  width: 20px; height: 20px; border-radius: 4px; border: none; flex-shrink: 0;
+  background: rgba(239,68,68,0.1); color: #f87171; cursor: pointer; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.vs-sample-del:hover { background: rgba(239,68,68,0.25); }
+.vs-empty { text-align: center; color: var(--muted); font-size: 12px; padding: 16px 0; }
+.vs-pattern-box {
+  background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2);
+  border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.7;
+  color: var(--text); margin-top: 8px; white-space: pre-wrap;
+}
+.vs-upload-zone {
+  border: 1.5px dashed rgba(124,58,237,0.4); border-radius: 10px;
+  padding: 16px 12px; text-align: center; cursor: pointer;
+  background: rgba(124,58,237,0.04); transition: all 0.15s;
+}
+.vs-upload-zone:hover, .vs-upload-zone.drag-over {
+  border-color: var(--accent2); background: rgba(124,58,237,0.1);
+}
+.vs-upload-zone.uploading { border-color: #34d399; background: rgba(16,185,129,0.06); cursor: default; }
+.vs-active-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; color: #34d399; font-weight: 600;
+  background: rgba(16,185,129,0.12); border-radius: 20px; padding: 3px 10px;
+}
+
+/* ── SETTINGS PAGE ───────────────────────────────────────────── */
+.settings-section { margin-bottom: 22px; }
+.settings-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+.model-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.model-card {
+  background: var(--card); border: 2px solid var(--border); border-radius: var(--radius);
+  padding: 14px; cursor: pointer; transition: all 0.15s;
+}
+.model-card:hover { border-color: var(--accent); }
+.model-card.selected { border-color: var(--accent2); background: rgba(124,58,237,0.12); }
+.model-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.model-price { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.model-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.model-rec { display: inline-block; margin-top: 5px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(124,58,237,0.25); color: #c4b5fd; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- sidebar removed -->
+  <div class="main">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 52" height="36" width="58">
+          <defs>
+            <linearGradient id="blueG" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#5bb8ff"/>
+              <stop offset="100%" stop-color="#1252b3"/>
+            </linearGradient>
+            <linearGradient id="orangeG" x1="30%" y1="0%" x2="70%" y2="100%">
+              <stop offset="0%" stop-color="#ffe033"/>
+              <stop offset="100%" stop-color="#f08000"/>
+            </linearGradient>
+          </defs>
+          <text x="0" y="43" font-family="Arial Black,Impact,sans-serif" font-size="46" font-weight="900" fill="url(#blueG)">C</text>
+          <rect x="37" y="4" width="6" height="44" rx="3" fill="url(#blueG)"/>
+          <polygon points="67,4 49,24 59,24 46,48 52,30 40,30" fill="url(#orangeG)"/>
+        </svg>
+        <div>
+          <div class="logo-wordmark">CKB VIDEO</div>
+          <div class="logo-sub">AI Content Tool</div>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a class="nav-tab active" onclick="showPage('generate',this)">&#9889; Generate</a>
+        <a class="nav-tab" onclick="showPage('history',this)">&#128218; Lich su</a>
+        <a class="nav-tab" onclick="showPage('settings',this)">&#9881;&#65039; Cai dat</a>
+      </nav>
+      <div class="header-right">
+        <div class="header-status">
+          <div class="status-dot"><div class="dot" id="apiDot"></div><span id="apiLabel">Claude API</span></div>
+          <div class="status-dot"><div class="dot" id="ffmpegDot"></div><span id="ffmpegLabel">FFmpeg</span></div>
+        </div>
+        <div class="api-badge offline" id="apiBadge">&#9679; Offline</div>
+        <div class="model-badge" onclick="toggleModelMenu()">&#129302; <span id="modelLabel">Sonnet 5</span> &#9662;</div>
+        <div class="model-dropdown" id="modelMenu">
+          <div class="model-opt" data-model="claude-haiku-4-5-20251001">
+            <div class="opt-name">&#9889; Haiku</div>
+            <div class="opt-tip">Nhanh &amp; Re nhat &bull; ~$0.80/M token</div>
+          </div>
+          <div class="model-opt selected" data-model="claude-sonnet-5">
+            <div class="opt-name">&#129504; Sonnet 5 &#11088;</div>
+            <div class="opt-tip">Thong minh &amp; Can bang &bull; ~$3/M token</div>
+          </div>
+          <div class="model-opt" data-model="claude-opus-4-8">
+            <div class="opt-name">&#128142; Opus 4.8</div>
+            <div class="opt-tip">Manh nhat &bull; ~$15/M token</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-area">
+
+      <!-- PAGE: GENERATE -->
+      <div class="page active" id="page-generate">
+        <div class="gen-grid">
+
+          <!-- LEFT COLUMN -->
+          <div class="gen-left">
+
+            <!-- Step 1: Upload -->
+            <div class="card">
+              <div class="card-title"><div class="step-badge">1</div> Upload Video</div>
+              <div class="upload-tabs">
+                <button class="utab active" id="utabSingle" onclick="setUploadMode('single')">&#127916; Video don</button>
+                <button class="utab" id="utabMulti" onclick="setUploadMode('multi')">&#127902;&#65039; Nhieu phan canh</button>
+              </div>
+              <div id="uploadSingle">
+                <div class="upload-zone" id="uploadZone">
+                  <input type="file" id="fileInput" accept="video/*" onchange="onFileSelect(this)">
+                  <div class="upload-icon">&#128249;</div>
+                  <div class="upload-text">Keo tha video vao day hoac <strong>bam chon file</strong></div>
+                  <div class="upload-info">MP4, MOV, AVI, MKV &middot; Toi da 500MB</div>
+                  <div class="file-selected" id="fileSelected">&#10003; <span id="fileName"></span></div>
+                </div>
+              </div>
+              <div id="uploadMulti" style="display:none">
+                <div id="sceneCountWrap" style="display:none">
+                  <span class="scene-count-badge">&#127902;&#65039; <span id="sceneCount">0</span> phan canh</span>
+                </div>
+                <div class="scene-list" id="sceneList"></div>
+                <div class="scene-add-zone" id="sceneAddZone">
+                  <input type="file" id="sceneFileInput" accept="video/*" multiple onchange="onSceneFilesSelect(this)">
+                  &#10133; Keo tha hoac <strong>bam chon</strong> de them phan canh
+                </div>
+              </div>
+              <div class="progress-bar" id="uploadProgress"><div class="progress-fill" id="uploadFill" style="width:0%"></div></div>
+              <p class="progress-label" id="uploadLabel"></p>
+            </div>
+
+            <!-- Step 2: Info -->
+            <div class="card">
+              <div class="card-title"><div class="step-badge">2</div> Thong tin video</div>
+              <div class="form-row">
+                <label class="form-label">&#128665; Ten xe</label>
+                <select id="xe"><option value="">-- Dang tai... --</option></select>
+                <div class="badge badge-success" id="xeDetect" style="display:none;margin-top:4px"></div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">&#127912; Mau xe</label>
+                <select id="mau"><option value="">-- Chon mau --</option></select>
+                <div class="badge badge-success" id="mauDetect" style="display:none;margin-top:4px"></div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">&#127916; Loai video</label>
+                <select id="loai"></select>
+                <div class="badge badge-success" id="loaiDetect" style="display:none;margin-top:4px"></div>
+              </div>
+              <div class="form-row">
+                <label class="form-label">&#128101; Doi tuong</label>
+                <select id="doituong"></select>
+              </div>
+              <div class="form-row">
+                <label class="form-label">&#128161; Diem noi bat</label>
+                <input type="text" id="diem" placeholder="VD: pin 60V, bao hanh 2 nam, gia tot...">
+              </div>
+              <div class="form-row">
+                <label class="form-label">&#9201;&#65039; Thoi luong</label>
+                <div class="duration-pills">
+                  <div class="pill" onclick="setPill(this,'15 giay')">15s</div>
+                  <div class="pill active" onclick="setPill(this,'30 giay')">30s</div>
+                  <div class="pill" onclick="setPill(this,'60 giay')">60s</div>
+                  <div class="pill" onclick="setPill(this,'90 giay')">90s</div>
+                  <div class="pill" onclick="setPill(this,'120 giay')">120s</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Prompt -->
+            <div class="card">
+              <div class="card-title" style="justify-content:space-between;margin-bottom:8px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="step-badge">3</div> Prompt tuy chinh
+                </div>
+                <button class="prompt-toggle-btn" id="promptToggleBtn" onclick="togglePromptMenu()">
+                  &#9889; Prompt mau <span class="toggle-arrow" id="promptArrow">&#9662;</span>
+                </button>
+              </div>
+              <div class="platform-row">
+                <div class="plat-pill active" onclick="togglePlatformPill(this,'TikTok')">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.84a8.27 8.27 0 004.84 1.54V6.93a4.85 4.85 0 01-1.07-.24z"/></svg>
+                  TikTok
+                </div>
+                <div class="plat-pill active" onclick="togglePlatformPill(this,'Facebook')">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  Facebook
+                </div>
+                <div class="plat-pill" onclick="togglePlatformPill(this,'YouTube')">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
+                  YouTube
+                </div>
+                <div class="plat-pill" onclick="togglePlatformPill(this,'Instagram')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                  Instagram
+                </div>
+              </div>
+              <div id="promptMenuPanel" style="display:none;margin-bottom:6px">
+                <div class="prompt-chips">
+                  <button class="prompt-chip" onclick="usePrompt('hook')">&#127919; Hook viral</button>
+                  <button class="prompt-chip" onclick="usePrompt('script')">&#128221; Script 30s</button>
+                  <button class="prompt-chip" onclick="usePrompt('funny')">&#128516; Hai huoc</button>
+                  <button class="prompt-chip" onclick="usePrompt('compare')">&#9878;&#65039; So sanh</button>
+                  <button class="prompt-chip" onclick="usePrompt('tech')">&#128267; Thong so KT</button>
+                  <button class="prompt-chip" onclick="usePrompt('promo')">&#128176; Khuyen mai</button>
+                  <button class="prompt-chip" onclick="usePrompt('faq')">&#10067; FAQ</button>
+                  <button class="prompt-chip" onclick="usePrompt('trend')">&#128293; Bat trend</button>
+                  <button class="prompt-chip" onclick="usePrompt('cta')">&#128227; CTA manh</button>
+                  <button class="prompt-chip" onclick="usePrompt('review')">&#11088; Review KH</button>
+                </div>
+              </div>
+              <div class="prompt-edit-bar" id="promptEditBar">
+                <span class="prompt-active-label" id="promptActiveLabel">&#128204; &#8212;</span>
+                <div class="prompt-edit-actions">
+                  <button class="pedit-btn edit" onclick="focusPromptEdit()">&#9999;&#65039; Sua</button>
+                  <button class="pedit-btn save" onclick="savePromptTemplate()">&#128190; Luu</button>
+                  <button class="pedit-btn reset" onclick="resetPromptTemplate()">&#8617; Reset</button>
+                </div>
+              </div>
+              <textarea id="customPromptInline" class="prompt-textarea" placeholder="Viet yeu cau cho AI hoac chon prompt mau&#10;VD: Viet 5 hook mo dau viral cho xe JVC G9..."></textarea>
+            </div>
+
+          </div>
+
+          <!-- CENTER COLUMN -->
+          <div class="gen-center">
+
+            <!-- Video preview -->
+            <div class="card">
+              <div class="card-title">&#128250; Preview</div>
+              <div id="videoHolder">
+                <div class="video-placeholder" id="videoPlaceholder">
+                  <div class="ph-icon">&#127916;</div>
+                  <div>Upload video de xem preview</div>
+                </div>
+                <video class="preview-video" id="videoPreview" controls style="display:none"></video>
+              </div>
+              <div id="videoMeta" style="margin-top:7px;font-size:12px;color:var(--muted);display:none">
+                <span id="videoDuration"></span> &middot; <span id="videoSize"></span>
+              </div>
+              <div class="scene-preview-nav" id="scenePreviewNav">
+                <button class="spnav-btn" id="spnavPrev" onclick="previewScene(-1)">&#9668; Truoc</button>
+                <div style="text-align:center;flex:1;min-width:0">
+                  <div class="spnav-label" id="spnavLabel">Canh 1 / 1</div>
+                  <div class="spnav-name" id="spnavName"></div>
+                </div>
+                <button class="spnav-btn" id="spnavNext" onclick="previewScene(1)">Tiep &#9658;</button>
+              </div>
+            </div>
+
+            <!-- Render card -->
+            <div class="card render-card" id="renderCard">
+              <div class="render-header">
+                <div>
+                  <div class="card-title" style="margin-bottom:2px">&#127916; Video hoan chinh</div>
+                  <div class="render-pct" id="renderPct">0<span>%</span></div>
+                </div>
+                <div class="render-status" id="renderStatus">Cho xu ly...</div>
+              </div>
+              <div class="render-bar-wrap">
+                <div class="render-bar-fill" id="renderBarFill"></div>
+              </div>
+              <div class="render-steps" id="renderSteps">
+                <div class="render-step" id="rStep0"><div class="step-dot"></div><span>Chuan bi &amp; doc video</span></div>
+                <div class="render-step" id="rStep1"><div class="step-dot"></div><span>Xu ly AI &amp; dung canh</span></div>
+                <div class="render-step" id="rStep2"><div class="step-dot"></div><span>Them phu de &amp; hieu ung</span></div>
+                <div class="render-step" id="rStep3"><div class="step-dot"></div><span>Ghep audio &amp; xuat file</span></div>
+                <div class="render-step" id="rStep4"><div class="step-dot"></div><span>Hoan thanh</span></div>
+              </div>
+              <div class="render-video-wrap" id="renderVideoWrap">
+                <video id="renderVideoPlayer" controls></video>
+                <div class="render-dl-row" id="renderDlRow"></div>
+              </div>
+            </div>
+
+            <!-- AI Analysis -->
+            <div class="card" id="analysisCard" style="display:none">
+              <div class="card-title">&#128269; Phan tich AI</div>
+              <div class="analysis-row">
+                <div>
+                  <div class="analysis-label">&#128065;&#65039; Vision</div>
+                  <div class="analysis-box" id="visionBox">&#8212;</div>
+                </div>
+                <div>
+                  <div class="analysis-label">&#11088; Chat luong</div>
+                  <div class="analysis-box" id="qualityBox">&#8212;</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Output tabs -->
+            <div class="card" id="outputCard" style="display:none">
+              <div class="card-title">&#128221; Noi dung AI</div>
+              <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('script',this)">&#128221; Script</button>
+                <button class="tab-btn" onclick="switchTab('caption',this)">&#128172; Caption</button>
+                <button class="tab-btn" onclick="switchTab('hashtag',this)"># Hashtag</button>
+              </div>
+              <div class="tab-content active" id="tab-script">
+                <div class="output-box" id="scriptBox"></div>
+                <button class="copy-btn" onclick="copyText('scriptBox')">&#128203; Copy Script</button>
+              </div>
+              <div class="tab-content" id="tab-caption">
+                <div class="output-box" id="captionBox"></div>
+                <button class="copy-btn" onclick="copyText('captionBox')">&#128203; Copy Caption</button>
+              </div>
+              <div class="tab-content" id="tab-hashtag">
+                <div class="output-box" id="hashtagBox"></div>
+                <button class="copy-btn" onclick="copyText('hashtagBox')">&#128203; Copy Hashtag</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: Action Rail -->
+          <div class="action-rail">
+
+            <div class="rail-section">
+              <div class="rail-title">&#128269; Phan tich</div>
+              <button class="rail-btn rail-primary" id="btnAnalyze" onclick="doAnalyze()">
+                <span class="rail-icon">&#129302;</span> AI Vision
+              </button>
+            </div>
+
+            <div class="rail-section">
+              <div class="rail-title">&#128293; Noi dung AI</div>
+              <button class="rail-btn rail-primary" id="btnGenerate" onclick="doGenerate()">
+                <span class="rail-icon">&#9889;</span> Sinh Script &amp; Caption
+              </button>
+              <button class="rail-btn" id="btnCustom" onclick="doCustomGenerate()">
+                <span class="rail-icon">&#9999;&#65039;</span> Gui Custom Prompt
+              </button>
+            </div>
+
+            <div class="rail-section">
+              <div class="rail-title">&#127916; Dung video</div>
+              <button class="rail-btn" onclick="doRenderVideo()">
+                <span class="rail-icon">&#127902;&#65039;</span> Tao video hoan chinh
+              </button>
+              <button class="rail-btn" onclick="doSubtitle()">
+                <span class="rail-icon">&#128196;</span> Them phu de
+              </button>
+              <button class="rail-btn" onclick="openVoiceover()">
+                <span class="rail-icon">&#127897;&#65039;</span> AI doc giong noi
+              </button>
+              <button class="rail-btn" onclick="doSubtitleThenVoice()">
+                <span class="rail-icon">&#128196;</span> Phu de + Giong noi
+              </button>
+            </div>
+
+            <div class="rail-section">
+              <div class="rail-title">&#128228; Xuat file</div>
+              <button class="rail-btn rail-green" onclick="doExport('tiktok')">
+                <span class="rail-icon">&#128242;</span> Xuat TikTok
+              </button>
+              <button class="rail-btn rail-green" onclick="doExport('facebook')">
+                <span class="rail-icon">&#128152;</span> Xuat Facebook
+              </button>
+              <button class="rail-btn rail-green" onclick="doExport('youtube')">
+                <span class="rail-icon">&#9654;&#65039;</span> Xuat YouTube
+              </button>
+              <button class="rail-btn rail-green" onclick="doExport('instagram')">
+                <span class="rail-icon">&#128248;</span> Xuat Instagram
+              </button>
+            </div>
+
+            <div class="rail-section">
+              <div class="rail-title">&#128295; Cong cu</div>
+              <button class="rail-btn" onclick="doThumbnail()">
+                <span class="rail-icon">&#128444;&#65039;</span> Tao Thumbnail AI
+              </button>
+              <button class="rail-btn rail-yellow" onclick="doViralScore()">
+                <span class="rail-icon">&#128202;</span> Cham diem Viral
+              </button>
+              <button class="rail-btn" onclick="doCheckDuplicate()">
+                <span class="rail-icon">&#128269;</span> Kiem tra trung lap
+              </button>
+              <button class="rail-btn rail-yellow" onclick="openMusicPicker()">
+                <span class="rail-icon">&#127925;</span> Chon nhac &amp; SFX
+              </button>
+              <button class="rail-btn" onclick="openVoiceStyle()" id="btnVoiceStyle">
+                <span class="rail-icon">&#127917;</span> Hoc giong &amp; ngu dieu
+              </button>
+            </div>
+
+            <div class="progress-bar" id="railProgress" style="margin:4px 0">
+              <div class="progress-fill" id="railFill" style="width:0%"></div>
+            </div>
+            <p class="progress-label" id="railLabel" style="padding:0 2px"></p>
+
+          </div>
+
+        </div>
+      </div><!-- /page-generate -->
+
+      <!-- PAGE: HISTORY -->
+      <div class="page" id="page-history">
+        <div style="max-width:900px">
+          <div class="history-header">
+            <h2 style="font-size:17px">&#128218; Lich su tao video</h2>
+            <input class="history-search" placeholder="&#128269; Tim theo ten xe..." oninput="filterHistory(this.value)">
+          </div>
+          <div class="history-grid" id="historyGrid">
+            <div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chua co video nao duoc tao</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: SETTINGS -->
+      <div class="page" id="page-settings">
+        <div style="max-width:700px">
+          <h2 style="font-size:17px;margin-bottom:18px">Cai dat</h2>
+          <div class="settings-section">
+            <div class="settings-title">&#129302; Chon model AI</div>
+            <div class="model-cards">
+              <div class="model-card" data-model="claude-haiku-4-5-20251001" onclick="selectModel(this)">
+                <div class="model-name">&#9889; Haiku</div>
+                <div class="model-price">~$0.80/M token</div>
+                <div class="model-desc">Nhanh va re nhat, phu hop cho caption don gian</div>
+              </div>
+              <div class="model-card selected" data-model="claude-sonnet-5" onclick="selectModel(this)">
+                <div class="model-name">&#129504; Sonnet 5</div>
+                <div class="model-price">~$3/M token</div>
+                <div class="model-desc">Can bang giua chat luong va toc do</div>
+                <span class="model-rec">&#11088; Khuyen nghi</span>
+              </div>
+              <div class="model-card" data-model="claude-opus-4-8" onclick="selectModel(this)">
+                <div class="model-name">&#128142; Opus 4.8</div>
+                <div class="model-price">~$15/M token</div>
+                <div class="model-desc">Manh nhat, tot nhat cho script phuc tap</div>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-title">&#8505;&#65039; Trang thai he thong</div>
+            <div class="card" style="margin:0">
+              <div class="status-dot" style="margin-bottom:8px"><div class="dot" id="settingApiDot"></div> Claude API: <span id="settingApiStatus">Dang kiem tra...</span></div>
+              <div class="status-dot"><div class="dot" id="settingFfmpegDot"></div> FFmpeg: <span id="settingFfmpegStatus">Dang kiem tra...</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL: Voice Style -->
+<div class="modal-overlay" id="voiceStyleModal" onclick="closeModalClick('voiceStyleModal',event)">
+  <div class="modal-box" style="max-width:580px">
+    <div class="modal-title">
+      &#127917; Hoc giong &amp; ngu dieu
+      <button class="modal-close" onclick="closeModal('voiceStyleModal')">&#10005;</button>
+    </div>
+    <p class="modal-hint">Dan caption / script mau de AI hoc giong dieu. Toi da 3 nguoi. AI se ap dung khi sinh noi dung.</p>
+    <div class="vs-slot-tabs" id="vsSlotTabs">
+      <button class="vs-slot-tab active" id="vsTab_person_1" onclick="vsSelectSlot('person_1')">
+        <span class="vs-dot"></span><span id="vsTabLabel_person_1">Nguoi 1</span>
+      </button>
+      <button class="vs-slot-tab" id="vsTab_person_2" onclick="vsSelectSlot('person_2')">
+        <span class="vs-dot"></span><span id="vsTabLabel_person_2">Nguoi 2</span>
+      </button>
+      <button class="vs-slot-tab" id="vsTab_person_3" onclick="vsSelectSlot('person_3')">
+        <span class="vs-dot"></span><span id="vsTabLabel_person_3">Nguoi 3</span>
+      </button>
+    </div>
+    <div class="vs-profile-header">
+      <input class="vs-name-input" id="vsNameInput" placeholder="Ten nguoi (VD: Admin, Chi Lan...)"
+        onblur="vsRename()" onkeydown="if(event.key==='Enter')vsRename()">
+      <button class="pedit-btn reset" style="white-space:nowrap" onclick="vsClear()">&#128465;&#65039; Xoa het</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:5px" id="vsSampleCountLabel">Chua co mau</div>
+    <div class="vs-samples-list" id="vsSamplesList"></div>
+
+    <!-- Upload video/audio -->
+    <div class="form-row" style="margin-bottom:8px">
+      <label class="form-label">&#127911; Hoc tu file video / MP3</label>
+      <div class="vs-upload-zone" id="vsUploadZone" onclick="document.getElementById('vsFileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="event.preventDefault();this.classList.remove('drag-over');vsHandleFileDrop(event)">
+        <input type="file" id="vsFileInput" accept="video/*,audio/*,.mp3,.mp4,.mov,.m4a,.wav,.ogg"
+          style="display:none" onchange="vsUploadFile(this)">
+        <div id="vsUploadIcon" style="font-size:24px;margin-bottom:4px">&#127911;</div>
+        <div id="vsUploadText" style="font-size:12px;color:var(--muted)">
+          Keo tha hoac <strong style="color:var(--accent2)">bam chon</strong> file video / MP3<br>
+          <span style="font-size:11px">AI se tu dong trich xuat loi thoai (Whisper)</span>
+        </div>
+        <div id="vsUploadProgress" style="display:none;margin-top:8px;width:100%">
+          <div style="background:rgba(124,58,237,0.15);border-radius:4px;height:4px;overflow:hidden">
+            <div id="vsUploadBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width 0.3s"></div>
+          </div>
+          <div id="vsUploadMsg" style="font-size:11px;color:var(--accent2);margin-top:4px;text-align:center">Dang xu ly...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-bottom:6px">
+      <label class="form-label">&#9997;&#65039; Them mau moi (dan caption / script)</label>
+      <textarea id="vsNewSample" rows="3" placeholder="Dan noi dung caption, script cua nguoi nay...&#10;Toi thieu 20 ky tu.&#10;(hoac de trong neu da upload file o tren)"></textarea>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <input id="vsNewLabel" placeholder="Nhan mau (tuy chon)" style="flex:1;padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-size:12px">
+      <button class="btn btn-secondary" style="width:auto;padding:6px 14px" onclick="vsAddSample()">&#10133; Them</button>
+    </div>
+    <div id="vsPatternWrap" style="display:none">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">&#128202; Pattern da hoc</div>
+      <div class="vs-pattern-box" id="vsPatternBox"></div>
+    </div>
+    <div class="modal-actions" style="margin-top:14px">
+      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceStyleModal')">Dong</button>
+      <button class="btn btn-secondary" style="width:auto" id="btnVsActivate" onclick="vsToggleActive()">&#9745;&#65039; Dung giong nay</button>
+      <button class="btn btn-primary" style="width:auto" id="btnVsAnalyze" onclick="vsAnalyze()">&#129504; Phan tich &amp; Hoc</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Voiceover -->
+<div class="modal-overlay" id="voiceoverModal" onclick="closeModalClick('voiceoverModal',event)">
+  <div class="modal-box">
+    <div class="modal-title">
+      &#127897;&#65039; AI doc giong noi
+      <button class="modal-close" onclick="closeModal('voiceoverModal')">&#10005;</button>
+    </div>
+    <p class="modal-hint">AI se doc van ban thanh giong noi tieng Viet. Phu hop lam voiceover cho video.</p>
+    <div class="form-row">
+      <label class="form-label">Van ban can doc</label>
+      <textarea id="voiceText" rows="5" placeholder="Nhap noi dung can AI doc...&#10;Tip: bam 'Lay tu Script' de tu dong dien."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="rail-btn" style="width:auto;padding:6px 12px;font-size:12px" onclick="fillVoiceFromScript()">&#128203; Lay tu Script</button>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Giong doc</label>
+      <select id="voiceSelect">
+        <option value="vi-VN-HoaiMyNeural">&#127897;&#65039; Hoai My &#8212; Nu, giong Nam Bo</option>
+        <option value="vi-VN-NamMinhNeural">&#127897;&#65039; Nam Minh &#8212; Nam, giong Ha Noi</option>
+      </select>
+    </div>
+    <div id="voiceResultBox" style="display:none;margin-top:12px">
+      <label class="form-label">Ket qua</label>
+      <audio id="voiceAudio" controls style="width:100%;margin-bottom:8px;border-radius:8px"></audio>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceoverModal')">Dong</button>
+      <a id="voiceDownloadBtn" class="modal-file-btn" style="display:none" download>&#128229; Tai ve MP3</a>
+      <button class="btn btn-primary" id="btnVoiceSend" style="width:auto" onclick="sendVoiceover()">&#127897;&#65039; Tao giong noi</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Music Picker -->
+<div class="modal-overlay" id="musicModal" onclick="closeModalClick('musicModal',event)">
+  <div class="music-modal-box">
+    <div class="music-modal-head">
+      <h2>&#127925; Chon nhac &amp; SFX</h2>
+      <button class="modal-close" onclick="closeModal('musicModal')">&#10005;</button>
+    </div>
+    <div class="music-tab-bar">
+      <div class="music-tab active" onclick="switchMusicTab('music',this)">&#127925; Nhac nen</div>
+      <div class="music-tab" onclick="switchMusicTab('sfx',this)">&#128266; SFX</div>
+    </div>
+    <div class="music-search-row">
+      <input class="music-search" id="musicSearch" placeholder="&#128269; Tim theo ten..." oninput="filterMusic(this.value)">
+      <span class="music-count" id="musicCount">0 bai</span>
+    </div>
+    <div class="music-list" id="musicList"></div>
+    <div class="music-mini-player" id="musicMiniPlayer">
+      <div class="mini-now">&#9654; Dang nghe: <strong id="miniNowName">&#8212;</strong></div>
+      <div class="mini-controls">
+        <span style="font-size:11px;color:var(--muted)">&#128266;</span>
+        <input type="range" class="mini-vol" id="miniVol" min="0" max="1" step="0.05" value="0.7" oninput="setPreviewVol(this.value)">
+        <input type="range" class="mini-progress" id="miniProgress" min="0" max="100" value="0" oninput="seekPreview(this.value)">
+        <span style="font-size:11px;color:var(--muted)" id="miniTime">0:00</span>
+      </div>
+    </div>
+    <div class="music-footer">
+      <div class="music-selected-info">Da chon: <strong id="musicSelectedCount">0</strong> bai</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="width:auto;margin:0" onclick="clearMusicSelection()">Bo chon het</button>
+        <button class="btn btn-primary" style="width:auto;margin:0" onclick="applyMusicSelection()">&#10003; Ap dung</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PROMPT TEMPLATES ────────────────────────────────────────────────
+let PROMPT_TEMPLATES = {
+  hook: `Vai tro: Ban la chuyen gia content TikTok xe dien hang dau Viet Nam.
+Nhiem vu: Viet 5 hook mo dau viral (3-5 giay dau tien) cho video xe {TEN_XE}{MAU_XE}.
+Yeu cau:
+- Moi hook phai tao cam giac "phai xem tiep" ngay lap tuc
+- Dung cac dang: cau hoi gay soc, tuyen bo tao bao, tinh huong bat ngo, so sanh doc dao
+- Phu hop platform: {PLATFORM}
+- Ngan gon, manh, khong vuot 10 tu moi hook
+- Cuoi moi hook them goi y hieu ung / am thanh nen
+Format: Danh so 1-5, ghi ro: [Hook] + [Goi y hieu ung]`,
+
+  script: `Vai tro: Scriptwriter chuyen nghiep cho cua hang xe dien Cong Khang Bike Hai Phong.
+Nhiem vu: Viet script hoan chinh {THOI_LUONG} cho video {TEN_XE}{MAU_XE}.
+Cau truc bat buoc:
+1. Hook (0-3 giay): Cau mo dau gay soc
+2. Gioi thieu (3-8 giay): Ten xe, diem noi bat: {DIEM_NOI_BAT}
+3. Demo (8-20 giay): Mieu ta canh quay thuc te
+4. Social proof (20-25 giay): Khach hang phan hoi
+5. CTA (25-30 giay): Keu goi den shop
+Ghi chu: Viet loi thoai tu nhien, khong doc nhu robot.`,
+
+  funny: `Vai tro: Comedian content creator chuyen mang xe dien len TikTok.
+Nhiem vu: Viet kich ban hai huoc gioi thieu xe {TEN_XE}{MAU_XE} cho {DOI_TUONG}.
+Phong cach: Hai huoc Gen Z, dung meme, tinh huong cuoc song hang ngay.
+- Co tinh huong: 1 nhan vat dang gap van de (ket xe, het tien xang)
+- Xe {TEN_XE} xuat hien la giai phap
+- Ket thuc bang CTA nhe nhang
+- {THOI_LUONG}`,
+
+  compare: `Vai tro: Chuyen gia phan tich xe dien.
+Nhiem vu: Viet noi dung so sanh {TEN_XE}{MAU_XE} voi dong tuong duong.
+Cac muc:
+1. Gia ban vs gia tri nhan duoc
+2. Thong so ky thuat (pin, toc do, trong luong)
+3. Thiet ke & mau sac
+4. Bao hanh & dich vu
+5. Danh gia tong the
+Format: Bang so sanh hoac bullet points.`,
+
+  tech: `Vai tro: Ky su xe dien giai thich de hieu.
+Nhiem vu: Giai thich thong so ky thuat xe {TEN_XE}{MAU_XE} cho nguoi khong chuyen.
+Thong so: {DIEM_NOI_BAT}
+Cach tiep can:
+- So sanh voi thu quen thuoc (VD: pin nhu 5 dien thoai)
+- Neu loi ich thuc te
+- Them FAQ
+Format: Moi thong so 2-3 cau, viet nhu giang cho ban be.`,
+
+  promo: `Vai tro: Marketing manager Cong Khang Bike Hai Phong.
+Nhiem vu: Viet noi dung quang cao khuyen mai xe {TEN_XE}{MAU_XE}.
+Thong tin: {DIEM_NOI_BAT}
+Yeu cau:
+- Tao urgency: thoi han, so luong gioi han
+- Nhan manh gia tri: tinh toan tiet kiem
+- Social proof ngan
+- CTA ro rang
+- {THOI_LUONG}
+Format: Caption + 3 bien the cho TikTok/Facebook/Zalo.`,
+
+  faq: `Vai tro: Tu van ban hang xe dien.
+Nhiem vu: Tao 10 cau hoi thuong gap (FAQ) ve xe {TEN_XE}{MAU_XE}.
+Chu de:
+1. Gia & thanh toan
+2. Pin & pham vi su dung
+3. Bao hanh & sua chua
+4. So sanh voi xe xang
+5. Phu hop voi {DOI_TUONG}
+Format: Q: [Cau hoi] / A: [Tra loi 2-3 cau]`,
+
+  trend: `Vai tro: TikTok trend expert xe dien.
+Nhiem vu: Tao kich ban bat trend cho xe {TEN_XE}{MAU_XE} tren {PLATFORM}.
+Cac dang trend:
+- POV: Ban vua mua xe {TEN_XE}
+- Before/After: truoc va sau khi co xe
+- Things I wish I knew before buying
+Yeu cau:
+- 3 concept cu the, chi tiet cach quay
+- Goi y hashtag (10-15 hashtag)`,
+
+  cta: `Vai tro: Conversion specialist.
+Nhiem vu: Viet 10 CTA manh cho video xe {TEN_XE}{MAU_XE}.
+Phan loai:
+- 3 CTA cho binh luan
+- 3 CTA cho nhan tin / lien he
+- 2 CTA cho den shop
+- 2 CTA cho chia se
+Moi CTA: Ngan (duoi 15 tu), co dong tu hanh dong, tao urgency.`,
+
+  review: `Vai tro: Content strategist social proof.
+Nhiem vu: Viet kich ban review cam nhan khach hang ve xe {TEN_XE}{MAU_XE}.
+Cau truc:
+1. Gioi thieu ngan (hoc sinh/di lam/giao hang)
+2. Ly do chon xe (gia, thiet ke, pin)
+3. Cam nhan sau {THOI_LUONG}: thich gi, van de gi
+4. Khuyen ai nen/khong nen mua
+5. Danh gia tong the (1-5 sao)
+Viet chan thuc, co ca mat han che de tang tin cay.`,
+};
+
+const _DEFAULT_TEMPLATES = Object.freeze(Object.assign({}, PROMPT_TEMPLATES));
+
+(function loadUserTemplates() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
+    Object.assign(PROMPT_TEMPLATES, saved);
+  } catch(e) {}
+})();
+
+let _activePromptKey = null;
+const _CHIP_LABELS = {
+  hook:'Hook viral', script:'Script 30s', funny:'Hai huoc',
+  compare:'So sanh', tech:'Thong so KT', promo:'Khuyen mai',
+  faq:'FAQ', trend:'Bat trend', cta:'CTA manh', review:'Review KH'
+};
+
+function _showEditBar(key) {
+  const bar = document.getElementById('promptEditBar');
+  const label = document.getElementById('promptActiveLabel');
+  const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
+  label.textContent = '📌 ' + (_CHIP_LABELS[key] || key) + (saved[key] ? ' ✦' : '');
+  bar.classList.add('visible');
+}
+
+function focusPromptEdit() {
+  const ta = document.getElementById('customPromptInline');
+  ta.classList.add('editing'); ta.focus();
+  toast('Chinh sua xong bam Luu de cap nhat template', 'ok');
+}
+
+function savePromptTemplate() {
+  if (!_activePromptKey) { toast('Chua chon prompt mau', 'err'); return; }
+  const ta = document.getElementById('customPromptInline');
+  const newText = ta.value.trim();
+  if (!newText) { toast('Noi dung trong', 'err'); return; }
+  PROMPT_TEMPLATES[_activePromptKey] = newText;
+  try {
+    const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
+    saved[_activePromptKey] = newText;
+    localStorage.setItem('ckb_user_prompts', JSON.stringify(saved));
+  } catch(e) {}
+  ta.classList.remove('editing');
+  _showEditBar(_activePromptKey);
+  toast('Da luu template', 'ok');
+}
+
+function resetPromptTemplate() {
+  if (!_activePromptKey) return;
+  const orig = _DEFAULT_TEMPLATES[_activePromptKey];
+  if (!orig) return;
+  PROMPT_TEMPLATES[_activePromptKey] = orig;
+  try {
+    const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
+    delete saved[_activePromptKey];
+    localStorage.setItem('ckb_user_prompts', JSON.stringify(saved));
+  } catch(e) {}
+  const ta = document.getElementById('customPromptInline');
+  ta.value = orig.replace(/{TEN_XE}/g, document.getElementById('xe').value||'xe dien')
+               .replace(/{MAU_XE}/g, document.getElementById('mau').value ? ' '+document.getElementById('mau').value : '')
+               .replace(/{DIEM_NOI_BAT}/g, document.getElementById('diem').value||'pin cao')
+               .replace(/{DOI_TUONG}/g, document.getElementById('doituong').value||'hoc sinh')
+               .replace(/{THOI_LUONG}/g, S.duration||'30 giay')
+               .replace(/{PLATFORM}/g, S.platforms.join(' va ')||'TikTok');
+  ta.classList.remove('editing');
+  _showEditBar(_activePromptKey);
+  toast('Da khoi phuc template goc', 'ok');
+}
+
+function togglePromptMenu() {
+  const panel = document.getElementById('promptMenuPanel');
+  const btn = document.getElementById('promptToggleBtn');
+  const arrow = document.getElementById('promptArrow');
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('rotated', !isOpen);
+}
+
+function usePrompt(key) {
+  const xe = document.getElementById('xe').value || 'xe dien';
+  const mau = document.getElementById('mau').value ? ' ' + document.getElementById('mau').value : '';
+  const diem = document.getElementById('diem').value || 'pin cao, thiet ke dep, gia tot';
+  const doituong = document.getElementById('doituong').value || 'hoc sinh, sinh vien';
+  const thoiluong = S.duration || '30 giay';
+  const platform = S.platforms.join(' va ') || 'TikTok';
+  let text = (PROMPT_TEMPLATES[key] || '')
+    .replace(/{TEN_XE}/g, xe).replace(/{MAU_XE}/g, mau)
+    .replace(/{DIEM_NOI_BAT}/g, diem).replace(/{DOI_TUONG}/g, doituong)
+    .replace(/{THOI_LUONG}/g, thoiluong).replace(/{PLATFORM}/g, platform);
+  const ta = document.getElementById('customPromptInline');
+  ta.value = text; ta.classList.remove('editing'); ta.focus();
+  document.querySelectorAll('.prompt-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('promptMenuPanel').style.display = 'none';
+  document.getElementById('promptToggleBtn').classList.remove('open');
+  document.getElementById('promptArrow').classList.remove('rotated');
+  _activePromptKey = key;
+  _showEditBar(key);
+  toast('Da chon prompt: ' + event.target.textContent, 'ok');
+}
+
+// ── STATE ────────────────────────────────────────────────────────────
+const S = {
+  videoPath: null, pendingFile: null, duration: '30 giay',
+  model: 'claude-sonnet-5', platforms: ['TikTok', 'Facebook'],
+  historyTimeout: null, selectedMusic: [], selectedMusicNames: [],
+  uploadMode: 'single', scenes: [],
+};
+
+// ── INIT ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadDropdowns();
+  checkStatus();
+  loadHistory();
+  document.querySelectorAll('.model-opt').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.model-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      S.model = el.dataset.model;
+      document.getElementById('modelLabel').textContent = el.querySelector('.opt-name').textContent;
+      document.getElementById('modelMenu').classList.remove('open');
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.model-badge') && !e.target.closest('.model-dropdown'))
+      document.getElementById('modelMenu').classList.remove('open');
+  });
+  const zone = document.getElementById('sceneAddZone');
+  if (zone) {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('dragover');
+      Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('video/')).forEach(addScene);
+    });
+  }
+});
+
+async function checkStatus() {
+  try {
+    const d = await fetch('/api/status').then(r => r.json());
+    const ok = d.api;
+    document.getElementById('apiBadge').className = 'api-badge' + (ok ? '' : ' offline');
+    document.getElementById('apiBadge').textContent = ok ? '● Online' : '● Offline';
+    document.getElementById('apiDot').className = 'dot ' + (ok ? 'ok' : 'err');
+    document.getElementById('ffmpegDot').className = 'dot ' + (d.ffmpeg ? 'ok' : 'warn');
+    if (document.getElementById('settingApiDot')) {
+      document.getElementById('settingApiDot').className = 'dot ' + (ok ? 'ok' : 'err');
+      document.getElementById('settingApiStatus').textContent = ok ? 'Ket noi OK' : 'Loi ket noi';
+      document.getElementById('settingFfmpegDot').className = 'dot ' + (d.ffmpeg ? 'ok' : 'warn');
+      document.getElementById('settingFfmpegStatus').textContent = d.ffmpeg ? 'San sang' : 'Chua cai';
+    }
+  } catch(e) {
+    document.getElementById('apiBadge').className = 'api-badge offline';
+    document.getElementById('apiBadge').textContent = '● Offline';
+  }
+}
+
+async function loadDropdowns() {
+  try {
+    const d = await fetch('/api/config').then(r => r.json());
+    const xeEl = document.getElementById('xe');
+    xeEl.innerHTML = '<option value="">-- Chon xe --</option>' +
+      d.xe_list.map(x => `<option value="${x}">${x}</option>`).join('');
+    const mauEl = document.getElementById('mau');
+    mauEl.innerHTML = '<option value="">-- Chon mau --</option>' +
+      d.mau_list.map(m => `<option value="${m}">${m}</option>`).join('');
+    const loaiEl = document.getElementById('loai');
+    loaiEl.innerHTML = d.loai_list.map(l => `<option value="${l}">${l}</option>`).join('');
+    const dtEl = document.getElementById('doituong');
+    dtEl.innerHTML = d.doi_tuong_list.map(dt => `<option value="${dt}">${dt}</option>`).join('');
+  } catch(e) {}
+}
+
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+function toggleModelMenu() {
+  document.getElementById('modelMenu').classList.toggle('open');
+}
+
+function selectModel(el) {
+  document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.model = el.dataset.model;
+}
+
+function setPill(el, val) {
+  document.querySelectorAll('.duration-pills .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  S.duration = val;
+}
+
+function togglePlatformPill(el, platform) {
+  el.classList.toggle('active');
+  if (el.classList.contains('active')) {
+    if (!S.platforms.includes(platform)) S.platforms.push(platform);
+  } else {
+    S.platforms = S.platforms.filter(p => p !== platform);
+  }
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── UPLOAD MODE ───────────────────────────────────────────────────────
+function setUploadMode(mode) {
+  S.uploadMode = mode;
+  document.getElementById('utabSingle').classList.toggle('active', mode === 'single');
+  document.getElementById('utabMulti').classList.toggle('active', mode === 'multi');
+  document.getElementById('uploadSingle').style.display = mode === 'single' ? '' : 'none';
+  document.getElementById('uploadMulti').style.display = mode === 'multi' ? '' : 'none';
+}
+
+// ── SCENE MANAGEMENT ──────────────────────────────────────────────────
+let _previewSceneIdx = 0;
+
+function onSceneFilesSelect(input) {
+  if (!input.files.length) return;
+  Array.from(input.files).forEach(f => addScene(f));
+  input.value = '';
+}
+
+function addScene(file) {
+  const url = URL.createObjectURL(file);
+  S.scenes.push({ file, name: file.name, size: file.size, url });
+  if (S.scenes.length === 1) _previewSceneIdx = 0;
+  renderScenes();
+  updateScenePreview(_previewSceneIdx);
+}
+
+function removeScene(idx) {
+  URL.revokeObjectURL(S.scenes[idx].url);
+  S.scenes.splice(idx, 1);
+  if (_previewSceneIdx >= S.scenes.length) _previewSceneIdx = Math.max(0, S.scenes.length - 1);
+  renderScenes();
+  if (S.scenes.length > 0) updateScenePreview(_previewSceneIdx);
+  else {
+    document.getElementById('videoPreview').style.display = 'none';
+    document.getElementById('videoPlaceholder').style.display = '';
+    document.getElementById('videoMeta').style.display = 'none';
+    document.getElementById('scenePreviewNav').classList.remove('visible');
+  }
+}
+
+function moveScene(idx, dir) {
+  const arr = S.scenes, newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= arr.length) return;
+  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+  if (_previewSceneIdx === idx) _previewSceneIdx = newIdx;
+  else if (_previewSceneIdx === newIdx) _previewSceneIdx = idx;
+  renderScenes(); updateScenePreview(_previewSceneIdx);
+}
+
+function previewScene(dir) {
+  const newIdx = _previewSceneIdx + dir;
+  if (newIdx < 0 || newIdx >= S.scenes.length) return;
+  _previewSceneIdx = newIdx;
+  updateScenePreview(newIdx);
+  document.querySelectorAll('.scene-item').forEach((el, i) => {
+    el.style.borderColor = i === newIdx ? 'var(--accent2)' : '';
+  });
+}
+
+function updateScenePreview(idx) {
+  if (!S.scenes.length) return;
+  const sc = S.scenes[idx];
+  const vid = document.getElementById('videoPreview');
+  vid.src = sc.url; vid.style.display = 'block'; vid.load();
+  document.getElementById('videoPlaceholder').style.display = 'none';
+  document.getElementById('videoMeta').style.display = 'block';
+  document.getElementById('videoSize').textContent = (sc.size/1024/1024).toFixed(1) + ' MB';
+  document.getElementById('videoDuration').textContent = '';
+  const nav = document.getElementById('scenePreviewNav');
+  nav.classList.toggle('visible', S.scenes.length > 1);
+  document.getElementById('spnavLabel').textContent = 'Canh ' + (idx+1) + ' / ' + S.scenes.length;
+  document.getElementById('spnavName').textContent = sc.name;
+  document.getElementById('spnavPrev').disabled = idx === 0;
+  document.getElementById('spnavNext').disabled = idx === S.scenes.length - 1;
+  S.pendingFile = sc.file;
+}
+
+function renderScenes() {
+  const list = document.getElementById('sceneList');
+  const n = S.scenes.length;
+  document.getElementById('sceneCount').textContent = n;
+  document.getElementById('sceneCountWrap').style.display = n > 0 ? 'block' : 'none';
+  list.innerHTML = S.scenes.map((sc, i) => `
+    <div class="scene-item" draggable="true"
+      style="${i===_previewSceneIdx?'border-color:var(--accent2)':''}"
+      ondragstart="sceneDragStart(event,${i})"
+      ondragover="sceneDragOver(event,${i})"
+      ondrop="sceneDrop(event,${i})"
+      ondragleave="this.classList.remove('drag-over')"
+      onclick="previewSceneByClick(${i})">
+      <div class="scene-num">${i+1}</div>
+      <div class="scene-thumb"><video src="${sc.url}" style="width:100%;height:100%;object-fit:cover" preload="metadata" muted></video></div>
+      <div class="scene-info">
+        <div class="scene-name" title="${sc.name}">${sc.name}</div>
+        <div class="scene-size">${(sc.size/1024/1024).toFixed(1)} MB</div>
+      </div>
+      <div class="scene-move-btns">
+        <button class="smove" onclick="event.stopPropagation();moveScene(${i},-1)" ${i===0?'disabled':''}>&#9650;</button>
+        <button class="smove" onclick="event.stopPropagation();moveScene(${i},1)" ${i===n-1?'disabled':''}>&#9660;</button>
+      </div>
+      <button class="scene-del" onclick="event.stopPropagation();removeScene(${i})">&#10005;</button>
+    </div>`).join('');
+}
+
+function previewSceneByClick(idx) {
+  _previewSceneIdx = idx;
+  updateScenePreview(idx);
+  document.querySelectorAll('.scene-item').forEach((el, i) => {
+    el.style.borderColor = i === idx ? 'var(--accent2)' : '';
+  });
+}
+
+let _dragSceneIdx = null;
+function sceneDragStart(e, idx) { _dragSceneIdx = idx; e.dataTransfer.effectAllowed = 'move'; }
+function sceneDragOver(e, idx) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function sceneDrop(e, idx) {
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  if (_dragSceneIdx === null || _dragSceneIdx === idx) return;
+  const arr = S.scenes, dragged = arr.splice(_dragSceneIdx, 1)[0];
+  arr.splice(idx, 0, dragged); _dragSceneIdx = null; renderScenes();
+}
+
+// ── FILE UPLOAD ───────────────────────────────────────────────────────
+function onFileSelect(input) { if (input.files[0]) handleFile(input.files[0]); }
+function handleFile(file) {
+  const url = URL.createObjectURL(file);
+  const vid = document.getElementById('videoPreview');
+  vid.src = url; vid.style.display = 'block';
+  document.getElementById('videoPlaceholder').style.display = 'none';
+  document.getElementById('videoSize').textContent = (file.size/1024/1024).toFixed(1) + ' MB';
+  document.getElementById('videoMeta').style.display = 'block';
+  document.getElementById('fileSelected').style.display = 'block';
+  document.getElementById('fileName').textContent = file.name;
+  S.pendingFile = file;
+  toast('Video da chon: ' + file.name, 'ok');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────
+let _toastTimer;
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show ' + (type||'');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+function showToast(msg, type) { toast(msg, type); }
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function setLoading(btn, on) {
+  if (!btn) return;
+  btn.disabled = on;
+  if (on) btn.classList.add('loading'); else btn.classList.remove('loading');
+}
+
+// API base: dùng Railway URL khi deploy, rỗng khi local
+const _API = (typeof window.CKB_API_BASE !== 'undefined' && window.CKB_API_BASE && !window.CKB_API_BASE.includes('REPLACE'))
+  ? window.CKB_API_BASE.replace(/\/$/, '')
+  : '';
+
+async function postJSON(url, body) {
+  const r = await fetch(_API + url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json().catch(() => ({detail: r.statusText})); throw new Error(e.detail || r.statusText); }
+  return r.json();
+}
+
+async function getJSON(url) {
+  const r = await fetch(_API + url);
+  if (!r.ok) throw new Error(r.statusText);
+  return r.json();
+}
+
+function copyText(id) {
+  const t = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(t).then(() => toast('Da copy!', 'ok'));
+}
+
+function railProgress(pct, label) {
+  const bar = document.getElementById('railProgress');
+  const fill = document.getElementById('railFill');
+  const lbl = document.getElementById('railLabel');
+  bar.classList.toggle('active', pct > 0);
+  fill.style.width = pct + '%';
+  lbl.textContent = label || '';
+}
+
+function autoFill(selId, val, badgeId, prefix) {
+  const sel = document.getElementById(selId);
+  for (let o of sel.options) { if (o.value.toLowerCase().includes(val.toLowerCase())) { sel.value = o.value; break; } }
+  const b = document.getElementById(badgeId);
+  b.textContent = prefix + val; b.style.display = 'inline-flex';
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalClick(id, e) { if (e.target.id === id) closeModal(id); }
+
+// ── ANALYZE ───────────────────────────────────────────────────────────
+async function doAnalyze() {
+  if (!S.pendingFile) { toast('Chua chon video', 'err'); return; }
+  const btn = document.getElementById('btnAnalyze');
+  railProgress(20, 'Dang upload video...');
+  setLoading(btn, true);
+  const fd = new FormData();
+  fd.append('file', S.pendingFile);
+  try {
+    railProgress(50, 'AI dang phan tich video...');
+    const d = await fetch('/api/analyze', { method:'POST', body: fd }).then(r => r.json());
+    railProgress(100, '');
+    S.videoPath = d.video_path;
+    if (d.duration) document.getElementById('videoDuration').textContent = d.duration + 's';
+    document.getElementById('analysisCard').style.display = 'block';
+    document.getElementById('visionBox').textContent = d.vision || '(Khong co du lieu)';
+    document.getElementById('qualityBox').textContent = d.quality || '(Khong co du lieu)';
+    if (d.xe_detect) autoFill('xe', d.xe_detect, 'xeDetect', '');
+    if (d.mau_detect) autoFill('mau', d.mau_detect, 'mauDetect', '');
+    if (d.loai_detect) autoFill('loai', d.loai_detect, 'loaiDetect', '');
+    toast('Phan tich xong!', 'ok');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setLoading(btn, false);
+  setTimeout(() => railProgress(0,''), 1500);
+}
+
+// ── GENERATE ──────────────────────────────────────────────────────────
+async function doGenerate() {
+  const xe = document.getElementById('xe').value;
+  if (!xe) { toast('Chon ten xe truoc', 'err'); return; }
+  const btn = document.getElementById('btnGenerate');
+  setLoading(btn, true);
+  railProgress(30, 'Dang goi Claude AI...');
+  const body = {
+    ten_xe: xe,
+    mau_xe: document.getElementById('mau').value,
+    loai_video: document.getElementById('loai').value,
+    doi_tuong: document.getElementById('doituong').value,
+    diem_noi_bat: document.getElementById('diem').value,
+    thoi_luong: S.duration,
+    platforms: S.platforms,
+    model: S.model,
+    video_path: S.videoPath || '',
+    voice_slot: typeof _vsActiveSlot !== 'undefined' ? (_vsActiveSlot || '') : '',
+  };
+  try {
+    railProgress(60, 'AI dang viet...');
+    const d = await postJSON('/api/generate', body);
+    railProgress(100, '');
+    document.getElementById('scriptBox').textContent = d.script || '';
+    document.getElementById('captionBox').textContent = d.caption || '';
+    document.getElementById('hashtagBox').textContent = d.hashtag || '';
+    document.getElementById('outputCard').style.display = 'block';
+    saveHistory({ xe, mau: body.mau_xe, script: d.script });
+    toast('Da sinh noi dung!', 'ok');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setLoading(btn, false);
+  setTimeout(() => railProgress(0,''), 1500);
+}
+
+// ── CUSTOM GENERATE ───────────────────────────────────────────────────
+async function doCustomGenerate() {
+  const prompt = document.getElementById('customPromptInline').value.trim();
+  if (!prompt) { toast('Nhap prompt o Step 3 truoc', 'err'); return; }
+  const btn = document.getElementById('btnCustom');
+  setLoading(btn, true);
+  railProgress(20, 'Dang gui prompt tuy chinh...');
+  try {
+    railProgress(60, 'AI dang xu ly...');
+    const d = await postJSON('/api/custom_generate', {
+      prompt, model: S.model,
+      ten_xe: document.getElementById('xe').value,
+      platforms: S.platforms,
+    });
+    railProgress(100, '');
+    document.getElementById('scriptBox').textContent = d.result || '';
+    document.getElementById('outputCard').style.display = 'block';
+    switchTab('script', document.querySelector('.tab-btn'));
+    toast('Da xu ly xong!', 'ok');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setLoading(btn, false);
+  setTimeout(() => railProgress(0,''), 1500);
+}
+
+// ── RENDER VIDEO ──────────────────────────────────────────────────────
+async function doRenderVideo() {
+  if (!S.videoPath) { toast('Chua upload video hoac phan tich', 'err'); return; }
+  railProgress(20, 'Dang dung video...');
+  try {
+    setRenderStep(0);
+    const d = await postJSON('/api/render_video', {
+      video_path: S.videoPath,
+      ten_xe: document.getElementById('xe').value,
+      mau_xe: document.getElementById('mau').value,
+      loai_video: document.getElementById('loai').value,
+      script: document.getElementById('scriptBox').textContent,
+    });
+    railProgress(100, '');
+    if (d.ok) {
+      setRenderStep(4, 'done');
+      showRenderResult(d.url, d.filename);
+      document.getElementById('renderStatus').textContent = 'Hoan thanh!';
+      document.getElementById('renderPct').innerHTML = '100<span>%</span>';
+      document.getElementById('renderBarFill').style.width = '100%';
+      toast('Video da xuat!', 'ok');
+    }
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setTimeout(() => railProgress(0,''), 2000);
+}
+
+function setRenderStep(idx, state) {
+  for (let i = 0; i <= 4; i++) {
+    const el = document.getElementById('rStep' + i);
+    if (!el) continue;
+    el.className = 'render-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  }
+  const pct = Math.round((idx / 4) * 100);
+  document.getElementById('renderPct').innerHTML = pct + '<span>%</span>';
+  document.getElementById('renderBarFill').style.width = pct + '%';
+}
+
+function showRenderResult(url, filename) {
+  const wrap = document.getElementById('renderVideoWrap');
+  wrap.style.display = 'block';
+  document.getElementById('renderVideoPlayer').src = url;
+  document.getElementById('renderDlRow').innerHTML = `<a class="render-dl-btn primary" href="${url}" download="${filename}">&#128229; Tai ve</a>`;
+}
+
+// ── SUBTITLE ──────────────────────────────────────────────────────────
+async function doSubtitle() {
+  if (!S.videoPath) { toast('Chua co video', 'err'); return; }
+  railProgress(30, 'Dang trich xuat phu de...');
+  try {
+    const d = await postJSON('/api/subtitle', { video_path: S.videoPath });
+    if (d.ok) toast('Phu de: ' + d.filename, 'ok');
+    else toast('Loi: ' + d.error, 'err');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setTimeout(() => railProgress(0,''), 1500);
+}
+
+async function doSubtitleThenVoice() {
+  await doSubtitle();
+  openVoiceover();
+}
+
+// ── THUMBNAIL ─────────────────────────────────────────────────────────
+async function doThumbnail() {
+  if (!S.videoPath) { toast('Chua co video', 'err'); return; }
+  railProgress(30, 'Dang tao thumbnail...');
+  try {
+    const d = await postJSON('/api/thumbnail', { video_path: S.videoPath, ten_xe: document.getElementById('xe').value });
+    if (d.ok) toast('Thumbnail: ' + d.url, 'ok');
+    else toast('Loi: ' + d.error, 'err');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setTimeout(() => railProgress(0,''), 1500);
+}
+
+// ── VIRAL SCORE ───────────────────────────────────────────────────────
+async function doViralScore() {
+  const script = document.getElementById('scriptBox').textContent;
+  if (!script) { toast('Can sinh Script truoc', 'err'); return; }
+  toast('Dang cham diem viral...', '');
+  try {
+    const d = await postJSON('/api/score', { script, ten_xe: document.getElementById('xe').value });
+    toast(d.score_text || d.score, 'ok');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+}
+
+// ── CHECK DUPLICATE ───────────────────────────────────────────────────
+async function doCheckDuplicate() {
+  const script = document.getElementById('scriptBox').textContent;
+  if (!script) { toast('Can sinh Script truoc', 'err'); return; }
+  try {
+    const d = await postJSON('/api/check_duplicate', { script });
+    toast(d.is_duplicate ? 'Co the trung lap!' : 'Noi dung doc dao', d.is_duplicate ? 'err' : 'ok');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────
+async function doExport(platform) {
+  if (!S.videoPath) { toast('Chua co video de xuat', 'err'); return; }
+  railProgress(30, 'Dang xuat ' + platform + '...');
+  try {
+    const d = await postJSON('/api/export', { video_path: S.videoPath, platform });
+    if (d.ok) { toast('Xuat ' + platform + ': ' + d.filename, 'ok'); }
+    else toast('Loi: ' + d.error, 'err');
+  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  setTimeout(() => railProgress(0,''), 1500);
+}
+
+// ── HISTORY ───────────────────────────────────────────────────────────
+let _history = [];
+function saveHistory(item) {
+  item.date = new Date().toLocaleDateString('vi-VN');
+  _history.unshift(item);
+  if (_history.length > 50) _history.pop();
+  try { localStorage.setItem('ckb_history', JSON.stringify(_history)); } catch(e) {}
+  renderHistory(_history);
+}
+function loadHistory() {
+  try { _history = JSON.parse(localStorage.getItem('ckb_history') || '[]'); } catch(e) { _history = []; }
+  renderHistory(_history);
+}
+function filterHistory(q) {
+  renderHistory(_history.filter(h => !q || (h.xe||'').toLowerCase().includes(q.toLowerCase())));
+}
+function renderHistory(list) {
+  const grid = document.getElementById('historyGrid');
+  if (!grid) return;
+  if (!list.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chua co video nao</div></div>'; return; }
+  grid.innerHTML = list.map(h => `
+    <div class="history-card">
+      <div class="history-thumb">&#127916;</div>
+      <div class="history-info">
+        <div class="history-xe">${h.xe || 'Khong ro'}</div>
+        <div class="history-meta">${h.mau || ''}</div>
+        <div class="history-date">${h.date || ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── VOICE STYLE ──────────────────────────────────────────────────────
+let _vsSlot = 'person_1';
+let _vsActiveSlot = null;
+let _vsProfiles = {};
+
+async function openVoiceStyle() {
+  document.getElementById('voiceStyleModal').classList.add('open');
+  await vsLoadAll();
+  vsSelectSlot(_vsSlot);
+}
+
+async function vsLoadAll() {
+  try {
+    const d = await fetch('/api/voice_style/all').then(r => r.json());
+    for (const p of d.profiles) {
+      _vsProfiles[p.slot] = p;
+      const lbl = document.getElementById('vsTabLabel_' + p.slot);
+      const tab = document.getElementById('vsTab_' + p.slot);
+      if (lbl) lbl.textContent = p.display_name;
+      if (tab) {
+        tab.classList.toggle('has-samples', p.sample_count > 0);
+        tab.classList.toggle('analyzed', p.analyzed);
+      }
+    }
+  } catch(e) {}
+}
+
+async function vsSelectSlot(slot) {
+  _vsSlot = slot;
+  ['person_1','person_2','person_3'].forEach(s =>
+    document.getElementById('vsTab_'+s).classList.toggle('active', s===slot));
+  try {
+    const p = await fetch('/api/voice_style/'+slot).then(r=>r.json());
+    _vsProfiles[slot] = p;
+    document.getElementById('vsNameInput').value = p.display_name||'';
+    vsRenderSamples(p.samples||[]);
+    vsRenderPattern(p);
+    const isActive = _vsActiveSlot===slot;
+    const btn = document.getElementById('btnVsActivate');
+    btn.textContent = isActive ? 'Dang dung giong nay' : 'Dung giong nay';
+    btn.style.color = isActive ? '#34d399' : '';
+  } catch(e) { toast('Khong tai duoc profile', 'err'); }
+}
+
+function vsRenderSamples(samples) {
+  const list = document.getElementById('vsSamplesList');
+  const lbl = document.getElementById('vsSampleCountLabel');
+  lbl.textContent = samples.length ? samples.length + ' mau da them' : 'Chua co mau';
+  list.innerHTML = samples.map((s,i) => `
+    <div class="vs-sample-item">
+      <div style="flex:1;min-width:0">
+        <div class="vs-sample-text">${s.text}</div>
+        <div class="vs-sample-label">&#127991;&#65039; ${s.label} &middot; ${s.added||''}</div>
+      </div>
+      <button class="vs-sample-del" onclick="vsDeleteSample(${i})">&#10005;</button>
+    </div>`).join('');
+}
+
+function vsRenderPattern(p) {
+  const wrap = document.getElementById('vsPatternWrap');
+  const box = document.getElementById('vsPatternBox');
+  if (!p.analyzed||!p.pattern){wrap.style.display='none';return;}
+  const pt = p.pattern;
+  box.textContent = [
+    'Tone: '+(pt.tone||'-'),
+    'Xung ho: '+(pt.address_style||'-'),
+    'Emoji: '+(pt.uses_emoji?'Co ('+pt.emoji_freq+')':'Khong'),
+    'Cau TB: '+(pt.avg_sentence_len||0)+' ky tu',
+    'CTA: '+(pt.preferred_cta||'-'),
+    pt.common_phrases&&pt.common_phrases.length?'Cum tu: '+pt.common_phrases.join(', '):'',
+    p.style_prompt?'\nStyle:\n'+p.style_prompt:'',
+  ].filter(Boolean).join('\n');
+  wrap.style.display='block';
+}
+
+async function vsAddSample() {
+  const text = document.getElementById('vsNewSample').value.trim();
+  const label = document.getElementById('vsNewLabel').value.trim();
+  if (!text) { toast('Nhap noi dung mau truoc', 'err'); return; }
+  try {
+    const d = await postJSON('/api/voice_style/'+_vsSlot+'/add_sample', {text, label});
+    if (d.ok) {
+      document.getElementById('vsNewSample').value = '';
+      document.getElementById('vsNewLabel').value = '';
+      toast(d.message, 'ok');
+      vsSelectSlot(_vsSlot); vsLoadAll();
+    } else toast(d.message, 'err');
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+function vsHandleFileDrop(e) {
+  const file = e.dataTransfer.files[0];
+  if (file) vsUploadFileObj(file);
+}
+
+function vsUploadFile(input) {
+  const file = input.files[0];
+  if (file) vsUploadFileObj(file);
+  input.value = '';
+}
+
+async function vsUploadFileObj(file) {
+  const zone = document.getElementById('vsUploadZone');
+  const prog = document.getElementById('vsUploadProgress');
+  const bar  = document.getElementById('vsUploadBar');
+  const msg  = document.getElementById('vsUploadMsg');
+  const icon = document.getElementById('vsUploadIcon');
+  const txt  = document.getElementById('vsUploadText');
+
+  // UI: loading state
+  zone.classList.add('uploading');
+  prog.style.display = 'block';
+  icon.textContent = '⏳';
+  txt.innerHTML = '<strong style="color:var(--accent2)">' + file.name + '</strong><br><span style="font-size:11px">Dang transcribe bang Whisper AI...</span>';
+  bar.style.width = '30%';
+  msg.textContent = 'Dang tai len...';
+
+  const label = document.getElementById('vsNewLabel').value.trim() || file.name.replace(/\.[^.]+$/, '').slice(0, 40);
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('label', label);
+
+  try {
+    bar.style.width = '60%';
+    msg.textContent = 'Whisper dang doc loi thoai...';
+
+    const r = await fetch('/api/voice_style/' + _vsSlot + '/add_from_file?label=' + encodeURIComponent(label), {
+      method: 'POST', body: fd
+    });
+    const d = await r.json();
+    bar.style.width = '100%';
+
+    if (d.ok) {
+      msg.textContent = '✅ Thanh cong! ' + (d.transcript?.length || 0) + ' ky tu trich xuat duoc';
+      icon.textContent = '✅';
+      txt.innerHTML = '<strong style="color:#34d399">Da them vao mau!</strong><br>'
+        + '<span style="font-size:11px;color:var(--muted)">' + (d.transcript || '').slice(0, 120) + '...</span>';
+      // Dien transcript vao textarea de xem
+      if (d.transcript) document.getElementById('vsNewSample').value = d.transcript;
+      toast('✅ ' + d.message.split('\n')[0], 'ok');
+      vsSelectSlot(_vsSlot); vsLoadAll();
+    } else {
+      icon.textContent = '❌';
+      const isWhisperMissing = d.message.includes('Whisper');
+      txt.innerHTML = '<strong style="color:#f87171">' + (isWhisperMissing ? 'Chua cai Whisper' : 'That bai') + '</strong><br>'
+        + '<span style="font-size:11px;color:var(--muted)">'
+        + (isWhisperMissing
+          ? 'Chay: <code style="color:#a78bfa">pip install openai-whisper torch</code>'
+          : d.message.slice(0, 100))
+        + '</span>';
+      toast('❌ ' + d.message.slice(0, 80), 'err');
+    }
+  } catch(e) {
+    icon.textContent = '❌';
+    txt.innerHTML = '<span style="color:#f87171">Loi ket noi: ' + e.message + '</span>';
+    toast('❌ ' + e.message, 'err');
+  } finally {
+    setTimeout(() => {
+      zone.classList.remove('uploading');
+      prog.style.display = 'none';
+      bar.style.width = '0%';
+      icon.textContent = '🎙️';
+      txt.innerHTML = 'Keo tha hoac <strong style="color:var(--accent2)">bam chon</strong> file video / MP3<br><span style="font-size:11px">AI se tu dong trich xuat loi thoai (Whisper)</span>';
+    }, 4000);
+  }
+}
+
+async function vsDeleteSample(idx) {
+  try {
+    const d = await fetch('/api/voice_style/'+_vsSlot+'/sample/'+idx, {method:'DELETE'}).then(r=>r.json());
+    if (d.ok) { toast(d.message, 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
+    else toast(d.message, 'err');
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function vsAnalyze() {
+  const btn = document.getElementById('btnVsAnalyze');
+  setLoading(btn, true);
+  try {
+    const d = await fetch('/api/voice_style/'+_vsSlot+'/analyze', {method:'POST'}).then(r=>r.json());
+    if (d.ok) { toast('AI da hoc xong giong dieu!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
+    else toast(d.message||'Loi phan tich', 'err');
+  } catch(e) { toast(e.message, 'err'); }
+  setLoading(btn, false);
+}
+
+async function vsRename() {
+  const name = document.getElementById('vsNameInput').value.trim();
+  if (!name) return;
+  try {
+    await postJSON('/api/voice_style/'+_vsSlot+'/rename', {display_name: name});
+    document.getElementById('vsTabLabel_'+_vsSlot).textContent = name;
+    if (_vsActiveSlot === _vsSlot)
+      document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> ' + name + ' &#10003;';
+  } catch(e) {}
+}
+
+async function vsClear() {
+  if (!confirm('Xoa toan bo mau va ket qua hoc?')) return;
+  try {
+    await fetch('/api/voice_style/'+_vsSlot+'/clear', {method:'POST'}).then(r=>r.json());
+    toast('Da xoa toan bo', 'ok');
+    vsSelectSlot(_vsSlot); vsLoadAll();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+function vsToggleActive() {
+  if (_vsActiveSlot === _vsSlot) {
+    _vsActiveSlot = null;
+    document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> Hoc giong &amp; ngu dieu';
+    toast('Da tat giong dieu tuy chinh', 'ok');
+  } else {
+    const p = _vsProfiles[_vsSlot];
+    if (!p||!p.analyzed) { toast('Can phan tich truoc! Bam Phan tich & Hoc', 'err'); return; }
+    _vsActiveSlot = _vsSlot;
+    const name = p.display_name || _vsSlot;
+    document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> ' + name + ' &#10003;';
+    toast('Se dung giong: ' + name, 'ok');
+  }
+  const btn = document.getElementById('btnVsActivate');
+  const isActive = _vsActiveSlot === _vsSlot;
+  btn.textContent = isActive ? 'Dang dung giong nay' : 'Dung giong nay';
+  btn.style.color = isActive ? '#34d399' : '';
+}
+
+// ── VOICEOVER ─────────────────────────────────────────────────────────
+function openVoiceover() {
+  document.getElementById('voiceoverModal').classList
