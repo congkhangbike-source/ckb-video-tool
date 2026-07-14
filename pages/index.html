@@ -1568,7 +1568,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function checkStatus() {
   try {
     const d = await fetch(_API + '/api/status').then(r => r.json());
-    const ok = d.api;
+    const ok = d.api === true || d.status === 'ok';
     document.getElementById('apiBadge').className = 'api-badge' + (ok ? '' : ' offline');
     document.getElementById('apiBadge').textContent = ok ? '● Online' : '● Offline';
     document.getElementById('apiDot').className = 'dot ' + (ok ? 'ok' : 'err');
