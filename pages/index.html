@@ -1540,6 +1540,7 @@ const S = {
 document.addEventListener('DOMContentLoaded', () => {
   loadDropdowns();
   checkStatus();
+  setInterval(checkStatus, 10000);
   loadHistory();
   document.querySelectorAll('.model-opt').forEach(el => {
     el.addEventListener('click', () => {
@@ -1567,7 +1568,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function checkStatus() {
   try {
-    const d = await fetch(_API + '/api/status').then(r => r.json());
+    const base = (window.CKB_API_BASE && !window.CKB_API_BASE.includes('REPLACE')) ? window.CKB_API_BASE.replace(/\/$/, '') : '';
+    const d = await fetch(base + '/api/status', {cache:'no-store'}).then(r => r.json());
     const ok = d.api === true || d.status === 'ok';
     document.getElementById('apiBadge').className = 'api-badge' + (ok ? '' : ' offline');
     document.getElementById('apiBadge').textContent = ok ? '● Online' : '● Offline';
