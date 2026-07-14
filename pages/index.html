@@ -411,8 +411,9 @@ textarea { resize: vertical; min-height: 60px; }
   background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  visibility: hidden;
 }
-.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-overlay.open { opacity: 1; pointer-events: all; visibility: visible; }
 .modal-box {
   background: var(--card2); border: 1px solid var(--border);
   border-radius: 16px; padding: 24px; width: 620px; max-width: 92vw;
@@ -768,6 +769,55 @@ textarea { resize: vertical; min-height: 60px; }
 .model-price { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
 .model-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
 .model-rec { display: inline-block; margin-top: 5px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(124,58,237,0.25); color: #c4b5fd; }
+
+/* ── MOBILE RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  html, body { overflow: auto; height: auto; }
+  .app { flex-direction: column; height: auto; min-height: 100vh; }
+  .main { overflow: visible; height: auto; }
+  .content-area { overflow: visible; padding: 8px 8px 20px; height: auto; }
+  .header { padding: 8px 12px !important; flex-wrap: wrap; gap: 6px; }
+  .header-nav { margin: 0 6px; gap: 2px; order: 3; width: 100%; justify-content: center; }
+  .nav-tab { padding: 6px 12px; font-size: 12.5px; flex: 1; text-align: center; justify-content: center; }
+  .header-status { gap: 8px; }
+  .header-status .status-dot span { display: none; }
+  .gen-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 0;
+  }
+  .gen-left, .gen-center {
+    height: auto;
+    overflow: visible;
+    position: static;
+  }
+  .action-rail {
+    position: static;
+    height: auto;
+    overflow: visible;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 8px;
+    padding-bottom: 10px;
+  }
+  .action-rail .rail-section { padding: 10px 0 2px; }
+  .action-rail .progress-bar,
+  .action-rail .progress-label { grid-column: 1 / -1; }
+  .model-cards { grid-template-columns: 1fr; }
+  .analysis-row { grid-template-columns: 1fr; }
+  .modal-box { padding: 16px; width: 95vw !important; max-width: 95vw !important; }
+  .music-modal-box { width: 95vw !important; max-width: 95vw; }
+}
+@media (max-width: 600px) {
+  .action-rail { grid-template-columns: 1fr; }
+  .header-nav { gap: 2px; }
+  .nav-tab { padding: 5px 8px; font-size: 12px; }
+  .logo-sub { display: none; }
+  .header-status { display: none; }
+  .gen-grid { gap: 0; }
+  .card { padding: 12px; }
+  .prompt-textarea { min-height: 200px; }
+}
 </style>
 </head>
 <body>
@@ -801,8 +851,8 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
       <nav class="header-nav">
         <a class="nav-tab active" onclick="showPage('generate',this)">&#9889; Generate</a>
-        <a class="nav-tab" onclick="showPage('history',this)">&#128218; Lich su</a>
-        <a class="nav-tab" onclick="showPage('settings',this)">&#9881;&#65039; Cai dat</a>
+        <a class="nav-tab" onclick="showPage('history',this)">&#128218; Lịch sử</a>
+        <a class="nav-tab" onclick="showPage('settings',this)">&#9881;&#65039; Cài đặt</a>
       </nav>
       <div class="header-right">
         <div class="header-status">
@@ -814,15 +864,15 @@ textarea { resize: vertical; min-height: 60px; }
         <div class="model-dropdown" id="modelMenu">
           <div class="model-opt" data-model="claude-haiku-4-5-20251001">
             <div class="opt-name">&#9889; Haiku</div>
-            <div class="opt-tip">Nhanh &amp; Re nhat &bull; ~$0.80/M token</div>
+            <div class="opt-tip">Nhanh &amp; Rẻ nhất &bull; ~$0.80/M token</div>
           </div>
           <div class="model-opt selected" data-model="claude-sonnet-5">
             <div class="opt-name">&#129504; Sonnet 5 &#11088;</div>
-            <div class="opt-tip">Thong minh &amp; Can bang &bull; ~$3/M token</div>
+            <div class="opt-tip">Thông minh &amp; Cân bằng &bull; ~$3/M token</div>
           </div>
           <div class="model-opt" data-model="claude-opus-4-8">
             <div class="opt-name">&#128142; Opus 4.8</div>
-            <div class="opt-tip">Manh nhat &bull; ~$15/M token</div>
+            <div class="opt-tip">Mạnh nhất &bull; ~$15/M token</div>
           </div>
         </div>
       </div>
@@ -842,26 +892,26 @@ textarea { resize: vertical; min-height: 60px; }
             <div class="card">
               <div class="card-title"><div class="step-badge">1</div> Upload Video</div>
               <div class="upload-tabs">
-                <button class="utab active" id="utabSingle" onclick="setUploadMode('single')">&#127916; Video don</button>
-                <button class="utab" id="utabMulti" onclick="setUploadMode('multi')">&#127902;&#65039; Nhieu phan canh</button>
+                <button class="utab active" id="utabSingle" onclick="setUploadMode('single')">&#127916; Video đơn</button>
+                <button class="utab" id="utabMulti" onclick="setUploadMode('multi')">&#127902;&#65039; Nhiều phân cảnh</button>
               </div>
               <div id="uploadSingle">
                 <div class="upload-zone" id="uploadZone">
                   <input type="file" id="fileInput" accept="video/*" onchange="onFileSelect(this)">
                   <div class="upload-icon">&#128249;</div>
-                  <div class="upload-text">Keo tha video vao day hoac <strong>bam chon file</strong></div>
-                  <div class="upload-info">MP4, MOV, AVI, MKV &middot; Toi da 500MB</div>
+                  <div class="upload-text">Kéo thả video vào đây hoặc <strong>bấm chọn file</strong></div>
+                  <div class="upload-info">MP4, MOV, AVI, MKV &middot; Tối đa 500MB</div>
                   <div class="file-selected" id="fileSelected">&#10003; <span id="fileName"></span></div>
                 </div>
               </div>
               <div id="uploadMulti" style="display:none">
                 <div id="sceneCountWrap" style="display:none">
-                  <span class="scene-count-badge">&#127902;&#65039; <span id="sceneCount">0</span> phan canh</span>
+                  <span class="scene-count-badge">&#127902;&#65039; <span id="sceneCount">0</span> phân cảnh</span>
                 </div>
                 <div class="scene-list" id="sceneList"></div>
                 <div class="scene-add-zone" id="sceneAddZone">
                   <input type="file" id="sceneFileInput" accept="video/*" multiple onchange="onSceneFilesSelect(this)">
-                  &#10133; Keo tha hoac <strong>bam chon</strong> de them phan canh
+                  &#10133; Kéo thả hoặc <strong>bấm chọn</strong> để thêm phân cảnh
                 </div>
               </div>
               <div class="progress-bar" id="uploadProgress"><div class="progress-fill" id="uploadFill" style="width:0%"></div></div>
@@ -870,32 +920,32 @@ textarea { resize: vertical; min-height: 60px; }
 
             <!-- Step 2: Info -->
             <div class="card">
-              <div class="card-title"><div class="step-badge">2</div> Thong tin video</div>
+              <div class="card-title"><div class="step-badge">2</div> Thông tin video</div>
               <div class="form-row">
-                <label class="form-label">&#128665; Ten xe</label>
-                <select id="xe"><option value="">-- Dang tai... --</option></select>
+                <label class="form-label">&#128665; Tên xe</label>
+                <select id="xe"><option value="">-- Chọn xe --</option></select>
                 <div class="badge badge-success" id="xeDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
-                <label class="form-label">&#127912; Mau xe</label>
-                <select id="mau"><option value="">-- Chon mau --</option></select>
+                <label class="form-label">&#127912; Màu xe</label>
+                <select id="mau"><option value="">-- Chọn màu --</option></select>
                 <div class="badge badge-success" id="mauDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
-                <label class="form-label">&#127916; Loai video</label>
+                <label class="form-label">&#127916; Loại video</label>
                 <select id="loai"></select>
                 <div class="badge badge-success" id="loaiDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
-                <label class="form-label">&#128101; Doi tuong</label>
+                <label class="form-label">&#128101; Đối tượng</label>
                 <select id="doituong"></select>
               </div>
               <div class="form-row">
-                <label class="form-label">&#128161; Diem noi bat</label>
-                <input type="text" id="diem" placeholder="VD: pin 60V, bao hanh 2 nam, gia tot...">
+                <label class="form-label">&#128161; Điểm nổi bật</label>
+                <input type="text" id="diem" placeholder="VD: pin 60V, bảo hành 2 năm, giá tốt...">
               </div>
               <div class="form-row">
-                <label class="form-label">&#9201;&#65039; Thoi luong</label>
+                <label class="form-label">&#9201;&#65039; Thời lượng</label>
                 <div class="duration-pills">
                   <div class="pill" onclick="setPill(this,'15 giay')">15s</div>
                   <div class="pill active" onclick="setPill(this,'30 giay')">30s</div>
@@ -910,10 +960,10 @@ textarea { resize: vertical; min-height: 60px; }
             <div class="card">
               <div class="card-title" style="justify-content:space-between;margin-bottom:8px">
                 <div style="display:flex;align-items:center;gap:8px">
-                  <div class="step-badge">3</div> Prompt tuy chinh
+                  <div class="step-badge">3</div> Prompt tùy chỉnh
                 </div>
                 <button class="prompt-toggle-btn" id="promptToggleBtn" onclick="togglePromptMenu()">
-                  &#9889; Prompt mau <span class="toggle-arrow" id="promptArrow">&#9662;</span>
+                  &#9889; Prompt mẫu <span class="toggle-arrow" id="promptArrow">&#9662;</span>
                 </button>
               </div>
               <div class="platform-row">
@@ -938,25 +988,25 @@ textarea { resize: vertical; min-height: 60px; }
                 <div class="prompt-chips">
                   <button class="prompt-chip" onclick="usePrompt('hook')">&#127919; Hook viral</button>
                   <button class="prompt-chip" onclick="usePrompt('script')">&#128221; Script 30s</button>
-                  <button class="prompt-chip" onclick="usePrompt('funny')">&#128516; Hai huoc</button>
-                  <button class="prompt-chip" onclick="usePrompt('compare')">&#9878;&#65039; So sanh</button>
-                  <button class="prompt-chip" onclick="usePrompt('tech')">&#128267; Thong so KT</button>
-                  <button class="prompt-chip" onclick="usePrompt('promo')">&#128176; Khuyen mai</button>
+                  <button class="prompt-chip" onclick="usePrompt('funny')">&#128516; Hài hước</button>
+                  <button class="prompt-chip" onclick="usePrompt('compare')">&#9878;&#65039; So sánh</button>
+                  <button class="prompt-chip" onclick="usePrompt('tech')">&#128267; Thông số KT</button>
+                  <button class="prompt-chip" onclick="usePrompt('promo')">&#128176; Khuyến mãi</button>
                   <button class="prompt-chip" onclick="usePrompt('faq')">&#10067; FAQ</button>
-                  <button class="prompt-chip" onclick="usePrompt('trend')">&#128293; Bat trend</button>
-                  <button class="prompt-chip" onclick="usePrompt('cta')">&#128227; CTA manh</button>
+                  <button class="prompt-chip" onclick="usePrompt('trend')">&#128293; Bắt trend</button>
+                  <button class="prompt-chip" onclick="usePrompt('cta')">&#128227; CTA mạnh</button>
                   <button class="prompt-chip" onclick="usePrompt('review')">&#11088; Review KH</button>
                 </div>
               </div>
               <div class="prompt-edit-bar" id="promptEditBar">
                 <span class="prompt-active-label" id="promptActiveLabel">&#128204; &#8212;</span>
                 <div class="prompt-edit-actions">
-                  <button class="pedit-btn edit" onclick="focusPromptEdit()">&#9999;&#65039; Sua</button>
-                  <button class="pedit-btn save" onclick="savePromptTemplate()">&#128190; Luu</button>
+                  <button class="pedit-btn edit" onclick="focusPromptEdit()">&#9999;&#65039; Sửa</button>
+                  <button class="pedit-btn save" onclick="savePromptTemplate()">&#128190; Lưu</button>
                   <button class="pedit-btn reset" onclick="resetPromptTemplate()">&#8617; Reset</button>
                 </div>
               </div>
-              <textarea id="customPromptInline" class="prompt-textarea" placeholder="Viet yeu cau cho AI hoac chon prompt mau&#10;VD: Viet 5 hook mo dau viral cho xe JVC G9..."></textarea>
+              <textarea id="customPromptInline" class="prompt-textarea" placeholder="Viết yêu cầu cho AI hoặc chọn prompt mẫu&#10;VD: Viết 5 hook mở đầu viral cho xe JVC G9..."></textarea>
             </div>
 
           </div>
@@ -970,7 +1020,7 @@ textarea { resize: vertical; min-height: 60px; }
               <div id="videoHolder">
                 <div class="video-placeholder" id="videoPlaceholder">
                   <div class="ph-icon">&#127916;</div>
-                  <div>Upload video de xem preview</div>
+                  <div>Upload video để xem preview</div>
                 </div>
                 <video class="preview-video" id="videoPreview" controls style="display:none"></video>
               </div>
@@ -978,12 +1028,12 @@ textarea { resize: vertical; min-height: 60px; }
                 <span id="videoDuration"></span> &middot; <span id="videoSize"></span>
               </div>
               <div class="scene-preview-nav" id="scenePreviewNav">
-                <button class="spnav-btn" id="spnavPrev" onclick="previewScene(-1)">&#9668; Truoc</button>
+                <button class="spnav-btn" id="spnavPrev" onclick="previewScene(-1)">&#9668; Trước</button>
                 <div style="text-align:center;flex:1;min-width:0">
                   <div class="spnav-label" id="spnavLabel">Canh 1 / 1</div>
                   <div class="spnav-name" id="spnavName"></div>
                 </div>
-                <button class="spnav-btn" id="spnavNext" onclick="previewScene(1)">Tiep &#9658;</button>
+                <button class="spnav-btn" id="spnavNext" onclick="previewScene(1)">Tiếp &#9658;</button>
               </div>
             </div>
 
@@ -991,20 +1041,20 @@ textarea { resize: vertical; min-height: 60px; }
             <div class="card render-card" id="renderCard">
               <div class="render-header">
                 <div>
-                  <div class="card-title" style="margin-bottom:2px">&#127916; Video hoan chinh</div>
+                  <div class="card-title" style="margin-bottom:2px">&#127916; Video hoàn chỉnh</div>
                   <div class="render-pct" id="renderPct">0<span>%</span></div>
                 </div>
-                <div class="render-status" id="renderStatus">Cho xu ly...</div>
+                <div class="render-status" id="renderStatus">Chờ xử lý...</div>
               </div>
               <div class="render-bar-wrap">
                 <div class="render-bar-fill" id="renderBarFill"></div>
               </div>
               <div class="render-steps" id="renderSteps">
-                <div class="render-step" id="rStep0"><div class="step-dot"></div><span>Chuan bi &amp; doc video</span></div>
-                <div class="render-step" id="rStep1"><div class="step-dot"></div><span>Xu ly AI &amp; dung canh</span></div>
-                <div class="render-step" id="rStep2"><div class="step-dot"></div><span>Them phu de &amp; hieu ung</span></div>
-                <div class="render-step" id="rStep3"><div class="step-dot"></div><span>Ghep audio &amp; xuat file</span></div>
-                <div class="render-step" id="rStep4"><div class="step-dot"></div><span>Hoan thanh</span></div>
+                <div class="render-step" id="rStep0"><div class="step-dot"></div><span>Chuẩn bị &amp; đọc video</span></div>
+                <div class="render-step" id="rStep1"><div class="step-dot"></div><span>Xử lý AI &amp; dựng cảnh</span></div>
+                <div class="render-step" id="rStep2"><div class="step-dot"></div><span>Thêm phụ đề &amp; hiệu ứng</span></div>
+                <div class="render-step" id="rStep3"><div class="step-dot"></div><span>Ghép audio &amp; xuất file</span></div>
+                <div class="render-step" id="rStep4"><div class="step-dot"></div><span>Hoàn thành</span></div>
               </div>
               <div class="render-video-wrap" id="renderVideoWrap">
                 <video id="renderVideoPlayer" controls></video>
@@ -1014,14 +1064,14 @@ textarea { resize: vertical; min-height: 60px; }
 
             <!-- AI Analysis -->
             <div class="card" id="analysisCard" style="display:none">
-              <div class="card-title">&#128269; Phan tich AI</div>
+              <div class="card-title">&#128269; Phân tích AI</div>
               <div class="analysis-row">
                 <div>
                   <div class="analysis-label">&#128065;&#65039; Vision</div>
                   <div class="analysis-box" id="visionBox">&#8212;</div>
                 </div>
                 <div>
-                  <div class="analysis-label">&#11088; Chat luong</div>
+                  <div class="analysis-label">&#11088; Chất lượng</div>
                   <div class="analysis-box" id="qualityBox">&#8212;</div>
                 </div>
               </div>
@@ -1029,7 +1079,7 @@ textarea { resize: vertical; min-height: 60px; }
 
             <!-- Output tabs -->
             <div class="card" id="outputCard" style="display:none">
-              <div class="card-title">&#128221; Noi dung AI</div>
+              <div class="card-title">&#128221; Nội dung AI</div>
               <div class="tab-nav">
                 <button class="tab-btn active" onclick="switchTab('script',this)">&#128221; Script</button>
                 <button class="tab-btn" onclick="switchTab('caption',this)">&#128172; Caption</button>
@@ -1055,70 +1105,70 @@ textarea { resize: vertical; min-height: 60px; }
           <div class="action-rail">
 
             <div class="rail-section">
-              <div class="rail-title">&#128269; Phan tich</div>
+              <div class="rail-title">&#128269; Phân tích</div>
               <button class="rail-btn rail-primary" id="btnAnalyze" onclick="doAnalyze()">
                 <span class="rail-icon">&#129302;</span> AI Vision
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#128293; Noi dung AI</div>
+              <div class="rail-title">&#128293; Nội dung AI</div>
               <button class="rail-btn rail-primary" id="btnGenerate" onclick="doGenerate()">
                 <span class="rail-icon">&#9889;</span> Sinh Script &amp; Caption
               </button>
               <button class="rail-btn" id="btnCustom" onclick="doCustomGenerate()">
-                <span class="rail-icon">&#9999;&#65039;</span> Gui Custom Prompt
+                <span class="rail-icon">&#9999;&#65039;</span> Gửi Custom Prompt
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#127916; Dung video</div>
+              <div class="rail-title">&#127916; Dựng video</div>
               <button class="rail-btn" onclick="doRenderVideo()">
-                <span class="rail-icon">&#127902;&#65039;</span> Tao video hoan chinh
+                <span class="rail-icon">&#127902;&#65039;</span> Tạo video hoàn chỉnh
               </button>
               <button class="rail-btn" onclick="doSubtitle()">
-                <span class="rail-icon">&#128196;</span> Them phu de
+                <span class="rail-icon">&#128196;</span> Thêm phụ đề
               </button>
               <button class="rail-btn" onclick="openVoiceover()">
-                <span class="rail-icon">&#127897;&#65039;</span> AI doc giong noi
+                <span class="rail-icon">&#127897;&#65039;</span> AI đọc giọng nói
               </button>
               <button class="rail-btn" onclick="doSubtitleThenVoice()">
-                <span class="rail-icon">&#128196;</span> Phu de + Giong noi
+                <span class="rail-icon">&#128196;</span> Phụ đề + Giọng nói
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#128228; Xuat file</div>
+              <div class="rail-title">&#128228; Xuất file</div>
               <button class="rail-btn rail-green" onclick="doExport('tiktok')">
-                <span class="rail-icon">&#128242;</span> Xuat TikTok
+                <span class="rail-icon">&#128242;</span> Xuất TikTok
               </button>
               <button class="rail-btn rail-green" onclick="doExport('facebook')">
-                <span class="rail-icon">&#128152;</span> Xuat Facebook
+                <span class="rail-icon">&#128152;</span> Xuất Facebook
               </button>
               <button class="rail-btn rail-green" onclick="doExport('youtube')">
-                <span class="rail-icon">&#9654;&#65039;</span> Xuat YouTube
+                <span class="rail-icon">&#9654;&#65039;</span> Xuất YouTube
               </button>
               <button class="rail-btn rail-green" onclick="doExport('instagram')">
-                <span class="rail-icon">&#128248;</span> Xuat Instagram
+                <span class="rail-icon">&#128248;</span> Xuất Instagram
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#128295; Cong cu</div>
+              <div class="rail-title">&#128295; Công cụ</div>
               <button class="rail-btn" onclick="doThumbnail()">
-                <span class="rail-icon">&#128444;&#65039;</span> Tao Thumbnail AI
+                <span class="rail-icon">&#128444;&#65039;</span> Tạo Thumbnail AI
               </button>
               <button class="rail-btn rail-yellow" onclick="doViralScore()">
-                <span class="rail-icon">&#128202;</span> Cham diem Viral
+                <span class="rail-icon">&#128202;</span> Chấm điểm Viral
               </button>
               <button class="rail-btn" onclick="doCheckDuplicate()">
-                <span class="rail-icon">&#128269;</span> Kiem tra trung lap
+                <span class="rail-icon">&#128269;</span> Kiểm tra trùng lặp
               </button>
               <button class="rail-btn rail-yellow" onclick="openMusicPicker()">
-                <span class="rail-icon">&#127925;</span> Chon nhac &amp; SFX
+                <span class="rail-icon">&#127925;</span> Chọn nhạc &amp; SFX
               </button>
               <button class="rail-btn" onclick="openVoiceStyle()" id="btnVoiceStyle">
-                <span class="rail-icon">&#127917;</span> Hoc giong &amp; ngu dieu
+                <span class="rail-icon">&#127917;</span> Học giọng &amp; ngữ điệu
               </button>
             </div>
 
@@ -1136,11 +1186,11 @@ textarea { resize: vertical; min-height: 60px; }
       <div class="page" id="page-history">
         <div style="max-width:900px">
           <div class="history-header">
-            <h2 style="font-size:17px">&#128218; Lich su tao video</h2>
-            <input class="history-search" placeholder="&#128269; Tim theo ten xe..." oninput="filterHistory(this.value)">
+            <h2 style="font-size:17px">&#128218; Lịch sử tao video</h2>
+            <input class="history-search" placeholder="&#128269; Tìm theo tên xe..." oninput="filterHistory(this.value)">
           </div>
           <div class="history-grid" id="historyGrid">
-            <div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chua co video nao duoc tao</div></div>
+            <div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chưa có video nào được tạo</div></div>
           </div>
         </div>
       </div>
@@ -1148,33 +1198,33 @@ textarea { resize: vertical; min-height: 60px; }
       <!-- PAGE: SETTINGS -->
       <div class="page" id="page-settings">
         <div style="max-width:700px">
-          <h2 style="font-size:17px;margin-bottom:18px">Cai dat</h2>
+          <h2 style="font-size:17px;margin-bottom:18px">Cài đặt</h2>
           <div class="settings-section">
-            <div class="settings-title">&#129302; Chon model AI</div>
+            <div class="settings-title">&#129302; Chọn model AI</div>
             <div class="model-cards">
               <div class="model-card" data-model="claude-haiku-4-5-20251001" onclick="selectModel(this)">
                 <div class="model-name">&#9889; Haiku</div>
                 <div class="model-price">~$0.80/M token</div>
-                <div class="model-desc">Nhanh va re nhat, phu hop cho caption don gian</div>
+                <div class="model-desc">Nhanh và rẻ nhất, phù hợp cho caption đơn giản</div>
               </div>
               <div class="model-card selected" data-model="claude-sonnet-5" onclick="selectModel(this)">
                 <div class="model-name">&#129504; Sonnet 5</div>
                 <div class="model-price">~$3/M token</div>
-                <div class="model-desc">Can bang giua chat luong va toc do</div>
-                <span class="model-rec">&#11088; Khuyen nghi</span>
+                <div class="model-desc">Cân bằng giữa chất lượng và tốc độ</div>
+                <span class="model-rec">&#11088; Khuyến nghị</span>
               </div>
               <div class="model-card" data-model="claude-opus-4-8" onclick="selectModel(this)">
                 <div class="model-name">&#128142; Opus 4.8</div>
                 <div class="model-price">~$15/M token</div>
-                <div class="model-desc">Manh nhat, tot nhat cho script phuc tap</div>
+                <div class="model-desc">Mạnh nhất, tốt nhất cho script phức tạp</div>
               </div>
             </div>
           </div>
           <div class="settings-section">
-            <div class="settings-title">&#8505;&#65039; Trang thai he thong</div>
+            <div class="settings-title">&#8505;&#65039; Trạng thái hệ thống</div>
             <div class="card" style="margin:0">
-              <div class="status-dot" style="margin-bottom:8px"><div class="dot" id="settingApiDot"></div> Claude API: <span id="settingApiStatus">Dang kiem tra...</span></div>
-              <div class="status-dot"><div class="dot" id="settingFfmpegDot"></div> FFmpeg: <span id="settingFfmpegStatus">Dang kiem tra...</span></div>
+              <div class="status-dot" style="margin-bottom:8px"><div class="dot" id="settingApiDot"></div> Claude API: <span id="settingApiStatus">Đang kiểm tra...</span></div>
+              <div class="status-dot"><div class="dot" id="settingFfmpegDot"></div> FFmpeg: <span id="settingFfmpegStatus">Đang kiểm tra...</span></div>
             </div>
           </div>
         </div>
@@ -1191,32 +1241,32 @@ textarea { resize: vertical; min-height: 60px; }
 <div class="modal-overlay" id="voiceStyleModal" onclick="closeModalClick('voiceStyleModal',event)">
   <div class="modal-box" style="max-width:580px">
     <div class="modal-title">
-      &#127917; Hoc giong &amp; ngu dieu
+      &#127917; Học giọng &amp; ngữ điệu
       <button class="modal-close" onclick="closeModal('voiceStyleModal')">&#10005;</button>
     </div>
-    <p class="modal-hint">Dan caption / script mau de AI hoc giong dieu. Toi da 3 nguoi. AI se ap dung khi sinh noi dung.</p>
+    <p class="modal-hint">Dán caption / script mẫu để AI học giọng điệu. Tối đa 3 người. AI sẽ áp dụng khi sinh nội dung.</p>
     <div class="vs-slot-tabs" id="vsSlotTabs">
       <button class="vs-slot-tab active" id="vsTab_person_1" onclick="vsSelectSlot('person_1')">
-        <span class="vs-dot"></span><span id="vsTabLabel_person_1">Nguoi 1</span>
+        <span class="vs-dot"></span><span id="vsTabLabel_person_1">Người 1</span>
       </button>
       <button class="vs-slot-tab" id="vsTab_person_2" onclick="vsSelectSlot('person_2')">
-        <span class="vs-dot"></span><span id="vsTabLabel_person_2">Nguoi 2</span>
+        <span class="vs-dot"></span><span id="vsTabLabel_person_2">Người 2</span>
       </button>
       <button class="vs-slot-tab" id="vsTab_person_3" onclick="vsSelectSlot('person_3')">
-        <span class="vs-dot"></span><span id="vsTabLabel_person_3">Nguoi 3</span>
+        <span class="vs-dot"></span><span id="vsTabLabel_person_3">Người 3</span>
       </button>
     </div>
     <div class="vs-profile-header">
-      <input class="vs-name-input" id="vsNameInput" placeholder="Ten nguoi (VD: Admin, Chi Lan...)"
+      <input class="vs-name-input" id="vsNameInput" placeholder="Tên người (VD: Admin, Chị Lan...)"
         onblur="vsRename()" onkeydown="if(event.key==='Enter')vsRename()">
-      <button class="pedit-btn reset" style="white-space:nowrap" onclick="vsClear()">&#128465;&#65039; Xoa het</button>
+      <button class="pedit-btn reset" style="white-space:nowrap" onclick="vsClear()">&#128465;&#65039; Xóa hết</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:5px" id="vsSampleCountLabel">Chua co mau</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:5px" id="vsSampleCountLabel">Chưa có mẫu</div>
     <div class="vs-samples-list" id="vsSamplesList"></div>
 
     <!-- Upload video/audio -->
     <div class="form-row" style="margin-bottom:8px">
-      <label class="form-label">&#127911; Hoc tu file video / MP3</label>
+      <label class="form-label">&#127911; Học từ file video / MP3</label>
       <div class="vs-upload-zone" id="vsUploadZone" onclick="document.getElementById('vsFileInput').click()"
         ondragover="event.preventDefault();this.classList.add('drag-over')"
         ondragleave="this.classList.remove('drag-over')"
@@ -1225,34 +1275,34 @@ textarea { resize: vertical; min-height: 60px; }
           style="display:none" onchange="vsUploadFile(this)">
         <div id="vsUploadIcon" style="font-size:24px;margin-bottom:4px">&#127911;</div>
         <div id="vsUploadText" style="font-size:12px;color:var(--muted)">
-          Keo tha hoac <strong style="color:var(--accent2)">bam chon</strong> file video / MP3<br>
-          <span style="font-size:11px">AI se tu dong trich xuat loi thoai (Whisper)</span>
+          Kéo thả hoặc <strong style="color:var(--accent2)">bấm chọn</strong> file video / MP3<br>
+          <span style="font-size:11px">AI sẽ tự động trích xuất lời thoại (Whisper)</span>
         </div>
         <div id="vsUploadProgress" style="display:none;margin-top:8px;width:100%">
           <div style="background:rgba(124,58,237,0.15);border-radius:4px;height:4px;overflow:hidden">
             <div id="vsUploadBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width 0.3s"></div>
           </div>
-          <div id="vsUploadMsg" style="font-size:11px;color:var(--accent2);margin-top:4px;text-align:center">Dang xu ly...</div>
+          <div id="vsUploadMsg" style="font-size:11px;color:var(--accent2);margin-top:4px;text-align:center">Đang xử lý...</div>
         </div>
       </div>
     </div>
 
     <div class="form-row" style="margin-bottom:6px">
-      <label class="form-label">&#9997;&#65039; Them mau moi (dan caption / script)</label>
-      <textarea id="vsNewSample" rows="3" placeholder="Dan noi dung caption, script cua nguoi nay...&#10;Toi thieu 20 ky tu.&#10;(hoac de trong neu da upload file o tren)"></textarea>
+      <label class="form-label">&#9997;&#65039; Thêm mẫu mới (dán caption / script)</label>
+      <textarea id="vsNewSample" rows="3" placeholder="Dán nội dung caption, script của người này...&#10;Tối thiểu 20 ký tự.&#10;(hoặc để trống nếu đã upload file ở trên)"></textarea>
     </div>
     <div style="display:flex;gap:6px;margin-bottom:12px">
-      <input id="vsNewLabel" placeholder="Nhan mau (tuy chon)" style="flex:1;padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-size:12px">
-      <button class="btn btn-secondary" style="width:auto;padding:6px 14px" onclick="vsAddSample()">&#10133; Them</button>
+      <input id="vsNewLabel" placeholder="Nhãn mẫu (tùy chọn)" style="flex:1;padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-size:12px">
+      <button class="btn btn-secondary" style="width:auto;padding:6px 14px" onclick="vsAddSample()">&#10133; Thêm</button>
     </div>
     <div id="vsPatternWrap" style="display:none">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">&#128202; Pattern da hoc</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">&#128202; Pattern đã học</div>
       <div class="vs-pattern-box" id="vsPatternBox"></div>
     </div>
     <div class="modal-actions" style="margin-top:14px">
-      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceStyleModal')">Dong</button>
-      <button class="btn btn-secondary" style="width:auto" id="btnVsActivate" onclick="vsToggleActive()">&#9745;&#65039; Dung giong nay</button>
-      <button class="btn btn-primary" style="width:auto" id="btnVsAnalyze" onclick="vsAnalyze()">&#129504; Phan tich &amp; Hoc</button>
+      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceStyleModal')">Đóng</button>
+      <button class="btn btn-secondary" style="width:auto" id="btnVsActivate" onclick="vsToggleActive()">&#9745;&#65039; Dùng giọng này</button>
+      <button class="btn btn-primary" style="width:auto" id="btnVsAnalyze" onclick="vsAnalyze()">&#129504; Phân tích &amp; Học</button>
     </div>
   </div>
 </div>
@@ -1261,32 +1311,32 @@ textarea { resize: vertical; min-height: 60px; }
 <div class="modal-overlay" id="voiceoverModal" onclick="closeModalClick('voiceoverModal',event)">
   <div class="modal-box">
     <div class="modal-title">
-      &#127897;&#65039; AI doc giong noi
+      &#127897;&#65039; AI đọc giọng nói
       <button class="modal-close" onclick="closeModal('voiceoverModal')">&#10005;</button>
     </div>
-    <p class="modal-hint">AI se doc van ban thanh giong noi tieng Viet. Phu hop lam voiceover cho video.</p>
+    <p class="modal-hint">AI sẽ đọc văn bản thành giọng nói tiếng Việt. Phù hợp làm voiceover cho video.</p>
     <div class="form-row">
-      <label class="form-label">Van ban can doc</label>
-      <textarea id="voiceText" rows="5" placeholder="Nhap noi dung can AI doc...&#10;Tip: bam 'Lay tu Script' de tu dong dien."></textarea>
+      <label class="form-label">Văn bản cần đọc</label>
+      <textarea id="voiceText" rows="5" placeholder="Nhập nội dung cần AI đọc...&#10;Tip: bấm 'Lấy từ Script' để tự động điền."></textarea>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:10px">
-      <button class="rail-btn" style="width:auto;padding:6px 12px;font-size:12px" onclick="fillVoiceFromScript()">&#128203; Lay tu Script</button>
+      <button class="rail-btn" style="width:auto;padding:6px 12px;font-size:12px" onclick="fillVoiceFromScript()">&#128203; Lấy từ Script</button>
     </div>
     <div class="form-row">
-      <label class="form-label">Giong doc</label>
+      <label class="form-label">Giọng đọc</label>
       <select id="voiceSelect">
-        <option value="vi-VN-HoaiMyNeural">&#127897;&#65039; Hoai My &#8212; Nu, giong Nam Bo</option>
-        <option value="vi-VN-NamMinhNeural">&#127897;&#65039; Nam Minh &#8212; Nam, giong Ha Noi</option>
+        <option value="vi-VN-HoaiMyNeural">&#127897;&#65039; Hoài My &#8212; Nữ, giọng Nam Bộ</option>
+        <option value="vi-VN-NamMinhNeural">&#127897;&#65039; Nam Minh &#8212; Nam, giọng Hà Nội</option>
       </select>
     </div>
     <div id="voiceResultBox" style="display:none;margin-top:12px">
-      <label class="form-label">Ket qua</label>
+      <label class="form-label">Kết quả</label>
       <audio id="voiceAudio" controls style="width:100%;margin-bottom:8px;border-radius:8px"></audio>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceoverModal')">Dong</button>
-      <a id="voiceDownloadBtn" class="modal-file-btn" style="display:none" download>&#128229; Tai ve MP3</a>
-      <button class="btn btn-primary" id="btnVoiceSend" style="width:auto" onclick="sendVoiceover()">&#127897;&#65039; Tao giong noi</button>
+      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceoverModal')">Đóng</button>
+      <a id="voiceDownloadBtn" class="modal-file-btn" style="display:none" download>&#128229; Tải về MP3</a>
+      <button class="btn btn-primary" id="btnVoiceSend" style="width:auto" onclick="sendVoiceover()">&#127897;&#65039; Tạo giọng nói</button>
     </div>
   </div>
 </div>
@@ -1295,20 +1345,20 @@ textarea { resize: vertical; min-height: 60px; }
 <div class="modal-overlay" id="musicModal" onclick="closeModalClick('musicModal',event)">
   <div class="music-modal-box">
     <div class="music-modal-head">
-      <h2>&#127925; Chon nhac &amp; SFX</h2>
+      <h2>&#127925; Chọn nhạc &amp; SFX</h2>
       <button class="modal-close" onclick="closeModal('musicModal')">&#10005;</button>
     </div>
     <div class="music-tab-bar">
-      <div class="music-tab active" onclick="switchMusicTab('music',this)">&#127925; Nhac nen</div>
+      <div class="music-tab active" onclick="switchMusicTab('music',this)">&#127925; Nhạc nền</div>
       <div class="music-tab" onclick="switchMusicTab('sfx',this)">&#128266; SFX</div>
     </div>
     <div class="music-search-row">
-      <input class="music-search" id="musicSearch" placeholder="&#128269; Tim theo ten..." oninput="filterMusic(this.value)">
+      <input class="music-search" id="musicSearch" placeholder="&#128269; Tìm theo tên..." oninput="filterMusic(this.value)">
       <span class="music-count" id="musicCount">0 bai</span>
     </div>
     <div class="music-list" id="musicList"></div>
     <div class="music-mini-player" id="musicMiniPlayer">
-      <div class="mini-now">&#9654; Dang nghe: <strong id="miniNowName">&#8212;</strong></div>
+      <div class="mini-now">&#9654; Đang nghe: <strong id="miniNowName">&#8212;</strong></div>
       <div class="mini-controls">
         <span style="font-size:11px;color:var(--muted)">&#128266;</span>
         <input type="range" class="mini-vol" id="miniVol" min="0" max="1" step="0.05" value="0.7" oninput="setPreviewVol(this.value)">
@@ -1317,10 +1367,10 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <div class="music-footer">
-      <div class="music-selected-info">Da chon: <strong id="musicSelectedCount">0</strong> bai</div>
+      <div class="music-selected-info">Đã chọn: <strong id="musicSelectedCount">0</strong> bài</div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" style="width:auto;margin:0" onclick="clearMusicSelection()">Bo chon het</button>
-        <button class="btn btn-primary" style="width:auto;margin:0" onclick="applyMusicSelection()">&#10003; Ap dung</button>
+        <button class="btn btn-secondary" style="width:auto;margin:0" onclick="clearMusicSelection()">Bỏ chọn hết</button>
+        <button class="btn btn-primary" style="width:auto;margin:0" onclick="applyMusicSelection()">&#10003; Áp dụng</button>
       </div>
     </div>
   </div>
@@ -1438,9 +1488,9 @@ const _DEFAULT_TEMPLATES = Object.freeze(Object.assign({}, PROMPT_TEMPLATES));
 
 let _activePromptKey = null;
 const _CHIP_LABELS = {
-  hook:'Hook viral', script:'Script 30s', funny:'Hai huoc',
-  compare:'So sanh', tech:'Thong so KT', promo:'Khuyen mai',
-  faq:'FAQ', trend:'Bat trend', cta:'CTA manh', review:'Review KH'
+  hook:'Hook viral', script:'Script 30s', funny:'Hài hước',
+  compare:'So sánh', tech:'Thông số KT', promo:'Khuyến mãi',
+  faq:'FAQ', trend:'Bắt trend', cta:'CTA mạnh', review:'Review KH'
 };
 
 function _showEditBar(key) {
@@ -1454,14 +1504,14 @@ function _showEditBar(key) {
 function focusPromptEdit() {
   const ta = document.getElementById('customPromptInline');
   ta.classList.add('editing'); ta.focus();
-  toast('Chinh sua xong bam Luu de cap nhat template', 'ok');
+  toast('Chỉnh sửa xong → bấm Lưu để cập nhật template', 'ok');
 }
 
 function savePromptTemplate() {
-  if (!_activePromptKey) { toast('Chua chon prompt mau', 'err'); return; }
+  if (!_activePromptKey) { toast('Chưa chọn prompt mẫu', 'err'); return; }
   const ta = document.getElementById('customPromptInline');
   const newText = ta.value.trim();
-  if (!newText) { toast('Noi dung trong', 'err'); return; }
+  if (!newText) { toast('Nội dung trống', 'err'); return; }
   PROMPT_TEMPLATES[_activePromptKey] = newText;
   try {
     const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
@@ -1470,7 +1520,7 @@ function savePromptTemplate() {
   } catch(e) {}
   ta.classList.remove('editing');
   _showEditBar(_activePromptKey);
-  toast('Da luu template', 'ok');
+  toast('Đã lưu template', 'ok');
 }
 
 function resetPromptTemplate() {
@@ -1492,7 +1542,7 @@ function resetPromptTemplate() {
                .replace(/{PLATFORM}/g, S.platforms.join(' va ')||'TikTok');
   ta.classList.remove('editing');
   _showEditBar(_activePromptKey);
-  toast('Da khoi phuc template goc', 'ok');
+  toast('Đã khôi phục template gốc', 'ok');
 }
 
 function togglePromptMenu() {
@@ -1525,7 +1575,7 @@ function usePrompt(key) {
   document.getElementById('promptArrow').classList.remove('rotated');
   _activePromptKey = key;
   _showEditBar(key);
-  toast('Da chon prompt: ' + event.target.textContent, 'ok');
+  toast('Đã chọn prompt: ' + event.target.textContent, 'ok');
 }
 
 // ── STATE ────────────────────────────────────────────────────────────
@@ -1588,13 +1638,48 @@ async function checkStatus() {
 }
 
 async function loadDropdowns() {
-  try {
-    const d = await fetch(_API + '/api/config').then(r => r.json());
+  const _DEFAULT_DATA = {
+    xe_list: [
+      'V1 Plus Livo', 'V1 Plus Lihaze', 'DK S3', 'DK EZ3', 'DK V2', 'DK S5',
+      'Dibao Rosa', 'Weezee Plus 3', 'Gogo Yaka', 'Sky', 'Lavia SX', 'Lavia Plus',
+      'V1 Sonco', 'Kren', 'G9 S New', 'JVC G9 NFC', 'Sonco Bun', 'V1 Dior JVC'
+    ],
+    mau_list: [
+      'Đen', 'Trắng', 'Đỏ', 'Cam', 'Vàng', 'Xanh lá', 'Xanh dương', 'Xanh navy',
+      'Tím', 'Hồng', 'Bạc', 'Xám', 'Nâu', 'Kem', 'Xanh ngọc', 'Hồng phấn', 'Vàng đồng', 'Đen bóng'
+    ],
+    loai_list: [
+      'Review xe mới', 'So sánh xe', 'Demo tính năng', 'Unboxing',
+      'Khách hàng đánh giá', 'Hướng dẫn sử dụng', 'Khuyến mãi/ưu đãi',
+      'Behind the scenes', 'Kỹ thuật sửa chữa', 'Story thương hiệu'
+    ],
+    doi_tuong_list: [
+      'Học sinh/Sinh viên', 'Phụ huynh mua cho con', 'Nhân viên văn phòng',
+      'Nội trợ/Gia đình', 'Người lớn tuổi', 'Khách mua xe cũ', 'Khách cần sửa chữa'
+    ]
+  };
+  function fillSelects(d) {
     const xeEl = document.getElementById('xe');
-    xeEl.innerHTML = '<option value="">-- Chon xe --</option>' +
+    xeEl.innerHTML = '<option value="">-- Chọn xe --</option>' +
       d.xe_list.map(x => `<option value="${x}">${x}</option>`).join('');
     const mauEl = document.getElementById('mau');
-    mauEl.innerHTML = '<option value="">-- Chon mau --</option>' +
+    mauEl.innerHTML = '<option value="">-- Chọn màu --</option>' +
+      d.mau_list.map(m => `<option value="${m}">${m}</option>`).join('');
+    const loaiEl = document.getElementById('loai');
+    loaiEl.innerHTML = d.loai_list.map(l => `<option value="${l}">${l}</option>`).join('');
+    const dtEl = document.getElementById('doituong');
+    dtEl.innerHTML = d.doi_tuong_list.map(dt => `<option value="${dt}">${dt}</option>`).join('');
+  }
+  // Load default data immediately — selects always work
+  fillSelects(_DEFAULT_DATA);
+  // Try to update from API (uses Railway data if available)
+  try {
+    const d = await fetch(_API + '/api/config').then(r => r.json());
+    if (d.xe_list && d.xe_list.length) fillSelects(d);
+  } catch(e) { /* fallback data already loaded */ }
+}">${x}</option>`).join('');
+    const mauEl = document.getElementById('mau');
+    mauEl.innerHTML = '<option value="">-- Chọn màu --</option>' +
       d.mau_list.map(m => `<option value="${m}">${m}</option>`).join('');
     const loaiEl = document.getElementById('loai');
     loaiEl.innerHTML = d.loai_list.map(l => `<option value="${l}">${l}</option>`).join('');
@@ -1776,7 +1861,7 @@ function handleFile(file) {
   document.getElementById('fileSelected').style.display = 'block';
   document.getElementById('fileName').textContent = file.name;
   S.pendingFile = file;
-  toast('Video da chon: ' + file.name, 'ok');
+  toast('Video đã chọn: ' + file.name, 'ok');
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────────
@@ -1815,7 +1900,7 @@ async function getJSON(url) {
 
 function copyText(id) {
   const t = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(t).then(() => toast('Da copy!', 'ok'));
+  navigator.clipboard.writeText(t).then(() => toast('Đã copy!', 'ok'));
 }
 
 function railProgress(pct, label) {
@@ -1840,26 +1925,26 @@ function closeModalClick(id, e) { if (e.target.id === id) closeModal(id); }
 
 // ── ANALYZE ───────────────────────────────────────────────────────────
 async function doAnalyze() {
-  if (!S.pendingFile) { toast('Chua chon video', 'err'); return; }
+  if (!S.pendingFile) { toast('Chưa chọn video', 'err'); return; }
   const btn = document.getElementById('btnAnalyze');
-  railProgress(20, 'Dang upload video...');
+  railProgress(20, 'Đang upload video...');
   setLoading(btn, true);
   const fd = new FormData();
   fd.append('file', S.pendingFile);
   try {
-    railProgress(50, 'AI dang phan tich video...');
+    railProgress(50, 'AI đang phân tích video...');
     const d = await fetch(_API + '/api/analyze', { method:'POST', body: fd }).then(r => r.json());
     railProgress(100, '');
     S.videoPath = d.video_path;
     if (d.duration) document.getElementById('videoDuration').textContent = d.duration + 's';
     document.getElementById('analysisCard').style.display = 'block';
-    document.getElementById('visionBox').textContent = d.vision || '(Khong co du lieu)';
-    document.getElementById('qualityBox').textContent = d.quality || '(Khong co du lieu)';
+    document.getElementById('visionBox').textContent = d.vision || '(Không có dữ liệu)';
+    document.getElementById('qualityBox').textContent = d.quality || '(Không có dữ liệu)';
     if (d.xe_detect) autoFill('xe', d.xe_detect, 'xeDetect', '');
     if (d.mau_detect) autoFill('mau', d.mau_detect, 'mauDetect', '');
     if (d.loai_detect) autoFill('loai', d.loai_detect, 'loaiDetect', '');
-    toast('Phan tich xong!', 'ok');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    toast('Phân tích xong!', 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setLoading(btn, false);
   setTimeout(() => railProgress(0,''), 1500);
 }
@@ -1867,10 +1952,10 @@ async function doAnalyze() {
 // ── GENERATE ──────────────────────────────────────────────────────────
 async function doGenerate() {
   const xe = document.getElementById('xe').value;
-  if (!xe) { toast('Chon ten xe truoc', 'err'); return; }
+  if (!xe) { toast('Chọn tên xe trước', 'err'); return; }
   const btn = document.getElementById('btnGenerate');
   setLoading(btn, true);
-  railProgress(30, 'Dang goi Claude AI...');
+  railProgress(30, 'Đang gọi Claude AI...');
   const body = {
     ten_xe: xe,
     mau_xe: document.getElementById('mau').value,
@@ -1884,7 +1969,7 @@ async function doGenerate() {
     voice_slot: typeof _vsActiveSlot !== 'undefined' ? (_vsActiveSlot || '') : '',
   };
   try {
-    railProgress(60, 'AI dang viet...');
+    railProgress(60, 'AI đang viết...');
     const d = await postJSON('/api/generate', body);
     railProgress(100, '');
     document.getElementById('scriptBox').textContent = d.script || '';
@@ -1892,8 +1977,8 @@ async function doGenerate() {
     document.getElementById('hashtagBox').textContent = d.hashtag || '';
     document.getElementById('outputCard').style.display = 'block';
     saveHistory({ xe, mau: body.mau_xe, script: d.script });
-    toast('Da sinh noi dung!', 'ok');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    toast('Đã sinh nội dung!', 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setLoading(btn, false);
   setTimeout(() => railProgress(0,''), 1500);
 }
@@ -1901,12 +1986,12 @@ async function doGenerate() {
 // ── CUSTOM GENERATE ───────────────────────────────────────────────────
 async function doCustomGenerate() {
   const prompt = document.getElementById('customPromptInline').value.trim();
-  if (!prompt) { toast('Nhap prompt o Step 3 truoc', 'err'); return; }
+  if (!prompt) { toast('Nhập prompt ở Step 3 trước', 'err'); return; }
   const btn = document.getElementById('btnCustom');
   setLoading(btn, true);
-  railProgress(20, 'Dang gui prompt tuy chinh...');
+  railProgress(20, 'Đang gửi prompt tùy chỉnh...');
   try {
-    railProgress(60, 'AI dang xu ly...');
+    railProgress(60, 'AI đang xử lý...');
     const d = await postJSON('/api/custom_generate', {
       prompt, model: S.model,
       ten_xe: document.getElementById('xe').value,
@@ -1916,16 +2001,16 @@ async function doCustomGenerate() {
     document.getElementById('scriptBox').textContent = d.result || '';
     document.getElementById('outputCard').style.display = 'block';
     switchTab('script', document.querySelector('.tab-btn'));
-    toast('Da xu ly xong!', 'ok');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    toast('Đã xử lý xong!', 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setLoading(btn, false);
   setTimeout(() => railProgress(0,''), 1500);
 }
 
 // ── RENDER VIDEO ──────────────────────────────────────────────────────
 async function doRenderVideo() {
-  if (!S.videoPath) { toast('Chua upload video hoac phan tich', 'err'); return; }
-  railProgress(20, 'Dang dung video...');
+  if (!S.videoPath) { toast('Chưa upload video hoặc phân tích', 'err'); return; }
+  railProgress(20, 'Đang dựng video...');
   try {
     setRenderStep(0);
     const d = await postJSON('/api/render_video', {
@@ -1939,12 +2024,12 @@ async function doRenderVideo() {
     if (d.ok) {
       setRenderStep(4, 'done');
       showRenderResult(d.url, d.filename);
-      document.getElementById('renderStatus').textContent = 'Hoan thanh!';
+      document.getElementById('renderStatus').textContent = 'Hoàn thành!';
       document.getElementById('renderPct').innerHTML = '100<span>%</span>';
       document.getElementById('renderBarFill').style.width = '100%';
-      toast('Video da xuat!', 'ok');
+      toast('Video đã xuất!', 'ok');
     }
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 2000);
 }
 
@@ -1968,13 +2053,13 @@ function showRenderResult(url, filename) {
 
 // ── SUBTITLE ──────────────────────────────────────────────────────────
 async function doSubtitle() {
-  if (!S.videoPath) { toast('Chua co video', 'err'); return; }
-  railProgress(30, 'Dang trich xuat phu de...');
+  if (!S.videoPath) { toast('Chưa có video', 'err'); return; }
+  railProgress(30, 'Đang trích xuất phụ đề...');
   try {
     const d = await postJSON('/api/subtitle', { video_path: S.videoPath });
-    if (d.ok) toast('Phu de: ' + d.filename, 'ok');
-    else toast('Loi: ' + d.error, 'err');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    if (d.ok) toast('Phụ đề: ' + d.filename, 'ok');
+    else toast('Lỗi: ' + d.error, 'err');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 1500);
 }
 
@@ -1985,46 +2070,46 @@ async function doSubtitleThenVoice() {
 
 // ── THUMBNAIL ─────────────────────────────────────────────────────────
 async function doThumbnail() {
-  if (!S.videoPath) { toast('Chua co video', 'err'); return; }
+  if (!S.videoPath) { toast('Chưa có video', 'err'); return; }
   railProgress(30, 'Dang tao thumbnail...');
   try {
     const d = await postJSON('/api/thumbnail', { video_path: S.videoPath, ten_xe: document.getElementById('xe').value });
     if (d.ok) toast('Thumbnail: ' + d.url, 'ok');
-    else toast('Loi: ' + d.error, 'err');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    else toast('Lỗi: ' + d.error, 'err');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 1500);
 }
 
 // ── VIRAL SCORE ───────────────────────────────────────────────────────
 async function doViralScore() {
   const script = document.getElementById('scriptBox').textContent;
-  if (!script) { toast('Can sinh Script truoc', 'err'); return; }
-  toast('Dang cham diem viral...', '');
+  if (!script) { toast('Cần sinh Script trước', 'err'); return; }
+  toast('Đang chấm điểm viral...', '');
   try {
     const d = await postJSON('/api/score', { script, ten_xe: document.getElementById('xe').value });
     toast(d.score_text || d.score, 'ok');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
 }
 
 // ── CHECK DUPLICATE ───────────────────────────────────────────────────
 async function doCheckDuplicate() {
   const script = document.getElementById('scriptBox').textContent;
-  if (!script) { toast('Can sinh Script truoc', 'err'); return; }
+  if (!script) { toast('Cần sinh Script trước', 'err'); return; }
   try {
     const d = await postJSON('/api/check_duplicate', { script });
-    toast(d.is_duplicate ? 'Co the trung lap!' : 'Noi dung doc dao', d.is_duplicate ? 'err' : 'ok');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    toast(d.is_duplicate ? 'Có thể trùng lặp!' : 'Nội dung độc đáo', d.is_duplicate ? 'err' : 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
 }
 
 // ── EXPORT ────────────────────────────────────────────────────────────
 async function doExport(platform) {
-  if (!S.videoPath) { toast('Chua co video de xuat', 'err'); return; }
-  railProgress(30, 'Dang xuat ' + platform + '...');
+  if (!S.videoPath) { toast('Chưa có video để xuất', 'err'); return; }
+  railProgress(30, 'Đang xuất ' + platform + '...');
   try {
     const d = await postJSON('/api/export', { video_path: S.videoPath, platform });
-    if (d.ok) { toast('Xuat ' + platform + ': ' + d.filename, 'ok'); }
-    else toast('Loi: ' + d.error, 'err');
-  } catch(e) { toast('Loi: ' + e.message, 'err'); }
+    if (d.ok) { toast('Xuất ' + platform + ': ' + d.filename, 'ok'); }
+    else toast('Lỗi: ' + d.error, 'err');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 1500);
 }
 
@@ -2047,12 +2132,12 @@ function filterHistory(q) {
 function renderHistory(list) {
   const grid = document.getElementById('historyGrid');
   if (!grid) return;
-  if (!list.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chua co video nao</div></div>'; return; }
+  if (!list.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chưa có video nào</div></div>'; return; }
   grid.innerHTML = list.map(h => `
     <div class="history-card">
       <div class="history-thumb">&#127916;</div>
       <div class="history-info">
-        <div class="history-xe">${h.xe || 'Khong ro'}</div>
+        <div class="history-xe">${h.xe || 'Không rõ'}</div>
         <div class="history-meta">${h.mau || ''}</div>
         <div class="history-date">${h.date || ''}</div>
       </div>
@@ -2098,15 +2183,15 @@ async function vsSelectSlot(slot) {
     vsRenderPattern(p);
     const isActive = _vsActiveSlot===slot;
     const btn = document.getElementById('btnVsActivate');
-    btn.textContent = isActive ? 'Dang dung giong nay' : 'Dung giong nay';
+    btn.textContent = isActive ? 'Đang dùng giọng này' : 'Dùng giọng này';
     btn.style.color = isActive ? '#34d399' : '';
-  } catch(e) { toast('Khong tai duoc profile', 'err'); }
+  } catch(e) { toast('Không tải được profile', 'err'); }
 }
 
 function vsRenderSamples(samples) {
   const list = document.getElementById('vsSamplesList');
   const lbl = document.getElementById('vsSampleCountLabel');
-  lbl.textContent = samples.length ? samples.length + ' mau da them' : 'Chua co mau';
+  lbl.textContent = samples.length ? samples.length + ' mẫu đã thêm' : 'Chưa có mẫu';
   list.innerHTML = samples.map((s,i) => `
     <div class="vs-sample-item">
       <div style="flex:1;min-width:0">
@@ -2137,7 +2222,7 @@ function vsRenderPattern(p) {
 async function vsAddSample() {
   const text = document.getElementById('vsNewSample').value.trim();
   const label = document.getElementById('vsNewLabel').value.trim();
-  if (!text) { toast('Nhap noi dung mau truoc', 'err'); return; }
+  if (!text) { toast('Nhập nội dung mẫu trước', 'err'); return; }
   try {
     const d = await postJSON('/api/voice_style/'+_vsSlot+'/add_sample', {text, label});
     if (d.ok) {
@@ -2221,7 +2306,7 @@ async function vsUploadFileObj(file) {
       prog.style.display = 'none';
       bar.style.width = '0%';
       icon.textContent = '🎙️';
-      txt.innerHTML = 'Keo tha hoac <strong style="color:var(--accent2)">bam chon</strong> file video / MP3<br><span style="font-size:11px">AI se tu dong trich xuat loi thoai (Whisper)</span>';
+      txt.innerHTML = 'Kéo thả hoặc <strong style="color:var(--accent2)">bấm chọn</strong> file video / MP3<br><span style="font-size:11px">AI sẽ tự động trích xuất lời thoại (Whisper)</span>';
     }, 4000);
   }
 }
@@ -2239,7 +2324,7 @@ async function vsAnalyze() {
   setLoading(btn, true);
   try {
     const d = await fetch(_API + '/api/voice_style/'+_vsSlot+'/analyze', {method:'POST'}).then(r=>r.json());
-    if (d.ok) { toast('AI da hoc xong giong dieu!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
+    if (d.ok) { toast('AI đã học xong giọng điệu!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
     else toast(d.message||'Loi phan tich', 'err');
   } catch(e) { toast(e.message, 'err'); }
   setLoading(btn, false);
@@ -2260,7 +2345,7 @@ async function vsClear() {
   if (!confirm('Xoa toan bo mau va ket qua hoc?')) return;
   try {
     await fetch(_API + '/api/voice_style/'+_vsSlot+'/clear', {method:'POST'}).then(r=>r.json());
-    toast('Da xoa toan bo', 'ok');
+    toast('Đã xóa toàn bộ', 'ok');
     vsSelectSlot(_vsSlot); vsLoadAll();
   } catch(e) { toast(e.message, 'err'); }
 }
@@ -2268,19 +2353,19 @@ async function vsClear() {
 function vsToggleActive() {
   if (_vsActiveSlot === _vsSlot) {
     _vsActiveSlot = null;
-    document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> Hoc giong &amp; ngu dieu';
-    toast('Da tat giong dieu tuy chinh', 'ok');
+    document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> Học giọng &amp; ngữ điệu';
+    toast('Đã tắt giọng điệu tùy chỉnh', 'ok');
   } else {
     const p = _vsProfiles[_vsSlot];
-    if (!p||!p.analyzed) { toast('Can phan tich truoc! Bam Phan tich & Hoc', 'err'); return; }
+    if (!p||!p.analyzed) { toast('Cần phân tích trước! Bấm Phân tích & Học', 'err'); return; }
     _vsActiveSlot = _vsSlot;
     const name = p.display_name || ot;
     document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> ' + name + ' &#10003;';
-    toast('Se dung giong: ' + name, 'ok');
+    toast('Sẽ dùng giọng: ' + name, 'ok');
   }
   const btn = document.getElementById('btnVsActivate');
   const isActive = _vsActiveSlot === _vsSlot;
-  btn.textContent = isActive ? 'Dang dung giong nay' : 'Dung giong nay';
+  btn.textContent = isActive ? 'Đang dùng giọng này' : 'Dùng giọng này';
   btn.style.color = isActive ? '#34d399' : '';
 }
 
@@ -2297,7 +2382,7 @@ function fillVoiceFromScript() {
 
 async function sendVoiceover() {
   const text = document.getElementById('voiceText').value.trim();
-  if (!text) { toast('Nhap noi dung can doc', 'err'); return; }
+  if (!text) { toast('Nhập nội dung cần đọc', 'err'); return; }
   const voice = document.getElementById('voiceSelect').value;
   const btn = document.getElementById('btnVoiceSend');
   setLoading(btn, true);
@@ -2311,7 +2396,7 @@ async function sendVoiceover() {
       const dlBtn = document.getElementById('voiceDownloadBtn');
       dlBtn.href = url;
       dlBtn.style.display = 'inline-flex';
-      toast('Da tao giong doc!', 'ok');
+      toast('Đã tạo giọng đọc!', 'ok');
     }
   } catch(e) { toast(e.message, 'err'); }
   setLoading(btn, false);
