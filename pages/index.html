@@ -921,12 +921,12 @@ textarea { resize: vertical; min-height: 60px; }
               <div class="card-title"><div class="step-badge">2</div> ThÃ´ng tin video</div>
               <div class="form-row">
                 <label class="form-label">&#128665; TÃªn xe</label>
-                <select id="xe"><option value="">-- Chá»n xe --</option></select>
+                <input id="xe" list="xe-datalist" placeholder="Chọn hoặc nhập tên xe..." autocomplete="off"><datalist id="xe-datalist"></datalist>
                 <div class="badge badge-success" id="xeDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
                 <label class="form-label">&#127912; MÃ u xe</label>
-                <select id="mau"><option value="">-- Chá»n mÃ u --</option></select>
+                <input id="mau" list="mau-datalist" placeholder="Chọn hoặc nhập màu xe..." autocomplete="off"><datalist id="mau-datalist"></datalist>
                 <div class="badge badge-success" id="mauDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
@@ -1664,16 +1664,10 @@ async function loadDropdowns() {
     ]
   };
   function fillSelects(d) {
-    const xeEl = document.getElementById('xe');
-    xeEl.innerHTML = '<option value="">-- Chá»n xe --</option>' +
-      d.xe_list.map(x => `<option value="${x}">${x}</option>`).join('');
-    const mauEl = document.getElementById('mau');
-    mauEl.innerHTML = '<option value="">-- Chá»n mÃ u --</option>' +
-      d.mau_list.map(m => `<option value="${m}">${m}</option>`).join('');
-    const loaiEl = document.getElementById('loai');
-    loaiEl.innerHTML = d.loai_list.map(l => `<option value="${l}">${l}</option>`).join('');
-    const dtEl = document.getElementById('doituong');
-    dtEl.innerHTML = d.doi_tuong_list.map(dt => `<option value="${dt}">${dt}</option>`).join('');
+    document.getElementById('xe-datalist').innerHTML = d.xe_list.map(x => `<option value="${x}">`).join('');
+    document.getElementById('mau-datalist').innerHTML = d.mau_list.map(m => `<option value="${m}">`).join('');
+    document.getElementById('loai-datalist').innerHTML = d.loai_list.map(l => `<option value="${l}">`).join('');
+    document.getElementById('doituong-datalist').innerHTML = d.doi_tuong_list.map(dt => `<option value="${dt}">`).join('');
   }
   // Load default data immediately â selects always work
   fillSelects(_DEFAULT_DATA);
