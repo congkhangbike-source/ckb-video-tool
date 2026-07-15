@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CKB Video Tool</title>
 <style>
-/* ââ RESET & BASE âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── RESET & BASE ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #0c0c1e;
@@ -27,15 +27,15 @@
 }
 html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; overflow: hidden; }
 
-/* ââ SCROLLBAR âââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── SCROLLBAR ───────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 3px; }
 
-/* ââ LAYOUT ââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── LAYOUT ──────────────────────────────────────────────────── */
 .app { display: flex; height: 100vh; }
 
-/* ââ SIDEBAR âââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--sidebar);
@@ -63,10 +63,10 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
 .dot.warn { background: var(--warning); }
 .dot.err { background: var(--error); }
 
-/* ââ MAIN ââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── MAIN ────────────────────────────────────────────────────── */
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-/* ââ HEADER ââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── HEADER ──────────────────────────────────────────────────── */
 .header {
   padding: 14px 20px;
   border-bottom: 1px solid var(--border);
@@ -100,14 +100,14 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
 }
 .api-badge.offline { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.3); }
 
-/* ââ CONTENT AREA ââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── CONTENT AREA ────────────────────────────────────────────── */
 .content-area { flex: 1; overflow: hidden; padding: 14px 14px 0 16px; display: flex; flex-direction: column; }
 
-/* ââ PAGE VIEWS ââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── PAGE VIEWS ──────────────────────────────────────────────── */
 .page { display: none; }
 .page.active { display: block; }
 
-/* ââ GENERATE PAGE GRID ââââââââââââââââââââââââââââââââââââââââ */
+/* ── GENERATE PAGE GRID ──────────────────────────────────────── */
 .gen-grid {
   display: grid;
   grid-template-columns: 355px 1fr 192px;
@@ -133,7 +133,7 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
   gap: 0;
 }
 
-/* ââ CARDS âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── CARDS ───────────────────────────────────────────────────── */
 .card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
@@ -149,7 +149,7 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 
-/* ââ UPLOAD ZONE âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── UPLOAD ZONE ─────────────────────────────────────────────── */
 .upload-zone {
   border: 2px dashed rgba(124,58,237,0.4); border-radius: 10px;
   padding: 22px 16px; text-align: center; cursor: pointer;
@@ -163,7 +163,7 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
 .upload-info { font-size: 11px; color: var(--muted); margin-top: 4px; }
 .file-selected { margin-top: 8px; font-size: 12px; color: var(--success); display: none; }
 
-/* ââ UPLOAD TABS âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── UPLOAD TABS ─────────────────────────────────────────────── */
 .upload-tabs {
   display: flex; gap: 0; border-radius: 8px; overflow: hidden;
   border: 1px solid var(--border); margin-bottom: 10px;
@@ -177,7 +177,7 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
 .utab.active { background: rgba(124,58,237,0.2); color: #c4b5fd; }
 .utab:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
 
-/* ââ SCENE LIST ââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── SCENE LIST ──────────────────────────────────────────────── */
 .scene-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
 .scene-item {
   display: flex; align-items: center; gap: 8px;
@@ -238,7 +238,7 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
   padding: 2px 8px; margin-bottom: 6px;
 }
 
-/* ââ SCENE PREVIEW NAV âââââââââââââââââââââââââââââââââââââââââ */
+/* ── SCENE PREVIEW NAV ───────────────────────────────────────── */
 .scene-preview-nav {
   display: none; align-items: center; justify-content: space-between;
   padding: 6px 4px 0; gap: 8px;
@@ -262,7 +262,7 @@ html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; backg
   max-width: 140px;
 }
 
-/* ââ FORM ELEMENTS âââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── FORM ELEMENTS ───────────────────────────────────────────── */
 .form-row { margin-bottom: 9px; }
 .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: block; }
 select, input[type=text], textarea {
@@ -282,7 +282,7 @@ textarea { resize: vertical; min-height: 60px; }
 .pill:hover { border-color: var(--accent); color: var(--text); }
 .pill.active { background: rgba(124,58,237,0.25); border-color: var(--accent); color: #c4b5fd; }
 
-/* ââ BUTTONS âââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── BUTTONS ─────────────────────────────────────────────────── */
 .btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
@@ -299,13 +299,13 @@ textarea { resize: vertical; min-height: 60px; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ââ PROGRESS BAR ââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── PROGRESS BAR ────────────────────────────────────────────── */
 .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 8px 0; display: none; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.4s; }
 .progress-bar.active { display: block; }
 .progress-label { font-size: 11px; color: var(--muted); text-align: center; }
 
-/* ââ RIGHT PANEL âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── RIGHT PANEL ─────────────────────────────────────────────── */
 .preview-video {
   width: 100%; aspect-ratio: 9/16; max-height: 300px;
   background: #06061a; border-radius: 10px; object-fit: contain; border: 1px solid var(--border);
@@ -319,7 +319,7 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .video-placeholder .ph-icon { font-size: 30px; opacity: 0.4; }
 
-/* ââ OUTPUT TABS âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── OUTPUT TABS ─────────────────────────────────────────────── */
 .tab-nav {
   display: flex; gap: 3px; margin-bottom: 10px;
   background: rgba(0,0,0,0.2); padding: 4px; border-radius: 8px;
@@ -344,7 +344,7 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .copy-btn:hover { color: var(--text); border-color: var(--accent); }
 
-/* ââ ANALYSIS BOX ââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── ANALYSIS BOX ────────────────────────────────────────────── */
 .analysis-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .analysis-box {
   background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px;
@@ -353,13 +353,13 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .analysis-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-/* ââ BADGE âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── BADGE ───────────────────────────────────────────────────── */
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .badge-success { background: rgba(16,185,129,0.15); color: #34d399; }
 .badge-processing { background: rgba(99,102,241,0.15); color: #818cf8; }
 .badge-error { background: rgba(239,68,68,0.1); color: #f87171; }
 
-/* ââ TOAST âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── TOAST ───────────────────────────────────────────────────── */
 .toast {
   position: fixed; bottom: 20px; right: 20px; z-index: 999;
   background: var(--card2); border: 1px solid var(--border); border-radius: 10px;
@@ -371,7 +371,7 @@ textarea { resize: vertical; min-height: 60px; }
 .toast.ok { border-color: rgba(16,185,129,0.4); color: #34d399; }
 .toast.err { border-color: rgba(239,68,68,0.3); color: #f87171; }
 
-/* ââ ACTION RAIL âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── ACTION RAIL ─────────────────────────────────────────────── */
 .action-rail {
   position: sticky; top: 0;
   height: calc(100vh - 74px);
@@ -405,7 +405,7 @@ textarea { resize: vertical; min-height: 60px; }
 .rail-btn.rail-red:hover { border-color: var(--error); background: rgba(239,68,68,0.08); color: #f87171; }
 .rail-icon { font-size: 14px; flex-shrink: 0; }
 
-/* ââ MODAL âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── MODAL ───────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 300;
   background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
@@ -440,7 +440,7 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .modal-file-btn:hover { border-color: var(--accent); background: rgba(124,58,237,0.12); }
 
-/* ââ HISTORY PAGE ââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── HISTORY PAGE ────────────────────────────────────────────── */
 .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .history-search {
   background: rgba(255,255,255,0.05); border: 1px solid var(--border);
@@ -466,7 +466,7 @@ textarea { resize: vertical; min-height: 60px; }
 .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
 .empty-state .empty-icon { font-size: 44px; margin-bottom: 10px; opacity: 0.4; }
 
-/* ââ RENDER PROGRESS CARD ââââââââââââââââââââââââââââââââââââââ */
+/* ── RENDER PROGRESS CARD ────────────────────────────────────── */
 .render-card { flex-shrink: 0; }
 .render-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .render-pct {
@@ -501,9 +501,9 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .render-step.active .step-dot { border-color: var(--accent2); background: rgba(124,58,237,0.2); animation: pulse 1s ease-in-out infinite; }
 .render-step.done .step-dot { border-color: var(--success); background: rgba(16,185,129,0.15); }
-.render-step.done .step-dot::after { content: 'â'; color: var(--success); }
+.render-step.done .step-dot::after { content: '✓'; color: var(--success); }
 .render-step.error .step-dot { border-color: var(--error); background: rgba(239,68,68,0.15); }
-.render-step.error .step-dot::after { content: 'â'; color: var(--error); }
+.render-step.error .step-dot::after { content: '✕'; color: var(--error); }
 .render-step:not(.active):not(.done):not(.error) .step-dot::after { content: ''; }
 @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,0.4)} 50%{box-shadow:0 0 0 5px rgba(168,85,247,0)} }
 
@@ -524,7 +524,7 @@ textarea { resize: vertical; min-height: 60px; }
 .render-dl-btn.primary { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: #34d399; }
 .render-dl-btn.primary:hover { background: rgba(16,185,129,0.25); }
 
-/* ââ PLATFORM PILLS WITH ICONS âââââââââââââââââââââââââââââââââ */
+/* ── PLATFORM PILLS WITH ICONS ───────────────────────────────── */
 .platform-row { display: flex; gap: 4px; margin-bottom: 7px; flex-wrap: nowrap; }
 .plat-pill {
   display: flex; align-items: center; gap: 3px;
@@ -536,7 +536,7 @@ textarea { resize: vertical; min-height: 60px; }
 .plat-pill.active { background: rgba(124,58,237,0.22); border-color: var(--accent); color: #c4b5fd; }
 .plat-pill svg { width: 10px; height: 10px; flex-shrink: 0; }
 
-/* ââ PROMPT TEXTAREA âââââââââââââââââââââââââââââââââââââââââââ */
+/* ── PROMPT TEXTAREA ─────────────────────────────────────────── */
 .prompt-textarea {
   width: 100%; min-height: 360px; resize: vertical;
   background: rgba(255,255,255,0.05); border: 1px solid var(--border);
@@ -546,7 +546,7 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .prompt-textarea:focus { border-color: var(--accent2); }
 
-/* ââ PROMPT TOGGLE BTN âââââââââââââââââââââââââââââââââââââââââ */
+/* ── PROMPT TOGGLE BTN ───────────────────────────────────────── */
 .prompt-toggle-btn {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
@@ -558,7 +558,7 @@ textarea { resize: vertical; min-height: 60px; }
 .toggle-arrow { font-size: 11px; transition: transform 0.2s; display: inline-block; }
 .toggle-arrow.rotated { transform: rotate(180deg); }
 
-/* ââ PROMPT CHIPS ââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── PROMPT CHIPS ────────────────────────────────────────────── */
 .prompt-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 2px; }
 .prompt-chip {
   padding: 5px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
@@ -572,7 +572,7 @@ textarea { resize: vertical; min-height: 60px; }
 .prompt-chip:active { transform: translateY(0); }
 .prompt-chip.active { background: rgba(124,58,237,0.35); border-color: var(--accent2); color: #fff; }
 
-/* ââ PROMPT EDIT BAR âââââââââââââââââââââââââââââââââââââââââââ */
+/* ── PROMPT EDIT BAR ─────────────────────────────────────────── */
 .prompt-edit-bar {
   display: none; align-items: center; justify-content: space-between;
   background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
@@ -601,10 +601,10 @@ textarea { resize: vertical; min-height: 60px; }
   box-shadow: 0 0 0 2px rgba(16,185,129,0.12);
 }
 
-/* ââ SIDEBAR HIDDEN ââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── SIDEBAR HIDDEN ──────────────────────────────────────────── */
 .sidebar { display: none !important; }
 
-/* ââ HEADER LOGO âââââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── HEADER LOGO ─────────────────────────────────────────────── */
 .header { padding: 8px 20px !important; gap: 0 !important; }
 .header-logo {
   display: flex; align-items: center; gap: 9px;
@@ -613,7 +613,7 @@ textarea { resize: vertical; min-height: 60px; }
 .logo-wordmark { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; line-height: 1; }
 .logo-sub { font-size: 10px; color: var(--muted); font-weight: 400; letter-spacing: 0.03em; }
 
-/* ââ HEADER NAV TABS âââââââââââââââââââââââââââââââââââââââââââ */
+/* ── HEADER NAV TABS ─────────────────────────────────────────── */
 .header-nav { display: flex; gap: 3px; margin: 0 20px; }
 .nav-tab {
   display: flex; align-items: center; gap: 6px;
@@ -626,11 +626,11 @@ textarea { resize: vertical; min-height: 60px; }
 .nav-tab:hover { color: var(--text); background: rgba(124,58,237,0.1); }
 .nav-tab.active { color: #fff; background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.45); }
 
-/* ââ HEADER STATUS âââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── HEADER STATUS ───────────────────────────────────────────── */
 .header-status { display: flex; align-items: center; gap: 14px; margin-right: 10px; }
 .status-dot { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
 
-/* ââ MUSIC PICKER MODAL ââââââââââââââââââââââââââââââââââââââââ */
+/* ── MUSIC PICKER MODAL ──────────────────────────────────────── */
 .music-modal-box {
   background: var(--card2); border: 1px solid var(--border);
   border-radius: 16px; width: 680px; max-width: 95vw;
@@ -697,7 +697,7 @@ textarea { resize: vertical; min-height: 60px; }
 .music-selected-info { font-size: 12px; color: var(--muted); }
 .music-selected-info strong { color: var(--accent2); }
 
-/* ââ VOICE STYLE MODAL âââââââââââââââââââââââââââââââââââââââââ */
+/* ── VOICE STYLE MODAL ───────────────────────────────────────── */
 .vs-slot-tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
 .vs-slot-tab {
   padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
@@ -753,7 +753,7 @@ textarea { resize: vertical; min-height: 60px; }
   background: rgba(16,185,129,0.12); border-radius: 20px; padding: 3px 10px;
 }
 
-/* ââ SETTINGS PAGE âââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── SETTINGS PAGE ───────────────────────────────────────────── */
 .settings-section { margin-bottom: 22px; }
 .settings-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
 .model-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -768,7 +768,7 @@ textarea { resize: vertical; min-height: 60px; }
 .model-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
 .model-rec { display: inline-block; margin-top: 5px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(124,58,237,0.25); color: #c4b5fd; }
 
-/* ââ MOBILE RESPONSIVE âââââââââââââââââââââââââââââââââââââââââââââ */
+/* ── MOBILE RESPONSIVE ───────────────────────────────────────────── */
 @media (max-width: 900px) {
   html, body { overflow: auto; height: auto; }
   .app { flex-direction: column; height: auto; min-height: 100vh; }
@@ -849,8 +849,8 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
       <nav class="header-nav">
         <a class="nav-tab active" onclick="showPage('generate',this)">&#9889; Generate</a>
-        <a class="nav-tab" onclick="showPage('history',this)">&#128218; Lá»ch sá»­</a>
-        <a class="nav-tab" onclick="showPage('settings',this)">&#9881;&#65039; CÃ i Äáº·t</a>
+        <a class="nav-tab" onclick="showPage('history',this)">&#128218; Lịch sử</a>
+        <a class="nav-tab" onclick="showPage('settings',this)">&#9881;&#65039; Cài đặt</a>
       </nav>
       <div class="header-right">
         <div class="header-status">
@@ -862,15 +862,15 @@ textarea { resize: vertical; min-height: 60px; }
         <div class="model-dropdown" id="modelMenu">
           <div class="model-opt" data-model="claude-haiku-4-5-20251001">
             <div class="opt-name">&#9889; Haiku</div>
-            <div class="opt-tip">Nhanh &amp; Ráº» nháº¥t &bull; ~$0.80/M token</div>
+            <div class="opt-tip">Nhanh &amp; Rẻ nhất &bull; ~$0.80/M token</div>
           </div>
           <div class="model-opt selected" data-model="claude-sonnet-5">
             <div class="opt-name">&#129504; Sonnet 5 &#11088;</div>
-            <div class="opt-tip">ThÃ´ng minh &amp; CÃ¢n báº±ng &bull; ~$3/M token</div>
+            <div class="opt-tip">Thông minh &amp; Cân bằng &bull; ~$3/M token</div>
           </div>
           <div class="model-opt" data-model="claude-opus-4-8">
             <div class="opt-name">&#128142; Opus 4.8</div>
-            <div class="opt-tip">Máº¡nh nháº¥t &bull; ~$15/M token</div>
+            <div class="opt-tip">Mạnh nhất &bull; ~$15/M token</div>
           </div>
         </div>
       </div>
@@ -890,26 +890,26 @@ textarea { resize: vertical; min-height: 60px; }
             <div class="card">
               <div class="card-title"><div class="step-badge">1</div> Upload Video</div>
               <div class="upload-tabs">
-                <button class="utab active" id="utabSingle" onclick="setUploadMode('single')">&#127916; Video ÄÆ¡n</button>
-                <button class="utab" id="utabMulti" onclick="setUploadMode('multi')">&#127902;&#65039; Nhiá»u phÃ¢n cáº£nh</button>
+                <button class="utab active" id="utabSingle" onclick="setUploadMode('single')">&#127916; Video đơn</button>
+                <button class="utab" id="utabMulti" onclick="setUploadMode('multi')">&#127902;&#65039; Nhiều phân cảnh</button>
               </div>
               <div id="uploadSingle">
                 <div class="upload-zone" id="uploadZone">
                   <input type="file" id="fileInput" accept="video/*" onchange="onFileSelect(this)">
                   <div class="upload-icon">&#128249;</div>
-                  <div class="upload-text">KÃ©o tháº£ video vÃ o ÄÃ¢y hoáº·c <strong>báº¥m chá»n file</strong></div>
-                  <div class="upload-info">MP4, MOV, AVI, MKV &middot; Tá»i Äa 500MB</div>
+                  <div class="upload-text">Kéo thả video vào đây hoặc <strong>bấm chọn file</strong></div>
+                  <div class="upload-info">MP4, MOV, AVI, MKV &middot; Tối đa 500MB</div>
                   <div class="file-selected" id="fileSelected">&#10003; <span id="fileName"></span></div>
                 </div>
               </div>
               <div id="uploadMulti" style="display:none">
                 <div id="sceneCountWrap" style="display:none">
-                  <span class="scene-count-badge">&#127902;&#65039; <span id="sceneCount">0</span> phÃ¢n cáº£nh</span>
+                  <span class="scene-count-badge">&#127902;&#65039; <span id="sceneCount">0</span> phân cảnh</span>
                 </div>
                 <div class="scene-list" id="sceneList"></div>
                 <div class="scene-add-zone" id="sceneAddZone">
                   <input type="file" id="sceneFileInput" accept="video/*" multiple onchange="onSceneFilesSelect(this)">
-                  &#10133; KÃ©o tháº£ hoáº·c <strong>báº¥m chá»n</strong> Äá» thÃªm phÃ¢n cáº£nh
+                  &#10133; Kéo thả hoặc <strong>bấm chọn</strong> để thêm phân cảnh
                 </div>
               </div>
               <div class="progress-bar" id="uploadProgress"><div class="progress-fill" id="uploadFill" style="width:0%"></div></div>
@@ -918,32 +918,32 @@ textarea { resize: vertical; min-height: 60px; }
 
             <!-- Step 2: Info -->
             <div class="card">
-              <div class="card-title"><div class="step-badge">2</div> ThÃ´ng tin video</div>
+              <div class="card-title"><div class="step-badge">2</div> Thông tin video</div>
               <div class="form-row">
-                <label class="form-label">&#128665; TÃªn xe</label>
+                <label class="form-label">&#128665; Tên xe</label>
                 <input id="xe" list="xe-datalist" placeholder="Chọn hoặc nhập tên xe..." autocomplete="off"><datalist id="xe-datalist"></datalist>
                 <div class="badge badge-success" id="xeDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
-                <label class="form-label">&#127912; MÃ u xe</label>
+                <label class="form-label">&#127912; Màu xe</label>
                 <input id="mau" list="mau-datalist" placeholder="Chọn hoặc nhập màu xe..." autocomplete="off"><datalist id="mau-datalist"></datalist>
                 <div class="badge badge-success" id="mauDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
-                <label class="form-label">&#127916; Loáº¡i video</label>
+                <label class="form-label">&#127916; Loại video</label>
                 <input id="loai" list="loai-datalist" placeholder="Chọn hoặc nhập loại video..." autocomplete="off"><datalist id="loai-datalist"></datalist>
                 <div class="badge badge-success" id="loaiDetect" style="display:none;margin-top:4px"></div>
               </div>
               <div class="form-row">
-                <label class="form-label">&#128101; Äá»i tÆ°á»£ng</label>
+                <label class="form-label">&#128101; Đối tượng</label>
                 <input id="doituong" list="doituong-datalist" placeholder="Chọn hoặc nhập đối tượng..." autocomplete="off"><datalist id="doituong-datalist"></datalist>
               </div>
               <div class="form-row">
-                <label class="form-label">&#128161; Äiá»m ná»i báº­t</label>
-                <input type="text" id="diem" placeholder="VD: pin 60V, báº£o hÃ nh 2 nÄm, giÃ¡ tá»t...">
+                <label class="form-label">&#128161; Điểm nổi bật</label>
+                <input type="text" id="diem" placeholder="VD: pin 60V, bảo hành 2 năm, giá tốt...">
               </div>
               <div class="form-row">
-                <label class="form-label">&#9201;&#65039; Thá»i lÆ°á»£ng</label>
+                <label class="form-label">&#9201;&#65039; Thời lượng</label>
                 <div class="duration-pills">
                   <div class="pill" onclick="setPill(this,'15 giay')">15s</div>
                   <div class="pill active" onclick="setPill(this,'30 giay')">30s</div>
@@ -958,10 +958,10 @@ textarea { resize: vertical; min-height: 60px; }
             <div class="card">
               <div class="card-title" style="justify-content:space-between;margin-bottom:8px">
                 <div style="display:flex;align-items:center;gap:8px">
-                  <div class="step-badge">3</div> Prompt tÃ¹y chá»nh
+                  <div class="step-badge">3</div> Prompt tùy chỉnh
                 </div>
                 <button class="prompt-toggle-btn" id="promptToggleBtn" onclick="togglePromptMenu()">
-                  &#9889; Prompt máº«u <span class="toggle-arrow" id="promptArrow">&#9662;</span>
+                  &#9889; Prompt mẫu <span class="toggle-arrow" id="promptArrow">&#9662;</span>
                 </button>
               </div>
               <div class="platform-row">
@@ -986,25 +986,25 @@ textarea { resize: vertical; min-height: 60px; }
                 <div class="prompt-chips">
                   <button class="prompt-chip" onclick="usePrompt('hook')">&#127919; Hook viral</button>
                   <button class="prompt-chip" onclick="usePrompt('script')">&#128221; Script 30s</button>
-                  <button class="prompt-chip" onclick="usePrompt('funny')">&#128516; HÃ i hÆ°á»c</button>
-                  <button class="prompt-chip" onclick="usePrompt('compare')">&#9878;&#65039; So sÃ¡nh</button>
-                  <button class="prompt-chip" onclick="usePrompt('tech')">&#128267; ThÃ´ng sá» KT</button>
-                  <button class="prompt-chip" onclick="usePrompt('promo')">&#128176; Khuyáº¿n mÃ£i</button>
+                  <button class="prompt-chip" onclick="usePrompt('funny')">&#128516; Hài hước</button>
+                  <button class="prompt-chip" onclick="usePrompt('compare')">&#9878;&#65039; So sánh</button>
+                  <button class="prompt-chip" onclick="usePrompt('tech')">&#128267; Thông số KT</button>
+                  <button class="prompt-chip" onclick="usePrompt('promo')">&#128176; Khuyến mãi</button>
                   <button class="prompt-chip" onclick="usePrompt('faq')">&#10067; FAQ</button>
-                  <button class="prompt-chip" onclick="usePrompt('trend')">&#128293; Báº¯t trend</button>
-                  <button class="prompt-chip" onclick="usePrompt('cta')">&#128227; CTA máº¡nh</button>
+                  <button class="prompt-chip" onclick="usePrompt('trend')">&#128293; Bắt trend</button>
+                  <button class="prompt-chip" onclick="usePrompt('cta')">&#128227; CTA mạnh</button>
                   <button class="prompt-chip" onclick="usePrompt('review')">&#11088; Review KH</button>
                 </div>
               </div>
               <div class="prompt-edit-bar" id="promptEditBar">
                 <span class="prompt-active-label" id="promptActiveLabel">&#128204; &#8212;</span>
                 <div class="prompt-edit-actions">
-                  <button class="pedit-btn edit" onclick="focusPromptEdit()">&#9999;&#65039; Sá»­a</button>
-                  <button class="pedit-btn save" onclick="savePromptTemplate()">&#128190; LÆ°u</button>
+                  <button class="pedit-btn edit" onclick="focusPromptEdit()">&#9999;&#65039; Sửa</button>
+                  <button class="pedit-btn save" onclick="savePromptTemplate()">&#128190; Lưu</button>
                   <button class="pedit-btn reset" onclick="resetPromptTemplate()">&#8617; Reset</button>
                 </div>
               </div>
-              <textarea id="customPromptInline" class="prompt-textarea" placeholder="Viáº¿t yÃªu cáº§u cho AI hoáº·c chá»n prompt máº«u&#10;VD: Viáº¿t 5 hook má» Äáº§u viral cho xe JVC G9..."></textarea>
+              <textarea id="customPromptInline" class="prompt-textarea" placeholder="Viết yêu cầu cho AI hoặc chọn prompt mẫu&#10;VD: Viết 5 hook mở đầu viral cho xe JVC G9..."></textarea>
             </div>
 
           </div>
@@ -1018,7 +1018,7 @@ textarea { resize: vertical; min-height: 60px; }
               <div id="videoHolder">
                 <div class="video-placeholder" id="videoPlaceholder">
                   <div class="ph-icon">&#127916;</div>
-                  <div>Upload video Äá» xem preview</div>
+                  <div>Upload video để xem preview</div>
                 </div>
                 <video class="preview-video" id="videoPreview" controls style="display:none"></video>
               </div>
@@ -1026,12 +1026,12 @@ textarea { resize: vertical; min-height: 60px; }
                 <span id="videoDuration"></span> &middot; <span id="videoSize"></span>
               </div>
               <div class="scene-preview-nav" id="scenePreviewNav">
-                <button class="spnav-btn" id="spnavPrev" onclick="previewScene(-1)">&#9668; TrÆ°á»c</button>
+                <button class="spnav-btn" id="spnavPrev" onclick="previewScene(-1)">&#9668; Trước</button>
                 <div style="text-align:center;flex:1;min-width:0">
                   <div class="spnav-label" id="spnavLabel">Canh 1 / 1</div>
                   <div class="spnav-name" id="spnavName"></div>
                 </div>
-                <button class="spnav-btn" id="spnavNext" onclick="previewScene(1)">Tiáº¿p &#9658;</button>
+                <button class="spnav-btn" id="spnavNext" onclick="previewScene(1)">Tiếp &#9658;</button>
               </div>
             </div>
 
@@ -1039,20 +1039,20 @@ textarea { resize: vertical; min-height: 60px; }
             <div class="card render-card" id="renderCard">
               <div class="render-header">
                 <div>
-                  <div class="card-title" style="margin-bottom:2px">&#127916; Video hoÃ n chá»nh</div>
+                  <div class="card-title" style="margin-bottom:2px">&#127916; Video hoàn chỉnh</div>
                   <div class="render-pct" id="renderPct">0<span>%</span></div>
                 </div>
-                <div class="render-status" id="renderStatus">Chá» xá»­ lÃ½...</div>
+                <div class="render-status" id="renderStatus">Chờ xử lý...</div>
               </div>
               <div class="render-bar-wrap">
                 <div class="render-bar-fill" id="renderBarFill"></div>
               </div>
               <div class="render-steps" id="renderSteps">
-                <div class="render-step" id="rStep0"><div class="step-dot"></div><span>Chuáº©n bá» &amp; Äá»c video</span></div>
-                <div class="render-step" id="rStep1"><div class="step-dot"></div><span>Xá»­ lÃ½ AI &amp; dá»±ng cáº£nh</span></div>
-                <div class="render-step" id="rStep2"><div class="step-dot"></div><span>ThÃªm phá»¥ Äá» &amp; hiá»u á»©ng</span></div>
-                <div class="render-step" id="rStep3"><div class="step-dot"></div><span>GhÃ©p audio &amp; xuáº¥t file</span></div>
-                <div class="render-step" id="rStep4"><div class="step-dot"></div><span>HoÃ n thÃ nh</span></div>
+                <div class="render-step" id="rStep0"><div class="step-dot"></div><span>Chuẩn bị &amp; đọc video</span></div>
+                <div class="render-step" id="rStep1"><div class="step-dot"></div><span>Xử lý AI &amp; dựng cảnh</span></div>
+                <div class="render-step" id="rStep2"><div class="step-dot"></div><span>Thêm phụ đề &amp; hiệu ứng</span></div>
+                <div class="render-step" id="rStep3"><div class="step-dot"></div><span>Ghép audio &amp; xuất file</span></div>
+                <div class="render-step" id="rStep4"><div class="step-dot"></div><span>Hoàn thành</span></div>
               </div>
               <div class="render-video-wrap" id="renderVideoWrap">
                 <video id="renderVideoPlayer" controls></video>
@@ -1062,14 +1062,14 @@ textarea { resize: vertical; min-height: 60px; }
 
             <!-- AI Analysis -->
             <div class="card" id="analysisCard" style="display:none">
-              <div class="card-title">&#128269; PhÃ¢n tÃ­ch AI</div>
+              <div class="card-title">&#128269; Phân tích AI</div>
               <div class="analysis-row">
                 <div>
                   <div class="analysis-label">&#128065;&#65039; Vision</div>
                   <div class="analysis-box" id="visionBox">&#8212;</div>
                 </div>
                 <div>
-                  <div class="analysis-label">&#11088; Cháº¥t lÆ°á»£ng</div>
+                  <div class="analysis-label">&#11088; Chất lượng</div>
                   <div class="analysis-box" id="qualityBox">&#8212;</div>
                 </div>
               </div>
@@ -1077,7 +1077,7 @@ textarea { resize: vertical; min-height: 60px; }
 
             <!-- Output tabs -->
             <div class="card" id="outputCard" style="display:none">
-              <div class="card-title">&#128221; Ná»i dung AI</div>
+              <div class="card-title">&#128221; Nội dung AI</div>
               <div class="tab-nav">
                 <button class="tab-btn active" onclick="switchTab('script',this)">&#128221; Script</button>
                 <button class="tab-btn" onclick="switchTab('caption',this)">&#128172; Caption</button>
@@ -1103,70 +1103,70 @@ textarea { resize: vertical; min-height: 60px; }
           <div class="action-rail">
 
             <div class="rail-section">
-              <div class="rail-title">&#128269; PhÃ¢n tÃ­ch</div>
+              <div class="rail-title">&#128269; Phân tích</div>
               <button class="rail-btn rail-primary" id="btnAnalyze" onclick="doAnalyze()">
                 <span class="rail-icon">&#129302;</span> AI Vision
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#128293; Ná»i dung AI</div>
+              <div class="rail-title">&#128293; Nội dung AI</div>
               <button class="rail-btn rail-primary" id="btnGenerate" onclick="doGenerate()">
                 <span class="rail-icon">&#9889;</span> Sinh Script &amp; Caption
               </button>
               <button class="rail-btn" id="btnCustom" onclick="doCustomGenerate()">
-                <span class="rail-icon">&#9999;&#65039;</span> Gá»­i Custom Prompt
+                <span class="rail-icon">&#9999;&#65039;</span> Gửi Custom Prompt
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#127916; Dá»±ng video</div>
+              <div class="rail-title">&#127916; Dựng video</div>
               <button class="rail-btn" onclick="doRenderVideo()">
-                <span class="rail-icon">&#127902;&#65039;</span> Táº¡o video hoÃ n chá»nh
+                <span class="rail-icon">&#127902;&#65039;</span> Tạo video hoàn chỉnh
               </button>
               <button class="rail-btn" onclick="doSubtitle()">
-                <span class="rail-icon">&#128196;</span> ThÃªm phá»¥ Äá»
+                <span class="rail-icon">&#128196;</span> Thêm phụ đề
               </button>
               <button class="rail-btn" onclick="openVoiceover()">
-                <span class="rail-icon">&#127897;&#65039;</span> AI Äá»c giá»ng nÃ³i
+                <span class="rail-icon">&#127897;&#65039;</span> AI đọc giọng nói
               </button>
               <button class="rail-btn" onclick="doSubtitleThenVoice()">
-                <span class="rail-icon">&#128196;</span> Phá»¥ Äá» + Giá»ng nÃ³i
+                <span class="rail-icon">&#128196;</span> Phụ đề + Giọng nói
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#128228; Xuáº¥t file</div>
+              <div class="rail-title">&#128228; Xuất file</div>
               <button class="rail-btn rail-green" onclick="doExport('tiktok')">
-                <span class="rail-icon">&#128242;</span> Xuáº¥t TikTok
+                <span class="rail-icon">&#128242;</span> Xuất TikTok
               </button>
               <button class="rail-btn rail-green" onclick="doExport('facebook')">
-                <span class="rail-icon">&#128152;</span> Xuáº¥t Facebook
+                <span class="rail-icon">&#128152;</span> Xuất Facebook
               </button>
               <button class="rail-btn rail-green" onclick="doExport('youtube')">
-                <span class="rail-icon">&#9654;&#65039;</span> Xuáº¥t YouTube
+                <span class="rail-icon">&#9654;&#65039;</span> Xuất YouTube
               </button>
               <button class="rail-btn rail-green" onclick="doExport('instagram')">
-                <span class="rail-icon">&#128248;</span> Xuáº¥t Instagram
+                <span class="rail-icon">&#128248;</span> Xuất Instagram
               </button>
             </div>
 
             <div class="rail-section">
-              <div class="rail-title">&#128295; CÃ´ng cá»¥</div>
+              <div class="rail-title">&#128295; Công cụ</div>
               <button class="rail-btn" onclick="doThumbnail()">
-                <span class="rail-icon">&#128444;&#65039;</span> Táº¡o Thumbnail AI
+                <span class="rail-icon">&#128444;&#65039;</span> Tạo Thumbnail AI
               </button>
               <button class="rail-btn rail-yellow" onclick="doViralScore()">
-                <span class="rail-icon">&#128202;</span> Cháº¥m Äiá»m Viral
+                <span class="rail-icon">&#128202;</span> Chấm điểm Viral
               </button>
               <button class="rail-btn" onclick="doCheckDuplicate()">
-                <span class="rail-icon">&#128269;</span> Kiá»m tra trÃ¹ng láº·p
+                <span class="rail-icon">&#128269;</span> Kiểm tra trùng lặp
               </button>
               <button class="rail-btn rail-yellow" onclick="openMusicPicker()">
-                <span class="rail-icon">&#127925;</span> Chá»n nháº¡c &amp; SFX
+                <span class="rail-icon">&#127925;</span> Chọn nhạc &amp; SFX
               </button>
               <button class="rail-btn" onclick="openVoiceStyle()" id="btnVoiceStyle">
-                <span class="rail-icon">&#127917;</span> Há»c giá»ng &amp; ngá»¯ Äiá»u
+                <span class="rail-icon">&#127917;</span> Học giọng &amp; ngữ điệu
               </button>
             </div>
 
@@ -1184,11 +1184,11 @@ textarea { resize: vertical; min-height: 60px; }
       <div class="page" id="page-history">
         <div style="max-width:900px">
           <div class="history-header">
-            <h2 style="font-size:17px">&#128218; Lá»ch sá»­ táº¡o video</h2>
-            <input class="history-search" placeholder="&#128269; TÃ¬m theo tÃªn xe..." oninput="filterHistory(this.value)">
+            <h2 style="font-size:17px">&#128218; Lịch sử tạo video</h2>
+            <input class="history-search" placeholder="&#128269; Tìm theo tên xe..." oninput="filterHistory(this.value)">
           </div>
           <div class="history-grid" id="historyGrid">
-            <div class="empty-state"><div class="empty-icon">&#128205;</div><div>ChÆ°a cÃ³ video nÃ o ÄÆ°á»£c táº¡o</div></div>
+            <div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chưa có video nào được tạo</div></div>
           </div>
         </div>
       </div>
@@ -1196,33 +1196,33 @@ textarea { resize: vertical; min-height: 60px; }
       <!-- PAGE: SETTINGS -->
       <div class="page" id="page-settings">
         <div style="max-width:700px">
-          <h2 style="font-size:17px;margin-bottom:18px">CÃ i Äáº·t</h2>
+          <h2 style="font-size:17px;margin-bottom:18px">Cài đặt</h2>
           <div class="settings-section">
-            <div class="settings-title">&#129302; Chá»n model AI</div>
+            <div class="settings-title">&#129302; Chọn model AI</div>
             <div class="model-cards">
               <div class="model-card" data-model="claude-haiku-4-5-20251001" onclick="selectModel(this)">
                 <div class="model-name">&#9889; Haiku</div>
                 <div class="model-price">~$0.80/M token</div>
-                <div class="model-desc">Nhanh vÃ  ráº» nháº¥t, phÃ¹ há»£p cho caption ÄÆ¡n giáº£n</div>
+                <div class="model-desc">Nhanh và rẻ nhất, phù hợp cho caption đơn giản</div>
               </div>
               <div class="model-card selected" data-model="claude-sonnet-5" onclick="selectModel(this)">
                 <div class="model-name">&#129504; Sonnet 5</div>
                 <div class="model-price">~$3/M token</div>
-                <div class="model-desc">CÃ¢n báº±ng giá»¯a cháº¥t lÆ°á»£ng vÃ  tá»c Äá»</div>
-                <span class="model-rec">&#11088; Khuyáº¿n nghá»</span>
+                <div class="model-desc">Cân bằng giữa chất lượng và tốc độ</div>
+                <span class="model-rec">&#11088; Khuyến nghị</span>
               </div>
               <div class="model-card" data-model="claude-opus-4-8" onclick="selectModel(this)">
                 <div class="model-name">&#128142; Opus 4.8</div>
                 <div class="model-price">~$15/M token</div>
-                <div class="model-desc">Máº¡nh nháº¥t, tá»t nháº¥t cho script phá»©c táº¡p</div>
+                <div class="model-desc">Mạnh nhất, tốt nhất cho script phức tạp</div>
               </div>
             </div>
           </div>
           <div class="settings-section">
-            <div class="settings-title">&#8505;&#65039; Tráº¡ng thÃ¡i há» thá»ng</div>
+            <div class="settings-title">&#8505;&#65039; Trạng thái hệ thống</div>
             <div class="card" style="margin:0">
-              <div class="status-dot" style="margin-bottom:8px"><div class="dot" id="settingApiDot"></div> Claude API: <span id="settingApiStatus">Äang kiá»m tra...</span></div>
-              <div class="status-dot"><div class="dot" id="settingFfmpegDot"></div> FFmpeg: <span id="settingFfmpegStatus">Äang kiá»m tra...</span></div>
+              <div class="status-dot" style="margin-bottom:8px"><div class="dot" id="settingApiDot"></div> Claude API: <span id="settingApiStatus">Đang kiểm tra...</span></div>
+              <div class="status-dot"><div class="dot" id="settingFfmpegDot"></div> FFmpeg: <span id="settingFfmpegStatus">Đang kiểm tra...</span></div>
             </div>
           </div>
         </div>
@@ -1239,32 +1239,32 @@ textarea { resize: vertical; min-height: 60px; }
 <div class="modal-overlay" id="voiceStyleModal" onclick="closeModalClick('voiceStyleModal',event)">
   <div class="modal-box" style="max-width:580px">
     <div class="modal-title">
-      &#127917; Há»c giá»ng &amp; ngá»¯ Äiá»u
+      &#127917; Học giọng &amp; ngữ điệu
       <button class="modal-close" onclick="closeModal('voiceStyleModal')">&#10005;</button>
     </div>
-    <p class="modal-hint">DÃ¡n caption / script máº«u Äá» AI há»c giá»ng Äiá»u. Tá»i Äa 3 ngÆ°á»i. AI sáº½ Ã¡p dá»¥ng khi sinh ná»i dung.</p>
+    <p class="modal-hint">Dán caption / script mẫu để AI học giọng điệu. Tối đa 3 người. AI sẽ áp dụng khi sinh nội dung.</p>
     <div class="vs-slot-tabs" id="vsSlotTabs">
       <button class="vs-slot-tab active" id="vsTab_person_1" onclick="vsSelectSlot('person_1')">
-        <span class="vs-dot"></span><span id="vsTabLabel_person_1">NgÆ°á»i 1</span>
+        <span class="vs-dot"></span><span id="vsTabLabel_person_1">Người 1</span>
       </button>
       <button class="vs-slot-tab" id="vsTab_person_2" onclick="vsSelectSlot('person_2')">
-        <span class="vs-dot"></span><span id="vsTabLabel_person_2">NgÆ°á»i 2</span>
+        <span class="vs-dot"></span><span id="vsTabLabel_person_2">Người 2</span>
       </button>
       <button class="vs-slot-tab" id="vsTab_person_3" onclick="vsSelectSlot('person_3')">
-        <span class="vs-dot"></span><span id="vsTabLabel_person_3">NgÆ°á»i 3</span>
+        <span class="vs-dot"></span><span id="vsTabLabel_person_3">Người 3</span>
       </button>
     </div>
     <div class="vs-profile-header">
-      <input class="vs-name-input" id="vsNameInput" placeholder="TÃªn ngÆ°á»i (VD: Admin, Chá» Lan...)"
+      <input class="vs-name-input" id="vsNameInput" placeholder="Tên người (VD: Admin, Chị Lan...)"
         onblur="vsRename()" onkeydown="if(event.key==='Enter')vsRename()">
-      <button class="pedit-btn reset" style="white-space:nowrap" onclick="vsClear()">&#128465;&#65039; XÃ³a háº¿t</button>
+      <button class="pedit-btn reset" style="white-space:nowrap" onclick="vsClear()">&#128465;&#65039; Xóa hết</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:5px" id="vsSampleCountLabel">ChÆ°a cÃ³ máº«u</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:5px" id="vsSampleCountLabel">Chưa có mẫu</div>
     <div class="vs-samples-list" id="vsSamplesList"></div>
 
     <!-- Upload video/audio -->
     <div class="form-row" style="margin-bottom:8px">
-      <label class="form-label">&#127911; Há»c tá»« file video / MP3</label>
+      <label class="form-label">&#127911; Học từ file video / MP3</label>
       <div class="vs-upload-zone" id="vsUploadZone" onclick="document.getElementById('vsFileInput').click()"
         ondragover="event.preventDefault();this.classList.add('drag-over')"
         ondragleave="this.classList.remove('drag-over')"
@@ -1273,34 +1273,34 @@ textarea { resize: vertical; min-height: 60px; }
           style="display:none" onchange="vsUploadFile(this)">
         <div id="vsUploadIcon" style="font-size:24px;margin-bottom:4px">&#127911;</div>
         <div id="vsUploadText" style="font-size:12px;color:var(--muted)">
-          KÃ©o tháº£ hoáº·c <strong style="color:var(--accent2)">báº¥m chá»n</strong> file video / MP3<br>
-          <span style="font-size:11px">AI sáº½ tá»± Äá»ng trÃ­ch xuáº¥t lá»i thoáº¡i (Whisper)</span>
+          Kéo thả hoặc <strong style="color:var(--accent2)">bấm chọn</strong> file video / MP3<br>
+          <span style="font-size:11px">AI sẽ tự động trích xuất lời thoại (Whisper)</span>
         </div>
         <div id="vsUploadProgress" style="display:none;margin-top:8px;width:100%">
           <div style="background:rgba(124,58,237,0.15);border-radius:4px;height:4px;overflow:hidden">
             <div id="vsUploadBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width 0.3s"></div>
           </div>
-          <div id="vsUploadMsg" style="font-size:11px;color:var(--accent2);margin-top:4px;text-align:center">Äang xá»­ lÃ½...</div>
+          <div id="vsUploadMsg" style="font-size:11px;color:var(--accent2);margin-top:4px;text-align:center">Đang xử lý...</div>
         </div>
       </div>
     </div>
 
     <div class="form-row" style="margin-bottom:6px">
-      <label class="form-label">&#9997;&#65039; ThÃªm máº«u má»i (dÃ¡n caption / script)</label>
-      <textarea id="vsNewSample" rows="3" placeholder="DÃ¡n ná»i dung caption, script cá»§a ngÆ°á»i nÃ y...&#10;Tá»i thiá»u 20 kÃ½ tá»±.&#10;(hoáº·c Äá» trá»ng náº¿u ÄÃ£ upload file á» trÃªn)"></textarea>
+      <label class="form-label">&#9997;&#65039; Thêm mẫu mới (dán caption / script)</label>
+      <textarea id="vsNewSample" rows="3" placeholder="Dán nội dung caption, script của người này...&#10;Tối thiểu 20 ký tự.&#10;(hoặc để trống nếu đã upload file ở trên)"></textarea>
     </div>
     <div style="display:flex;gap:6px;margin-bottom:12px">
-      <input id="vsNewLabel" placeholder="NhÃ£n máº«u (tÃ¹y chá»n)" style="flex:1;padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-size:12px">
-      <button class="btn btn-secondary" style="width:auto;padding:6px 14px" onclick="vsAddSample()">&#10133; ThÃªm</button>
+      <input id="vsNewLabel" placeholder="Nhãn mẫu (tùy chọn)" style="flex:1;padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--text);font-size:12px">
+      <button class="btn btn-secondary" style="width:auto;padding:6px 14px" onclick="vsAddSample()">&#10133; Thêm</button>
     </div>
     <div id="vsPatternWrap" style="display:none">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">&#128202; Pattern ÄÃ£ há»c</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">&#128202; Pattern đã học</div>
       <div class="vs-pattern-box" id="vsPatternBox"></div>
     </div>
     <div class="modal-actions" style="margin-top:14px">
-      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceStyleModal')">ÄÃ³ng</button>
-      <button class="btn btn-secondary" style="width:auto" id="btnVsActivate" onclick="vsToggleActive()">&#9745;&#65039; DÃ¹ng giá»ng nÃ y</button>
-      <button class="btn btn-primary" style="width:auto" id="btnVsAnalyze" onclick="vsAnalyze()">&#129504; PhÃ¢n tÃ­ch &amp; Há»c</button>
+      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceStyleModal')">Đóng</button>
+      <button class="btn btn-secondary" style="width:auto" id="btnVsActivate" onclick="vsToggleActive()">&#9745;&#65039; Dùng giọng này</button>
+      <button class="btn btn-primary" style="width:auto" id="btnVsAnalyze" onclick="vsAnalyze()">&#129504; Phân tích &amp; Học</button>
     </div>
   </div>
 </div>
@@ -1309,32 +1309,32 @@ textarea { resize: vertical; min-height: 60px; }
 <div class="modal-overlay" id="voiceoverModal" onclick="closeModalClick('voiceoverModal',event)">
   <div class="modal-box">
     <div class="modal-title">
-      &#127897;&#65039; AI Äá»c giá»ng nÃ³i
+      &#127897;&#65039; AI đọc giọng nói
       <button class="modal-close" onclick="closeModal('voiceoverModal')">&#10005;</button>
     </div>
-    <p class="modal-hint">AI sáº½ Äá»c vÄn báº£n thÃ nh giá»ng nÃ³i tiáº¿ng Viá»t. PhÃ¹ há»£p lÃ m voiceover cho video.</p>
+    <p class="modal-hint">AI sẽ đọc văn bản thành giọng nói tiếng Việt. Phù hợp làm voiceover cho video.</p>
     <div class="form-row">
-      <label class="form-label">VÄn báº£n cáº§n Äá»c</label>
-      <textarea id="voiceText" rows="5" placeholder="Nháº­p ná»i dung cáº§n AI Äá»c...&#10;Tip: báº¥m 'Láº¥y tá»« Script' Äá» tá»± Äá»ng Äiá»n."></textarea>
+      <label class="form-label">Văn bản cần đọc</label>
+      <textarea id="voiceText" rows="5" placeholder="Nhập nội dung cần AI đọc...&#10;Tip: bấm 'Lấy từ Script' để tự động điền."></textarea>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:10px">
-      <button class="rail-btn" style="width:auto;padding:6px 12px;font-size:12px" onclick="fillVoiceFromScript()">&#128203; Láº¥y tá»« Script</button>
+      <button class="rail-btn" style="width:auto;padding:6px 12px;font-size:12px" onclick="fillVoiceFromScript()">&#128203; Lấy từ Script</button>
     </div>
     <div class="form-row">
-      <label class="form-label">Giá»ng Äá»c</label>
+      <label class="form-label">Giọng đọc</label>
       <select id="voiceSelect">
-        <option value="vi-VN-HoaiMyNeural">&#127897;&#65039; HoÃ i My &#8212; Ná»¯, giá»ng Nam Bá»</option>
-        <option value="vi-VN-NamMinhNeural">&#127897;&#65039; Nam Minh &#8212; Nam, giá»ng HÃ  Ná»i</option>
+        <option value="vi-VN-HoaiMyNeural">&#127897;&#65039; Hoài My &#8212; Nữ, giọng Nam Bộ</option>
+        <option value="vi-VN-NamMinhNeural">&#127897;&#65039; Nam Minh &#8212; Nam, giọng Hà Nội</option>
       </select>
     </div>
     <div id="voiceResultBox" style="display:none;margin-top:12px">
-      <label class="form-label">Káº¿t quáº£</label>
+      <label class="form-label">Kết quả</label>
       <audio id="voiceAudio" controls style="width:100%;margin-bottom:8px;border-radius:8px"></audio>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceoverModal')">ÄÃ³ng</button>
-      <a id="voiceDownloadBtn" class="modal-file-btn" style="display:none" download>&#128229; Táº£i vá» MP3</a>
-      <button class="btn btn-primary" id="btnVoiceSend" style="width:auto" onclick="sendVoiceover()">&#127897;&#65039; Táº¡o giá»ng nÃ³i</button>
+      <button class="btn btn-secondary" style="width:auto" onclick="closeModal('voiceoverModal')">Đóng</button>
+      <a id="voiceDownloadBtn" class="modal-file-btn" style="display:none" download>&#128229; Tải về MP3</a>
+      <button class="btn btn-primary" id="btnVoiceSend" style="width:auto" onclick="sendVoiceover()">&#127897;&#65039; Tạo giọng nói</button>
     </div>
   </div>
 </div>
@@ -1343,20 +1343,20 @@ textarea { resize: vertical; min-height: 60px; }
 <div class="modal-overlay" id="musicModal" onclick="closeModalClick('musicModal',event)">
   <div class="music-modal-box">
     <div class="music-modal-head">
-      <h2>&#127925; Chá»n nháº¡c &amp; SFX</h2>
+      <h2>&#127925; Chọn nhạc &amp; SFX</h2>
       <button class="modal-close" onclick="closeModal('musicModal')">&#10005;</button>
     </div>
     <div class="music-tab-bar">
-      <div class="music-tab active" onclick="switchMusicTab('music',this)">&#127925; Nháº¡c ná»n</div>
+      <div class="music-tab active" onclick="switchMusicTab('music',this)">&#127925; Nhạc nền</div>
       <div class="music-tab" onclick="switchMusicTab('sfx',this)">&#128266; SFX</div>
     </div>
     <div class="music-search-row">
-      <input class="music-search" id="musicSearch" placeholder="&#128269; TÃ¬m theo tÃªn..." oninput="filterMusic(this.value)">
+      <input class="music-search" id="musicSearch" placeholder="&#128269; Tìm theo tên..." oninput="filterMusic(this.value)">
       <span class="music-count" id="musicCount">0 bai</span>
     </div>
     <div class="music-list" id="musicList"></div>
     <div class="music-mini-player" id="musicMiniPlayer">
-      <div class="mini-now">&#9654; Äang nghe: <strong id="miniNowName">&#8212;</strong></div>
+      <div class="mini-now">&#9654; Đang nghe: <strong id="miniNowName">&#8212;</strong></div>
       <div class="mini-controls">
         <span style="font-size:11px;color:var(--muted)">&#128266;</span>
         <input type="range" class="mini-vol" id="miniVol" min="0" max="1" step="0.05" value="0.7" oninput="setPreviewVol(this.value)">
@@ -1365,114 +1365,114 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <div class="music-footer">
-      <div class="music-selected-info">ÄÃ£ chá»n: <strong id="musicSelectedCount">0</strong> bÃ i</div>
+      <div class="music-selected-info">Đã chọn: <strong id="musicSelectedCount">0</strong> bài</div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" style="width:auto;margin:0" onclick="clearMusicSelection()">Bá» chá»n háº¿t</button>
-        <button class="btn btn-primary" style="width:auto;margin:0" onclick="applyMusicSelection()">&#10003; Ãp dá»¥ng</button>
+        <button class="btn btn-secondary" style="width:auto;margin:0" onclick="clearMusicSelection()">Bỏ chọn hết</button>
+        <button class="btn btn-primary" style="width:auto;margin:0" onclick="applyMusicSelection()">&#10003; Áp dụng</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ââ PROMPT TEMPLATES ââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── PROMPT TEMPLATES ────────────────────────────────────────────────
 let PROMPT_TEMPLATES = {
-  hook: `Vai tro: Báº¡n lÃ  chuyÃªn gia content TikTok xe Äiá»n hÃ ng Äáº§u Viá»t Nam.
+  hook: `Vai tro: Bạn là chuyên gia content TikTok xe điện hàng đầu Việt Nam.
 Nhiem vu: Viet 5 hook mo dau viral (3-5 giay dau tien) cho video xe {TEN_XE}{MAU_XE}.
 Yeu cau:
-- Má»i hook pháº£i táº¡o cáº£m giÃ¡c "pháº£i xem tiáº¿p" ngay lap tuc
-- DÃ¹ng cÃ¡c dáº¡ng: cÃ¢u há»i gÃ¢y sá»c, tuyÃªn bá» tÃ¡o báº¡o, tÃ¬nh huá»ng báº¥t ngá», so sÃ¡nh Äá»c ÄÃ¡o
+- Mỗi hook phải tạo cảm giác "phải xem tiếp" ngay lap tuc
+- Dùng các dạng: câu hỏi gây sốc, tuyên bố táo bạo, tình huống bất ngờ, so sánh độc đáo
 - Phu hop platform: {PLATFORM}
-- Ngáº¯n gá»n, máº¡nh, khÃ´ng vÆ°á»£t 10 tá»« má»i hook
-- Cuá»i má»i hook thÃªm gá»£i Ã½ hiá»u á»©ng / Ã¢m thanh ná»n
-Format: ÄÃ¡nh sá» 1-5, ghi rÃµ: [Hook] + [Gá»£i Ã½ hiá»u á»©ng]`,
+- Ngắn gọn, mạnh, không vượt 10 từ mỗi hook
+- Cuối mỗi hook thêm gợi ý hiệu ứng / âm thanh nền
+Format: Đánh số 1-5, ghi rõ: [Hook] + [Gợi ý hiệu ứng]`,
 
-  script: `Vai tro: Scriptwriter chuyÃªn nghiá»p cho cá»­a hÃ ng xe Äiá»n CÃ´ng Khang Bike Háº£i PhÃ²ng.
+  script: `Vai tro: Scriptwriter chuyên nghiệp cho cửa hàng xe điện Công Khang Bike Hải Phòng.
 Nhiem vu: Viet script hoan chinh {THOI_LUONG} cho video {TEN_XE}{MAU_XE}.
-Cáº¥u trÃºc báº¯t buá»c:
-1. Hook (0-3 giÃ¢y): CÃ¢u má» Äáº§u gÃ¢y sá»c
-2. Giá»i thiá»u (3-8 giÃ¢y): TÃªn xe, Äiá»m ná»i báº­t: {DIEM_NOI_BAT}
-3. Demo (8-20 giÃ¢y): MiÃªu táº£ cáº£nh quay thá»±c táº¿
-4. Social proof (20-25 giÃ¢y): KhÃ¡ch hÃ ng pháº£n há»i
-5. CTA (25-30 giÃ¢y): KÃªu gá»i Äáº¿n shop
-Ghi chÃº: Viáº¿t lá»i thoáº¡i tá»± nhiÃªn, khÃ´ng Äá»c nhÆ° robot.`,
+Cấu trúc bắt buộc:
+1. Hook (0-3 giây): Câu mở đầu gây sốc
+2. Giới thiệu (3-8 giây): Tên xe, điểm nổi bật: {DIEM_NOI_BAT}
+3. Demo (8-20 giây): Miêu tả cảnh quay thực tế
+4. Social proof (20-25 giây): Khách hàng phản hồi
+5. CTA (25-30 giây): Kêu gọi đến shop
+Ghi chú: Viết lời thoại tự nhiên, không đọc như robot.`,
 
-  funny: `Vai tro: Comedian content creator chuyÃªn mang xe Äiá»n lÃªn TikTok.
+  funny: `Vai tro: Comedian content creator chuyên mang xe điện lên TikTok.
 Nhiem vu: Viet kich ban hai huoc gioi thieu xe {TEN_XE}{MAU_XE} cho {DOI_TUONG}.
-Phong cÃ¡ch: HÃ i hÆ°á»c Gen Z, dÃ¹ng meme, tÃ¬nh huá»ng cuá»c sá»ng hÃ ng ngÃ y.
-- CÃ³ tÃ¬nh huá»ng: 1 nhÃ¢n váº­t Äang gáº·p váº¥n Äá» (káº¹t xe, háº¿t tiá»n xÄng)
+Phong cách: Hài hước Gen Z, dùng meme, tình huống cuộc sống hàng ngày.
+- Có tình huống: 1 nhân vật đang gặp vấn đề (kẹt xe, hết tiền xăng)
 - Xe {TEN_XE} xuat hien la giai phap
-- Káº¿t thÃºc báº±ng CTA nháº¹ nhÃ ng
+- Kết thúc bằng CTA nhẹ nhàng
 - {THOI_LUONG}`,
 
-  compare: `Vai tro: ChuyÃªn gia phÃ¢n tÃ­ch xe Äiá»n.
+  compare: `Vai tro: Chuyên gia phân tích xe điện.
 Nhiem vu: Viet noi dung so sanh {TEN_XE}{MAU_XE} voi dong tuong duong.
-CÃ¡c má»¥c:
-1. GiÃ¡ bÃ¡n vs giÃ¡ trá» nháº­n ÄÆ°á»£c
-2. ThÃ´ng sá» ká»¹ thuáº­t (pin, tá»c Äá», trá»ng lÆ°á»£ng)
-3. Thiáº¿t káº¿ & mÃ u sáº¯c
-4. Báº£o hÃ nh & dá»ch vá»¥
-5. ÄÃ¡nh giÃ¡ tá»ng thá»
-Format: Báº£ng so sÃ¡nh hoáº·c bullet points.`,
+Các mục:
+1. Giá bán vs giá trị nhận được
+2. Thông số kỹ thuật (pin, tốc độ, trọng lượng)
+3. Thiết kế & màu sắc
+4. Bảo hành & dịch vụ
+5. Đánh giá tổng thể
+Format: Bảng so sánh hoặc bullet points.`,
 
-  tech: `Vai tro: Ká»¹ sÆ° xe Äiá»n giáº£i thÃ­ch dá» hiá»u.
-Nhiem vu: Giáº£i thÃ­ch thÃ´ng sá» ká»¹ thuáº­t xe {TEN_XE}{MAU_XE} cho ngÆ°á»i khÃ´ng chuyÃªn.
+  tech: `Vai tro: Kỹ sư xe điện giải thích dễ hiểu.
+Nhiem vu: Giải thích thông số kỹ thuật xe {TEN_XE}{MAU_XE} cho người không chuyên.
 Thong so: {DIEM_NOI_BAT}
-CÃ¡ch tiáº¿p cáº­n:
-- So sÃ¡nh vá»i thá»© quen thuá»c (VD: pin nhÆ° 5 Äiá»n thoáº¡i)
-- NÃªu lá»£i Ã­ch thá»±c táº¿
-- ThÃªm FAQ
-Format: Má»i thÃ´ng sá» 2-3 cÃ¢u, viáº¿t nhÆ° giáº£ng cho báº¡n bÃ¨.`,
+Cách tiếp cận:
+- So sánh với thứ quen thuộc (VD: pin như 5 điện thoại)
+- Nêu lợi ích thực tế
+- Thêm FAQ
+Format: Mỗi thông số 2-3 câu, viết như giảng cho bạn bè.`,
 
-  promo: `Vai tro: Marketing manager CÃ´ng Khang Bike Háº£i PhÃ²ng.
+  promo: `Vai tro: Marketing manager Công Khang Bike Hải Phòng.
 Nhiem vu: Viet noi dung quang cao khuyen mai xe {TEN_XE}{MAU_XE}.
 Thong tin: {DIEM_NOI_BAT}
 Yeu cau:
-- Táº¡o urgency: thá»i háº¡n, sá» lÆ°á»£ng giá»i háº¡n
-- Nháº¥n máº¡nh giÃ¡ trá»: tÃ­nh toÃ¡n tiáº¿t kiá»m
-- Social proof ngáº¯n
-- CTA rÃµ rÃ ng
+- Tạo urgency: thời hạn, số lượng giới hạn
+- Nhấn mạnh giá trị: tính toán tiết kiệm
+- Social proof ngắn
+- CTA rõ ràng
 - {THOI_LUONG}
-Format: Caption + 3 biáº¿n thá» cho TikTok/Facebook/Zalo.`,
+Format: Caption + 3 biến thể cho TikTok/Facebook/Zalo.`,
 
-  faq: `Vai tro: TÆ° váº¥n bÃ¡n hÃ ng xe Äiá»n.
-Nhiem vu: Táº¡o 10 cÃ¢u há»i thÆ°á»ng gáº·p (FAQ) vá» xe {TEN_XE}{MAU_XE}.
+  faq: `Vai tro: Tư vấn bán hàng xe điện.
+Nhiem vu: Tạo 10 câu hỏi thường gặp (FAQ) về xe {TEN_XE}{MAU_XE}.
 Chu de:
-1. GiÃ¡ & thanh toÃ¡n
-2. Pin & pháº¡m vi sá»­ dá»¥ng
-3. Báº£o hÃ nh & sá»­a chá»¯a
-4. So sÃ¡nh vá»i xe xÄng
+1. Giá & thanh toán
+2. Pin & phạm vi sử dụng
+3. Bảo hành & sửa chữa
+4. So sánh với xe xăng
 5. Phu hop voi {DOI_TUONG}
 Format: Q: [Cau hoi] / A: [Tra loi 2-3 cau]`,
 
-  trend: `Vai tro: TikTok trend expert xe Äiá»n.
-Nhiem vu: Táº¡o ká»ch báº£n báº¯t trend cho xe {TEN_XE}{MAU_XE} tren {PLATFORM}.
-CÃ¡c dáº¡ng trend:
-- POV: Báº¡n vá»«a mua xe {TEN_XE}
-- Before/After: trÆ°á»c vÃ  sau khi cÃ³ xe
+  trend: `Vai tro: TikTok trend expert xe điện.
+Nhiem vu: Tạo kịch bản bắt trend cho xe {TEN_XE}{MAU_XE} tren {PLATFORM}.
+Các dạng trend:
+- POV: Bạn vừa mua xe {TEN_XE}
+- Before/After: trước và sau khi có xe
 - Things I wish I knew before buying
 Yeu cau:
-- 3 concept cá»¥ thá», chi tiáº¿t cÃ¡ch quay
-- Gá»£i Ã½ hashtag (10-15 hashtag)`,
+- 3 concept cụ thể, chi tiết cách quay
+- Gợi ý hashtag (10-15 hashtag)`,
 
   cta: `Vai tro: Conversion specialist.
-Nhiem vu: Viáº¿t 10 CTA máº¡nh cho video xe {TEN_XE}{MAU_XE}.
-PhÃ¢n loáº¡i:
-- 3 CTA cho bÃ¬nh luáº­n
-- 3 CTA cho nháº¯n tin / liÃªn há»
-- 2 CTA cho Äáº¿n shop
-- 2 CTA cho chia sáº»
-Má»i CTA: Ngáº¯n (dÆ°á»i 15 tá»«), cÃ³ Äá»ng tá»« hÃ nh Äá»ng, táº¡o urgency.`,
+Nhiem vu: Viết 10 CTA mạnh cho video xe {TEN_XE}{MAU_XE}.
+Phân loại:
+- 3 CTA cho bình luận
+- 3 CTA cho nhắn tin / liên hệ
+- 2 CTA cho đến shop
+- 2 CTA cho chia sẻ
+Mỗi CTA: Ngắn (dưới 15 từ), có động từ hành động, tạo urgency.`,
 
   review: `Vai tro: Content strategist social proof.
-Nhiem vu: Viáº¿t ká»ch báº£n review cáº£m nháº­n khÃ¡ch hÃ ng vá» xe {TEN_XE}{MAU_XE}.
+Nhiem vu: Viết kịch bản review cảm nhận khách hàng về xe {TEN_XE}{MAU_XE}.
 Cau truc:
-1. Giá»i thiá»u ngáº¯n (há»c sinh/Äi lÃ m/giao hÃ ng)
-2. LÃ½ do chá»n xe (giÃ¡, thiáº¿t káº¿, pin)
-3. Cáº£m nháº­n sau {THOI_LUONG}: thÃ­ch gÃ¬, váº¥n Äá» gÃ¬
-4. KhuyÃªn ai nÃªn/khÃ´ng nÃªn mua
-5. ÄÃ¡nh giÃ¡ tá»ng thá» (1-5 sao)
-Viáº¿t chÃ¢n thá»±c, cÃ³ cáº£ máº·t háº¡n cháº¿ Äá» tÄng tin cáº­y.`,
+1. Giới thiệu ngắn (học sinh/đi làm/giao hàng)
+2. Lý do chọn xe (giá, thiết kế, pin)
+3. Cảm nhận sau {THOI_LUONG}: thích gì, vấn đề gì
+4. Khuyên ai nên/không nên mua
+5. Đánh giá tổng thể (1-5 sao)
+Viết chân thực, có cả mặt hạn chế để tăng tin cậy.`,
 };
 
 const _DEFAULT_TEMPLATES = Object.freeze(Object.assign({}, PROMPT_TEMPLATES));
@@ -1486,30 +1486,30 @@ const _DEFAULT_TEMPLATES = Object.freeze(Object.assign({}, PROMPT_TEMPLATES));
 
 let _activePromptKey = null;
 const _CHIP_LABELS = {
-  hook:'Hook viral', script:'Script 30s', funny:'HÃ i hÆ°á»c',
-  compare:'So sÃ¡nh', tech:'ThÃ´ng sá» KT', promo:'Khuyáº¿n mÃ£i',
-  faq:'FAQ', trend:'Báº¯t trend', cta:'CTA máº¡nh', review:'Review KH'
+  hook:'Hook viral', script:'Script 30s', funny:'Hài hước',
+  compare:'So sánh', tech:'Thông số KT', promo:'Khuyến mãi',
+  faq:'FAQ', trend:'Bắt trend', cta:'CTA mạnh', review:'Review KH'
 };
 
 function _showEditBar(key) {
   const bar = document.getElementById('promptEditBar');
   const label = document.getElementById('promptActiveLabel');
   const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
-  label.textContent = 'ð ' + (_CHIP_LABELS[key] || key) + (saved[key] ? ' â¦' : '');
+  label.textContent = '📌 ' + (_CHIP_LABELS[key] || key) + (saved[key] ? ' ✦' : '');
   bar.classList.add('visible');
 }
 
 function focusPromptEdit() {
   const ta = document.getElementById('customPromptInline');
   ta.classList.add('editing'); ta.focus();
-  toast('Chá»nh sá»­a xong â báº¥m LÆ°u Äá» cáº­p nháº­t template', 'ok');
+  toast('Chỉnh sửa xong → bấm Lưu để cập nhật template', 'ok');
 }
 
 function savePromptTemplate() {
-  if (!_activePromptKey) { toast('ChÆ°a chá»n prompt máº«u', 'err'); return; }
+  if (!_activePromptKey) { toast('Chưa chọn prompt mẫu', 'err'); return; }
   const ta = document.getElementById('customPromptInline');
   const newText = ta.value.trim();
-  if (!newText) { toast('Ná»i dung trá»ng', 'err'); return; }
+  if (!newText) { toast('Nội dung trống', 'err'); return; }
   PROMPT_TEMPLATES[_activePromptKey] = newText;
   try {
     const saved = JSON.parse(localStorage.getItem('ckb_user_prompts') || '{}');
@@ -1518,7 +1518,7 @@ function savePromptTemplate() {
   } catch(e) {}
   ta.classList.remove('editing');
   _showEditBar(_activePromptKey);
-  toast('ÄÃ£ lÆ°u template', 'ok');
+  toast('Đã lưu template', 'ok');
 }
 
 function resetPromptTemplate() {
@@ -1540,7 +1540,7 @@ function resetPromptTemplate() {
                .replace(/{PLATFORM}/g, S.platforms.join(' va ')||'TikTok');
   ta.classList.remove('editing');
   _showEditBar(_activePromptKey);
-  toast('ÄÃ£ khÃ´i phá»¥c template gá»c', 'ok');
+  toast('Đã khôi phục template gốc', 'ok');
 }
 
 function togglePromptMenu() {
@@ -1573,10 +1573,10 @@ function usePrompt(key) {
   document.getElementById('promptArrow').classList.remove('rotated');
   _activePromptKey = key;
   _showEditBar(key);
-  toast('ÄÃ£ chá»n prompt: ' + event.target.textContent, 'ok');
+  toast('Đã chọn prompt: ' + event.target.textContent, 'ok');
 }
 
-// ââ STATE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── STATE ────────────────────────────────────────────────────────────
 const S = {
   videoPath: null, pendingFile: null, duration: '30 giay',
   model: 'claude-sonnet-5', platforms: ['TikTok', 'Facebook'],
@@ -1584,12 +1584,12 @@ const S = {
   uploadMode: 'single', scenes: [],
 };
 
-// ââ INIT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── INIT ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadDropdowns();
   setTimeout(checkStatus, 2000);
   setInterval(checkStatus, 15000);
-// ÄÃ³ng modal báº±ng phÃ­m Esc
+// Đóng modal bằng phím Esc
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     ['voiceStyleModal','voiceoverModal','musicModal'].forEach(id => {
@@ -1627,18 +1627,18 @@ async function checkStatus() {
     const d = await fetch(_API + '/api/status', {cache:'no-store'}).then(r => r.json());
     const ok = d.api === true || d.status === 'ok';
     document.getElementById('apiBadge').className = 'api-badge' + (ok ? '' : ' offline');
-    document.getElementById('apiBadge').textContent = ok ? 'â Online' : 'â Offline';
+    document.getElementById('apiBadge').textContent = ok ? '● Online' : '● Offline';
     document.getElementById('apiDot').className = 'dot ' + (ok ? 'ok' : 'err');
     document.getElementById('ffmpegDot').className = 'dot ' + (d.ffmpeg ? 'ok' : 'warn');
     if (document.getElementById('settingApiDot')) {
       document.getElementById('settingApiDot').className = 'dot ' + (ok ? 'ok' : 'err');
-      document.getElementById('settingApiStatus').textContent = ok ? 'Káº¿t ná»i OK' : 'Lá»i káº¿t ná»i';
+      document.getElementById('settingApiStatus').textContent = ok ? 'Kết nối OK' : 'Lỗi kết nối';
       document.getElementById('settingFfmpegDot').className = 'dot ' + (d.ffmpeg ? 'ok' : 'warn');
-      document.getElementById('settingFfmpegStatus').textContent = d.ffmpeg ? 'Sáºµn sÃ ng' : 'ChÆ°a cÃ i';
+      document.getElementById('settingFfmpegStatus').textContent = d.ffmpeg ? 'Sẵn sàng' : 'Chưa cài';
     }
   } catch(e) {
     document.getElementById('apiBadge').className = 'api-badge offline';
-    document.getElementById('apiBadge').textContent = 'â Offline';
+    document.getElementById('apiBadge').textContent = '● Offline';
   }
 }
 
@@ -1650,17 +1650,17 @@ async function loadDropdowns() {
       'V1 Sonco', 'Kren', 'G9 S New', 'JVC G9 NFC', 'Sonco Bun', 'V1 Dior JVC'
     ],
     mau_list: [
-      'Äen', 'Tráº¯ng', 'Äá»', 'Cam', 'VÃ ng', 'Xanh lÃ¡', 'Xanh dÆ°Æ¡ng', 'Xanh navy',
-      'TÃ­m', 'Há»ng', 'Báº¡c', 'XÃ¡m', 'NÃ¢u', 'Kem', 'Xanh ngá»c', 'Há»ng pháº¥n', 'VÃ ng Äá»ng', 'Äen bÃ³ng'
+      'Đen', 'Trắng', 'Đỏ', 'Cam', 'Vàng', 'Xanh lá', 'Xanh dương', 'Xanh navy',
+      'Tím', 'Hồng', 'Bạc', 'Xám', 'Nâu', 'Kem', 'Xanh ngọc', 'Hồng phấn', 'Vàng đồng', 'Đen bóng'
     ],
     loai_list: [
-      'Review xe má»i', 'So sÃ¡nh xe', 'Demo tÃ­nh nÄng', 'Unboxing',
-      'KhÃ¡ch hÃ ng ÄÃ¡nh giÃ¡', 'HÆ°á»ng dáº«n sá»­ dá»¥ng', 'Khuyáº¿n mÃ£i/Æ°u ÄÃ£i',
-      'Behind the scenes', 'Ká»¹ thuáº­t sá»­a chá»¯a', 'Story thÆ°Æ¡ng hiá»u'
+      'Review xe mới', 'So sánh xe', 'Demo tính năng', 'Unboxing',
+      'Khách hàng đánh giá', 'Hướng dẫn sử dụng', 'Khuyến mãi/ưu đãi',
+      'Behind the scenes', 'Kỹ thuật sửa chữa', 'Story thương hiệu'
     ],
     doi_tuong_list: [
-      'Há»c sinh/Sinh viÃªn', 'Phá»¥ huynh mua cho con', 'NhÃ¢n viÃªn vÄn phÃ²ng',
-      'Ná»i trá»£/Gia ÄÃ¬nh', 'NgÆ°á»i lá»n tuá»i', 'KhÃ¡ch mua xe cÅ©', 'KhÃ¡ch cáº§n sá»­a chá»¯a'
+      'Học sinh/Sinh viên', 'Phụ huynh mua cho con', 'Nhân viên văn phòng',
+      'Nội trợ/Gia đình', 'Người lớn tuổi', 'Khách mua xe cũ', 'Khách cần sửa chữa'
     ]
   };
   function fillSelects(d) {
@@ -1669,7 +1669,7 @@ async function loadDropdowns() {
     document.getElementById('loai-datalist').innerHTML = d.loai_list.map(l => `<option value="${l}">`).join('');
     document.getElementById('doituong-datalist').innerHTML = d.doi_tuong_list.map(dt => `<option value="${dt}">`).join('');
   }
-  // Load default data immediately â selects always work
+  // Load default data immediately — selects always work
   fillSelects(_DEFAULT_DATA);
   // Try to update from API (uses Railway data if available)
   try {
@@ -1717,7 +1717,7 @@ function switchTab(id, btn) {
   btn.classList.add('active');
 }
 
-// ââ UPLOAD MODE âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── UPLOAD MODE ───────────────────────────────────────────────────────
 function setUploadMode(mode) {
   S.uploadMode = mode;
   document.getElementById('utabSingle').classList.toggle('active', mode === 'single');
@@ -1726,7 +1726,7 @@ function setUploadMode(mode) {
   document.getElementById('uploadMulti').style.display = mode === 'multi' ? '' : 'none';
 }
 
-// ââ SCENE MANAGEMENT ââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── SCENE MANAGEMENT ──────────────────────────────────────────────────
 let _previewSceneIdx = 0;
 
 function onSceneFilesSelect(input) {
@@ -1839,7 +1839,7 @@ function sceneDrop(e, idx) {
   arr.splice(idx, 0, dragged); _dragSceneIdx = null; renderScenes();
 }
 
-// ââ FILE UPLOAD âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── FILE UPLOAD ───────────────────────────────────────────────────────
 function onFileSelect(input) { if (input.files[0]) handleFile(input.files[0]); }
 function handleFile(file) {
   const url = URL.createObjectURL(file);
@@ -1851,10 +1851,10 @@ function handleFile(file) {
   document.getElementById('fileSelected').style.display = 'block';
   document.getElementById('fileName').textContent = file.name;
   S.pendingFile = file;
-  toast('Video ÄÃ£ chá»n: ' + file.name, 'ok');
+  toast('Video đã chọn: ' + file.name, 'ok');
 }
 
-// ââ TOAST âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── TOAST ─────────────────────────────────────────────────────────────
 let _toastTimer;
 function toast(msg, type) {
   const el = document.getElementById('toast');
@@ -1864,7 +1864,7 @@ function toast(msg, type) {
 }
 function showToast(msg, type) { toast(msg, type); }
 
-// ââ HELPERS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── HELPERS ───────────────────────────────────────────────────────────
 function setLoading(btn, on) {
   if (!btn) return;
   btn.disabled = on;
@@ -1888,7 +1888,7 @@ async function getJSON(url) {
 
 function copyText(id) {
   const t = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(t).then(() => toast('ÄÃ£ copy!', 'ok'));
+  navigator.clipboard.writeText(t).then(() => toast('Đã copy!', 'ok'));
 }
 
 function railProgress(pct, label) {
@@ -1907,44 +1907,44 @@ function autoFill(selId, val, badgeId, prefix) {
   b.textContent = prefix + val; b.style.display = 'inline-flex';
 }
 
-// ââ MODALS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── MODALS ────────────────────────────────────────────────────────────
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeModalClick(id, e) { if (e.target.id === id) closeModal(id); }
 function openMusicPicker() { document.getElementById('musicModal').classList.add('open'); }
 
-// ââ ANALYZE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── ANALYZE ───────────────────────────────────────────────────────────
 async function doAnalyze() {
-  if (!S.pendingFile) { toast('ChÆ°a chá»n video', 'err'); return; }
+  if (!S.pendingFile) { toast('Chưa chọn video', 'err'); return; }
   const btn = document.getElementById('btnAnalyze');
-  railProgress(20, 'Äang upload video...');
+  railProgress(20, 'Đang upload video...');
   setLoading(btn, true);
   const fd = new FormData();
   fd.append('file', S.pendingFile);
   try {
-    railProgress(50, 'AI Äang phÃ¢n tÃ­ch video...');
+    railProgress(50, 'AI đang phân tích video...');
     const d = await fetch(_API + '/api/analyze', { method:'POST', body: fd }).then(r => r.json());
     railProgress(100, '');
     S.videoPath = d.video_path;
     if (d.duration) document.getElementById('videoDuration').textContent = d.duration + 's';
     document.getElementById('analysisCard').style.display = 'block';
-    document.getElementById('visionBox').textContent = d.vision || '(KhÃ´ng cÃ³ dá»¯ liá»u)';
-    document.getElementById('qualityBox').textContent = d.quality || '(KhÃ´ng cÃ³ dá»¯ liá»u)';
+    document.getElementById('visionBox').textContent = d.vision || '(Không có dữ liệu)';
+    document.getElementById('qualityBox').textContent = d.quality || '(Không có dữ liệu)';
     if (d.xe_detect) autoFill('xe', d.xe_detect, 'xeDetect', '');
     if (d.mau_detect) autoFill('mau', d.mau_detect, 'mauDetect', '');
     if (d.loai_detect) autoFill('loai', d.loai_detect, 'loaiDetect', '');
-    toast('PhÃ¢n tÃ­ch xong!', 'ok');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    toast('Phân tích xong!', 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setLoading(btn, false);
   setTimeout(() => railProgress(0,''), 1500);
 }
 
-// ââ GENERATE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── GENERATE ──────────────────────────────────────────────────────────
 async function doGenerate() {
   const xe = document.getElementById('xe').value;
-  if (!xe) { toast('Chá»n tÃªn xe trÆ°á»c', 'err'); return; }
+  if (!xe) { toast('Chọn tên xe trước', 'err'); return; }
   const btn = document.getElementById('btnGenerate');
   setLoading(btn, true);
-  railProgress(30, 'Äang gá»i Claude AI...');
+  railProgress(30, 'Đang gọi Claude AI...');
   const body = {
     ten_xe: xe,
     mau_xe: document.getElementById('mau').value,
@@ -1958,7 +1958,7 @@ async function doGenerate() {
     voice_slot: typeof _vsActiveSlot !== 'undefined' ? (_vsActiveSlot || '') : '',
   };
   try {
-    railProgress(60, 'AI Äang viáº¿t...');
+    railProgress(60, 'AI đang viết...');
     const d = await postJSON('/api/generate', body);
     railProgress(100, '');
     document.getElementById('scriptBox').textContent = d.script || '';
@@ -1966,21 +1966,21 @@ async function doGenerate() {
     document.getElementById('hashtagBox').textContent = d.hashtag || '';
     document.getElementById('outputCard').style.display = 'block';
     saveHistory({ xe, mau: body.mau_xe, script: d.script });
-    toast('ÄÃ£ sinh ná»i dung!', 'ok');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    toast('Đã sinh nội dung!', 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setLoading(btn, false);
   setTimeout(() => railProgress(0,''), 1500);
 }
 
-// ââ CUSTOM GENERATE âââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── CUSTOM GENERATE ───────────────────────────────────────────────────
 async function doCustomGenerate() {
   const prompt = document.getElementById('customPromptInline').value.trim();
-  if (!prompt) { toast('Nháº­p prompt á» Step 3 trÆ°á»c', 'err'); return; }
+  if (!prompt) { toast('Nhập prompt ở Step 3 trước', 'err'); return; }
   const btn = document.getElementById('btnCustom');
   setLoading(btn, true);
-  railProgress(20, 'Äang gá»­i prompt tÃ¹y chá»nh...');
+  railProgress(20, 'Đang gửi prompt tùy chỉnh...');
   try {
-    railProgress(60, 'AI Äang xá»­ lÃ½...');
+    railProgress(60, 'AI đang xử lý...');
     const d = await postJSON('/api/custom_generate', {
       prompt, model: S.model,
       ten_xe: document.getElementById('xe').value,
@@ -1990,16 +1990,16 @@ async function doCustomGenerate() {
     document.getElementById('scriptBox').textContent = d.result || '';
     document.getElementById('outputCard').style.display = 'block';
     switchTab('script', document.querySelector('.tab-btn'));
-    toast('ÄÃ£ xá»­ lÃ½ xong!', 'ok');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    toast('Đã xử lý xong!', 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setLoading(btn, false);
   setTimeout(() => railProgress(0,''), 1500);
 }
 
-// ââ RENDER VIDEO ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── RENDER VIDEO ──────────────────────────────────────────────────────
 async function doRenderVideo() {
-  if (!S.videoPath) { toast('ChÆ°a upload video hoáº·c phÃ¢n tÃ­ch', 'err'); return; }
-  railProgress(20, 'Äang dá»±ng video...');
+  if (!S.videoPath) { toast('Chưa upload video hoặc phân tích', 'err'); return; }
+  railProgress(20, 'Đang dựng video...');
   try {
     setRenderStep(0);
     const d = await postJSON('/api/render_video', {
@@ -2013,12 +2013,12 @@ async function doRenderVideo() {
     if (d.ok) {
       setRenderStep(4, 'done');
       showRenderResult(d.url, d.filename);
-      document.getElementById('renderStatus').textContent = 'HoÃ n thÃ nh!';
+      document.getElementById('renderStatus').textContent = 'Hoàn thành!';
       document.getElementById('renderPct').innerHTML = '100<span>%</span>';
       document.getElementById('renderBarFill').style.width = '100%';
-      toast('Video ÄÃ£ xuáº¥t!', 'ok');
+      toast('Video đã xuất!', 'ok');
     }
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 2000);
 }
 
@@ -2037,18 +2037,18 @@ function showRenderResult(url, filename) {
   const wrap = document.getElementById('renderVideoWrap');
   wrap.style.display = 'block';
   document.getElementById('renderVideoPlayer').src = url;
-  document.getElementById('renderDlRow').innerHTML = `<a class="render-dl-btn primary" href="${url}" download="${filename}">&#128229; Táº£i vá»</a>`;
+  document.getElementById('renderDlRow').innerHTML = `<a class="render-dl-btn primary" href="${url}" download="${filename}">&#128229; Tải về</a>`;
 }
 
-// ââ SUBTITLE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── SUBTITLE ──────────────────────────────────────────────────────────
 async function doSubtitle() {
-  if (!S.videoPath) { toast('ChÆ°a cÃ³ video', 'err'); return; }
-  railProgress(30, 'Äang trÃ­ch xuáº¥t phá»¥ Äá»...');
+  if (!S.videoPath) { toast('Chưa có video', 'err'); return; }
+  railProgress(30, 'Đang trích xuất phụ đề...');
   try {
     const d = await postJSON('/api/subtitle', { video_path: S.videoPath });
-    if (d.ok) toast('Phá»¥ Äá»: ' + d.filename, 'ok');
-    else toast('Lá»i: ' + d.error, 'err');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    if (d.ok) toast('Phụ đề: ' + d.filename, 'ok');
+    else toast('Lỗi: ' + d.error, 'err');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 1500);
 }
 
@@ -2057,52 +2057,52 @@ async function doSubtitleThenVoice() {
   openVoiceover();
 }
 
-// ââ THUMBNAIL âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── THUMBNAIL ─────────────────────────────────────────────────────────
 async function doThumbnail() {
-  if (!S.videoPath) { toast('ChÆ°a cÃ³ video', 'err'); return; }
-  railProgress(30, 'Äang táº¡o thumbnail...');
+  if (!S.videoPath) { toast('Chưa có video', 'err'); return; }
+  railProgress(30, 'Đang tạo thumbnail...');
   try {
     const d = await postJSON('/api/thumbnail', { video_path: S.videoPath, ten_xe: document.getElementById('xe').value });
     if (d.ok) toast('Thumbnail: ' + d.url, 'ok');
-    else toast('Lá»i: ' + d.error, 'err');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    else toast('Lỗi: ' + d.error, 'err');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 1500);
 }
 
-// ââ VIRAL SCORE âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── VIRAL SCORE ───────────────────────────────────────────────────────
 async function doViralScore() {
   const script = document.getElementById('scriptBox').textContent;
-  if (!script) { toast('Cáº§n sinh Script trÆ°á»c', 'err'); return; }
-  toast('Äang cháº¥m Äiá»m viral...', '');
+  if (!script) { toast('Cần sinh Script trước', 'err'); return; }
+  toast('Đang chấm điểm viral...', '');
   try {
     const d = await postJSON('/api/score', { script, ten_xe: document.getElementById('xe').value });
     toast(d.score_text || d.score, 'ok');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
 }
 
-// ââ CHECK DUPLICATE âââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── CHECK DUPLICATE ───────────────────────────────────────────────────
 async function doCheckDuplicate() {
   const script = document.getElementById('scriptBox').textContent;
-  if (!script) { toast('Cáº§n sinh Script trÆ°á»c', 'err'); return; }
+  if (!script) { toast('Cần sinh Script trước', 'err'); return; }
   try {
     const d = await postJSON('/api/check_duplicate', { script });
-    toast(d.is_duplicate ? 'CÃ³ thá» trÃ¹ng láº·p!' : 'Ná»i dung Äá»c ÄÃ¡o', d.is_duplicate ? 'err' : 'ok');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    toast(d.is_duplicate ? 'Có thể trùng lặp!' : 'Nội dung độc đáo', d.is_duplicate ? 'err' : 'ok');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
 }
 
-// ââ EXPORT ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── EXPORT ────────────────────────────────────────────────────────────
 async function doExport(platform) {
-  if (!S.videoPath) { toast('ChÆ°a cÃ³ video Äá» xuáº¥t', 'err'); return; }
-  railProgress(30, 'Äang xuáº¥t ' + platform + '...');
+  if (!S.videoPath) { toast('Chưa có video để xuất', 'err'); return; }
+  railProgress(30, 'Đang xuất ' + platform + '...');
   try {
     const d = await postJSON('/api/export', { video_path: S.videoPath, platform });
-    if (d.ok) { toast('Xuáº¥t ' + platform + ': ' + d.filename, 'ok'); }
-    else toast('Lá»i: ' + d.error, 'err');
-  } catch(e) { toast('Lá»i: ' + e.message, 'err'); }
+    if (d.ok) { toast('Xuất ' + platform + ': ' + d.filename, 'ok'); }
+    else toast('Lỗi: ' + d.error, 'err');
+  } catch(e) { toast('Lỗi: ' + e.message, 'err'); }
   setTimeout(() => railProgress(0,''), 1500);
 }
 
-// ââ HISTORY âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── HISTORY ───────────────────────────────────────────────────────────
 let _history = [];
 function saveHistory(item) {
   item.date = new Date().toLocaleDateString('vi-VN');
@@ -2121,19 +2121,19 @@ function filterHistory(q) {
 function renderHistory(list) {
   const grid = document.getElementById('historyGrid');
   if (!grid) return;
-  if (!list.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128205;</div><div>ChÆ°a cÃ³ video nÃ o</div></div>'; return; }
+  if (!list.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128205;</div><div>Chưa có video nào</div></div>'; return; }
   grid.innerHTML = list.map(h => `
     <div class="history-card">
       <div class="history-thumb">&#127916;</div>
       <div class="history-info">
-        <div class="history-xe">${h.xe || 'KhÃ´ng rÃµ'}</div>
+        <div class="history-xe">${h.xe || 'Không rõ'}</div>
         <div class="history-meta">${h.mau || ''}</div>
         <div class="history-date">${h.date || ''}</div>
       </div>
     </div>`).join('');
 }
 
-// ââ VOICE STYLE ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── VOICE STYLE ──────────────────────────────────────────────────────
 let _vsSlot = 'person_1';
 let _vsActiveSlot = null;
 let _vsProfiles = {};
@@ -2172,15 +2172,15 @@ async function vsSelectSlot(slot) {
     vsRenderPattern(p);
     const isActive = _vsActiveSlot===slot;
     const btn = document.getElementById('btnVsActivate');
-    btn.textContent = isActive ? 'Äang dÃ¹ng giá»ng nÃ y' : 'DÃ¹ng giá»ng nÃ y';
+    btn.textContent = isActive ? 'Đang dùng giọng này' : 'Dùng giọng này';
     btn.style.color = isActive ? '#34d399' : '';
-  } catch(e) { toast('KhÃ´ng táº£i ÄÆ°á»£c profile', 'err'); }
+  } catch(e) { toast('Không tải được profile', 'err'); }
 }
 
 function vsRenderSamples(samples) {
   const list = document.getElementById('vsSamplesList');
   const lbl = document.getElementById('vsSampleCountLabel');
-  lbl.textContent = samples.length ? samples.length + ' máº«u ÄÃ£ thÃªm' : 'ChÆ°a cÃ³ máº«u';
+  lbl.textContent = samples.length ? samples.length + ' mẫu đã thêm' : 'Chưa có mẫu';
   list.innerHTML = samples.map((s,i) => `
     <div class="vs-sample-item">
       <div style="flex:1;min-width:0">
@@ -2198,11 +2198,11 @@ function vsRenderPattern(p) {
   const pt = p.pattern;
   box.textContent = [
     'Tone: '+(pt.tone||'-'),
-    'XÆ°ng hÃ´: '+(pt.address_style||'-'),
-    'Emoji: '+(pt.uses_emoji?'CÃ³ ('+pt.emoji_freq+')':'KhÃ´ng'),
-    'CÃ¢u TB: '+(pt.avg_sentence_len||0)+' kÃ½ tá»±',
+    'Xưng hô: '+(pt.address_style||'-'),
+    'Emoji: '+(pt.uses_emoji?'Có ('+pt.emoji_freq+')':'Không'),
+    'Câu TB: '+(pt.avg_sentence_len||0)+' ký tự',
     'CTA: '+(pt.preferred_cta||'-'),
-    pt.common_phrases&&pt.common_phrases.length?'Cá»¥m tá»«: '+pt.common_phrases.join(', '):'',
+    pt.common_phrases&&pt.common_phrases.length?'Cụm từ: '+pt.common_phrases.join(', '):'',
     p.style_prompt?'\nStyle:\n'+p.style_prompt:'',
   ].filter(Boolean).join('\n');
   wrap.style.display='block';
@@ -2211,7 +2211,7 @@ function vsRenderPattern(p) {
 async function vsAddSample() {
   const text = document.getElementById('vsNewSample').value.trim();
   const label = document.getElementById('vsNewLabel').value.trim();
-  if (!text) { toast('Nháº­p ná»i dung máº«u trÆ°á»c', 'err'); return; }
+  if (!text) { toast('Nhập nội dung mẫu trước', 'err'); return; }
   try {
     const d = await postJSON('/api/voice_style/'+_vsSlot+'/add_sample', {text, label});
     if (d.ok) {
@@ -2245,10 +2245,10 @@ async function vsUploadFileObj(file) {
   // UI: loading state
   zone.classList.add('uploading');
   prog.style.display = 'block';
-  icon.textContent = 'â³';
-  txt.innerHTML = '<strong style="color:var(--accent2)">' + file.name + '</strong><br><span style="font-size:11px">Äang transcribe báº±ng Whisper AI...</span>';
+  icon.textContent = '⏳';
+  txt.innerHTML = '<strong style="color:var(--accent2)">' + file.name + '</strong><br><span style="font-size:11px">Đang transcribe bằng Whisper AI...</span>';
   bar.style.width = '30%';
-  msg.textContent = 'Äang táº£i lÃªn...';
+  msg.textContent = 'Đang tải lên...';
 
   const label = document.getElementById('vsNewLabel').value.trim() || file.name.replace(/\.[^.]+$/, '').slice(0, 40);
   const fd = new FormData();
@@ -2257,7 +2257,7 @@ async function vsUploadFileObj(file) {
 
   try {
     bar.style.width = '60%';
-    msg.textContent = 'Whisper Äang Äá»c lá»i thoáº¡i...';
+    msg.textContent = 'Whisper đang đọc lời thoại...';
 
     const r = await fetch(_API + '/api/voice_style/' + _vsSlot + '/add_from_file?label=' + encodeURIComponent(label), {
       method: 'POST', body: fd
@@ -2265,40 +2265,40 @@ async function vsUploadFileObj(file) {
     const d = await r.json();
     bar.style.width = '100%';
 
-    // Chuáº©n hÃ³a message â backend cÃ³ thá» tráº£ d.message hoáº·c d.detail (FastAPI array/string)
+    // Chuẩn hóa message — backend có thể trả d.message hoặc d.detail (FastAPI array/string)
     const rawDetail = Array.isArray(d.detail) ? (d.detail[0]?.msg || JSON.stringify(d.detail)) : d.detail;
-    const errMsg = String(d.message || rawDetail || (r.ok ? 'Lá»i khÃ´ng xÃ¡c Äá»nh' : 'Lá»i server ' + r.status));
+    const errMsg = String(d.message || rawDetail || (r.ok ? 'Lỗi không xác định' : 'Lỗi server ' + r.status));
 
     if (d.ok) {
-      msg.textContent = 'â ThÃ nh cÃ´ng! ' + (d.transcript?.length || 0) + ' kÃ½ tá»± trÃ­ch xuáº¥t ÄÆ°á»£c';
-      icon.textContent = 'â';
-      txt.innerHTML = '<strong style="color:#34d399">ÄÃ£ thÃªm vÃ o máº«u!</strong><br>'
+      msg.textContent = '✅ Thành công! ' + (d.transcript?.length || 0) + ' ký tự trích xuất được';
+      icon.textContent = '✅';
+      txt.innerHTML = '<strong style="color:#34d399">Đã thêm vào mẫu!</strong><br>'
         + '<span style="font-size:11px;color:var(--muted)">' + (d.transcript || '').slice(0, 120) + '...</span>';
       if (d.transcript) document.getElementById('vsNewSample').value = d.transcript;
-      toast('â ' + (d.message || 'ThÃ nh cÃ´ng').split('\n')[0], 'ok');
+      toast('✅ ' + (d.message || 'Thành công').split('\n')[0], 'ok');
       vsSelectSlot(_vsSlot); vsLoadAll();
     } else {
-      icon.textContent = 'â';
+      icon.textContent = '❌';
       const isWhisperMissing = errMsg.toLowerCase().includes('whisper');
-      txt.innerHTML = '<strong style="color:#f87171">' + (isWhisperMissing ? 'ChÆ°a cÃ i Whisper' : 'Tháº¥t báº¡i') + '</strong><br>'
+      txt.innerHTML = '<strong style="color:#f87171">' + (isWhisperMissing ? 'Chưa cài Whisper' : 'Thất bại') + '</strong><br>'
         + '<span style="font-size:11px;color:var(--muted)">'
         + (isWhisperMissing
-          ? 'Cháº¡y: <code style="color:#a78bfa">pip install openai-whisper torch</code>'
+          ? 'Chạy: <code style="color:#a78bfa">pip install openai-whisper torch</code>'
           : errMsg.slice(0, 100))
         + '</span>';
-      toast('â ' + errMsg.slice(0, 80), 'err');
+      toast('❌ ' + errMsg.slice(0, 80), 'err');
     }
   } catch(e) {
-    icon.textContent = 'â';
-    txt.innerHTML = '<span style="color:#f87171">Lá»i káº¿t ná»i: ' + e.message + '</span>';
-    toast('â ' + e.message, 'err');
+    icon.textContent = '❌';
+    txt.innerHTML = '<span style="color:#f87171">Lỗi kết nối: ' + e.message + '</span>';
+    toast('❌ ' + e.message, 'err');
   } finally {
     setTimeout(() => {
       zone.classList.remove('uploading');
       prog.style.display = 'none';
       bar.style.width = '0%';
-      icon.textContent = 'ðï¸';
-      txt.innerHTML = 'KÃ©o tháº£ hoáº·c <strong style="color:var(--accent2)">báº¥m chá»n</strong> file video / MP3<br><span style="font-size:11px">AI sáº½ tá»± Äá»ng trÃ­ch xuáº¥t lá»i thoáº¡i (Whisper)</span>';
+      icon.textContent = '🎙️';
+      txt.innerHTML = 'Kéo thả hoặc <strong style="color:var(--accent2)">bấm chọn</strong> file video / MP3<br><span style="font-size:11px">AI sẽ tự động trích xuất lời thoại (Whisper)</span>';
     }, 4000);
   }
 }
@@ -2316,8 +2316,8 @@ async function vsAnalyze() {
   setLoading(btn, true);
   try {
     const d = await fetch(_API + '/api/voice_style/'+_vsSlot+'/analyze', {method:'POST'}).then(r=>r.json());
-    if (d.ok) { toast('AI ÄÃ£ há»c xong giá»ng Äiá»u!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
-    else toast(d.message||'Lá»i phÃ¢n tÃ­ch', 'err');
+    if (d.ok) { toast('AI đã học xong giọng điệu!', 'ok'); vsSelectSlot(_vsSlot); vsLoadAll(); }
+    else toast(d.message||'Lỗi phân tích', 'err');
   } catch(e) { toast(e.message, 'err'); }
   setLoading(btn, false);
 }
@@ -2334,10 +2334,10 @@ async function vsRename() {
 }
 
 async function vsClear() {
-  if (!confirm('XÃ³a toÃ n bá» máº«u vÃ  káº¿t quáº£ há»c?')) return;
+  if (!confirm('Xóa toàn bộ mẫu và kết quả học?')) return;
   try {
     await fetch(_API + '/api/voice_style/'+_vsSlot+'/clear', {method:'POST'}).then(r=>r.json());
-    toast('ÄÃ£ xÃ³a toÃ n bá»', 'ok');
+    toast('Đã xóa toàn bộ', 'ok');
     vsSelectSlot(_vsSlot); vsLoadAll();
   } catch(e) { toast(e.message, 'err'); }
 }
@@ -2345,23 +2345,23 @@ async function vsClear() {
 function vsToggleActive() {
   if (_vsActiveSlot === _vsSlot) {
     _vsActiveSlot = null;
-    document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> Há»c giá»ng &amp; ngá»¯ Äiá»u';
-    toast('ÄÃ£ táº¯t giá»ng Äiá»u tÃ¹y chá»nh', 'ok');
+    document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> Học giọng &amp; ngữ điệu';
+    toast('Đã tắt giọng điệu tùy chỉnh', 'ok');
   } else {
     const p = _vsProfiles[_vsSlot];
-    if (!p||!p.analyzed) { toast('Cáº§n phÃ¢n tÃ­ch trÆ°á»c! Báº¥m PhÃ¢n tÃ­ch & Há»c', 'err'); return; }
+    if (!p||!p.analyzed) { toast('Cần phân tích trước! Bấm Phân tích & Học', 'err'); return; }
     _vsActiveSlot = _vsSlot;
     const name = p.display_name || ot;
     document.getElementById('btnVoiceStyle').innerHTML = '<span class="rail-icon">&#127917;</span> ' + name + ' &#10003;';
-    toast('Sáº½ dÃ¹ng giá»ng: ' + name, 'ok');
+    toast('Sẽ dùng giọng: ' + name, 'ok');
   }
   const btn = document.getElementById('btnVsActivate');
   const isActive = _vsActiveSlot === _vsSlot;
-  btn.textContent = isActive ? 'Äang dÃ¹ng giá»ng nÃ y' : 'DÃ¹ng giá»ng nÃ y';
+  btn.textContent = isActive ? 'Đang dùng giọng này' : 'Dùng giọng này';
   btn.style.color = isActive ? '#34d399' : '';
 }
 
-// ââ VOICEOVER âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── VOICEOVER ─────────────────────────────────────────────────────
 function openVoiceover() {
   document.getElementById('voiceoverModal').classList.add('open');
 }
@@ -2374,7 +2374,7 @@ function fillVoiceFromScript() {
 
 async function sendVoiceover() {
   const text = document.getElementById('voiceText').value.trim();
-  if (!text) { toast('Nháº­p ná»i dung cáº§n Äá»c', 'err'); return; }
+  if (!text) { toast('Nhập nội dung cần đọc', 'err'); return; }
   const voice = document.getElementById('voiceSelect').value;
   const btn = document.getElementById('btnVoiceSend');
   setLoading(btn, true);
@@ -2388,7 +2388,7 @@ async function sendVoiceover() {
       const dlBtn = document.getElementById('voiceDownloadBtn');
       dlBtn.href = url;
       dlBtn.style.display = 'inline-flex';
-      toast('ÄÃ£ táº¡o giá»ng Äá»c!', 'ok');
+      toast('Đã tạo giọng đọc!', 'ok');
     }
   } catch(e) { toast(e.message, 'err'); }
   setLoading(btn, false);
