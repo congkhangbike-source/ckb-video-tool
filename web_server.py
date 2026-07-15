@@ -1,4 +1,11 @@
 import os
+import sys
+from pathlib import Path
+BASE_DIR = Path(__file__).parent
+sys.path.insert(0, str(BASE_DIR))
+
+import config
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -8,19 +15,11 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 @app.get("/api/status")
 def api_status():
-    return {"api": False, "model": "claude-sonnet-5", "ffmpeg": False, "test_mode": "v3_baseline"}
-
-@app.get("/api/voice_style/{slot}")
-def vs_get(slot: str):
-    return {"slot": slot, "samples": [], "analyzed": False, "test_mode": True}
-
-@app.get("/api/voice_style/all")
-def vs_all():
-    return {"profiles": [], "test_mode": True}
+    return {"api": False, "model": config.CLAUDE_MODEL, "ffmpeg": False, "test_mode": "v4_config"}
 
 @app.get("/")
 def root():
-    return {"status": "Railway OK", "test_mode": "v3_baseline"}
+    return {"status": "OK", "test_mode": "v4_config"}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
