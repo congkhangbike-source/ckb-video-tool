@@ -4,11 +4,12 @@ import sys
 import uuid
 import concurrent.futures
 from pathlib import Path
+from typing import Optional
 
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR))
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, Body
+from fastapi import FastAPI, UploadFile, File, HTTPException, Body, Query
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -94,7 +95,9 @@ async def vs_rename(slot: str, body: dict = Body(default={})):
     try:
         from engines.voice_style_engine import load_style_profile, save_style_profile
         p = load_style_profile(slot)
-        p["display_name"] = body.get("name", slot)
+        # Frontend gửi {display_name: "..."} 
+        name = body.get("display_name") or body.get("name") or slot
+        p["display_name"] = name
         save_style_profile(p, slot)
         return {"ok": True, "display_name": p["display_name"]}
     except Exception as e:
@@ -102,7 +105,7 @@ async def vs_rename(slot: str, body: dict = Body(default={})):
 
 
 @app.post("/api/voice_style/{slot}/add_sample")
-async def vs_add_sample(slot: str, file: UploadFile = File(...)):
+async def vs_add_sample(slot: str, file: UploadFile = File(...), label: str = Query(default="")):
     if slot not in VALID_SLOTS:
         raise HTTPException(status_code=400, detail="Invalid slot")
     try:
@@ -112,6 +115,32 @@ async def vs_add_sample(slot: str, file: UploadFile = File(...)):
         tmp.parent.mkdir(exist_ok=True)
         tmp.write_bytes(await file.read())
         ok, msg, text = add_sample(slot, str(tmp))
+        return {"ok": ok, "message": msg, "transcription": text}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/voice_style/{slot}/add_from_file")
+async def vs_add_from_file(slot: str, file: UploadFile = File(...), label: str = Query(default="")):
+    """Upload file video/MP3 - frontend calls this endpoint"""
+    if slot not in VALID_SLOTS:
+        raise HTTPException(status_code=400, detail="Invalid slot")
+    try:
+        suffix = Path(file.filename or "upload").suffix or ".mp4"
+        tmp = BASE_DIR / "temp" / f"vs_{slot}_{uuid.uuid4().hex[:8]}{suffix}"
+        tmp.parent.mkdir(exist_ok=True)
+        tmp.write_bytes(await file.read())
+        # Try video extraction first, fallback to audio sample
+        ok, msg, text = False, "", ""
+        try:
+            from engines.voice_style_engine import add_sample_from_video
+            ok, msg, text = add_sample_from_video(slot, str(tmp))
+        except Exception:
+            try:
+                from engines.voice_style_engine import add_sample
+                ok, msg, text = add_sample(slot, str(tmp))
+            except Exception as e2:
+                ok, msg, text = False, str(e2), ""
         return {"ok": ok, "message": msg, "transcription": text}
     except Exception as e:
         return {"ok": False, "error": str(e)}
@@ -152,22 +181,6 @@ def vs_clear(slot: str):
         p["analyzed"] = False
         save_style_profile(p, slot)
         return {"ok": True}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
-
-
-@app.post("/api/voice_style/{slot}/add_from_video")
-async def vs_add_from_video(slot: str, file: UploadFile = File(...)):
-    if slot not in VALID_SLOTS:
-        raise HTTPException(status_code=400, detail="Invalid slot")
-    try:
-        from engines.voice_style_engine import add_sample_from_video
-        suffix = Path(file.filename or "v.mp4").suffix or ".mp4"
-        tmp = BASE_DIR / "temp" / f"vs_{slot}_{uuid.uuid4().hex[:8]}{suffix}"
-        tmp.parent.mkdir(exist_ok=True)
-        tmp.write_bytes(await file.read())
-        ok, msg, text = add_sample_from_video(slot, str(tmp))
-        return {"ok": ok, "message": msg, "transcription": text}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
