@@ -95,7 +95,7 @@ async def vs_rename(slot: str, body: dict = Body(default={})):
     try:
         from engines.voice_style_engine import load_style_profile, save_style_profile
         p = load_style_profile(slot)
-        # Frontend gửi {display_name: "..."} 
+        # Frontend gá»­i {display_name: "..."} 
         name = body.get("display_name") or body.get("name") or slot
         p["display_name"] = name
         save_style_profile(p, slot)
@@ -134,13 +134,9 @@ async def vs_add_from_file(slot: str, file: UploadFile = File(...), label: str =
         ok, msg, text = False, "", ""
         try:
             from engines.voice_style_engine import add_sample_from_video
-            ok, msg, text = add_sample_from_video(slot, str(tmp))
-        except Exception:
-            try:
-                from engines.voice_style_engine import add_sample
-                ok, msg, text = add_sample(slot, str(tmp))
-            except Exception as e2:
-                ok, msg, text = False, str(e2), ""
+            ok, msg, text = add_sample_from_video(str(tmp), label=label, slot=slot)
+        except Exception as e_vs:
+            ok, msg, text = False, f"Loi xu ly video: {str(e_vs)}", ""
         return {"ok": ok, "message": msg, "transcription": text}
     except Exception as e:
         return {"ok": False, "error": str(e)}
