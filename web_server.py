@@ -95,7 +95,7 @@ async def vs_rename(slot: str, body: dict = Body(default={})):
     try:
         from engines.voice_style_engine import load_style_profile, save_style_profile
         p = load_style_profile(slot)
-        # Frontend gá»­i {display_name: "..."} 
+        # Frontend gÃ¡Â»Â­i {display_name: "..."} 
         name = body.get("display_name") or body.get("name") or slot
         p["display_name"] = name
         save_style_profile(p, slot)
@@ -160,8 +160,10 @@ def vs_analyze(slot: str):
         raise HTTPException(status_code=400, detail="Invalid slot")
     try:
         from engines.voice_style_engine import analyze_style
-        ok, msg = analyze_style(slot)
-        return {"ok": ok, "message": msg}
+        result = analyze_style(slot)
+        if "error" in result:
+            return {"ok": False, "message": result["error"]}
+        return {"ok": True, "message": "Da phan tich xong", "profile": result}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
