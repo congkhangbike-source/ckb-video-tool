@@ -1624,8 +1624,7 @@ document.addEventListener('keydown', function(e) {
 
 async function checkStatus() {
   try {
-    const base = (window.CKB_API_BASE && !window.CKB_API_BASE.includes('REPLACE')) ? window.CKB_API_BASE.replace(/\/$/, '') : '';
-    const d = await fetch(base + '/api/status', {cache:'no-store'}).then(r => r.json());
+    const d = await fetch(_API + '/api/status', {cache:'no-store'}).then(r => r.json());
     const ok = d.api === true || d.status === 'ok';
     document.getElementById('apiBadge').className = 'api-badge' + (ok ? '' : ' offline');
     document.getElementById('apiBadge').textContent = ok ? '● Online' : '● Offline';
@@ -1878,10 +1877,8 @@ function setLoading(btn, on) {
   if (on) btn.classList.add('loading'); else btn.classList.remove('loading');
 }
 
-// API base: dùng Railway URL khi deploy, rỗng khi local
-const _API = (typeof window.CKB_API_BASE !== 'undefined' && window.CKB_API_BASE && !window.CKB_API_BASE.includes('REPLACE'))
-  ? window.CKB_API_BASE.replace(/\/$/, '')
-  : '';
+// API base: Railway backend URL
+const _API = 'https://web-production-ec3e7.up.railway.app';
 
 async function postJSON(url, body) {
   const r = await fetch(_API + url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
