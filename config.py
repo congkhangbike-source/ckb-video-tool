@@ -13,7 +13,7 @@ CLAUDE_MODEL   = "claude-sonnet-5"
 # =============================================
 # FFMPEG
 # =============================================
-FFMPEG_PATH	 } os.environ.get("FFMPEG_PATH", "ffmpeg")
+FFMPEG_PATH = os.environ.get("FFMPEG_PATH", "ffmpeg")
 FFPROBE_PATH = os.environ.get("FFPROBE_PATH", "ffprobe")
 
 # =============================================
