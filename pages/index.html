@@ -2271,25 +2271,28 @@ async function vsUploadFileObj(file) {
     const d = await r.json();
     bar.style.width = '100%';
 
+    // Chuẩn hóa message — backend có thể trả d.message hoặc d.detail (FastAPI array/string)
+    const rawDetail = Array.isArray(d.detail) ? (d.detail[0]?.msg || JSON.stringify(d.detail)) : d.detail;
+    const errMsg = String(d.message || rawDetail || (r.ok ? 'Lỗi không xác định' : 'Lỗi server ' + r.status));
+
     if (d.ok) {
       msg.textContent = '✅ Thành công! ' + (d.transcript?.length || 0) + ' ký tự trích xuất được';
       icon.textContent = '✅';
-      txt.innerHTML = '<strong style="color:#34d399">Da them vao mau!</strong><br>'
+      txt.innerHTML = '<strong style="color:#34d399">Đã thêm vào mẫu!</strong><br>'
         + '<span style="font-size:11px;color:var(--muted)">' + (d.transcript || '').slice(0, 120) + '...</span>';
-      // Dien transcript vao textarea de xem
       if (d.transcript) document.getElementById('vsNewSample').value = d.transcript;
-      toast('✅ ' + d.message.split('\n')[0], 'ok');
+      toast('✅ ' + (d.message || 'Thành công').split('\n')[0], 'ok');
       vsSelectSlot(_vsSlot); vsLoadAll();
     } else {
       icon.textContent = '❌';
-      const isWhisperMissing = d.message.includes('Whisper');
+      const isWhisperMissing = errMsg.toLowerCase().includes('whisper');
       txt.innerHTML = '<strong style="color:#f87171">' + (isWhisperMissing ? 'Chưa cài Whisper' : 'Thất bại') + '</strong><br>'
         + '<span style="font-size:11px;color:var(--muted)">'
         + (isWhisperMissing
-          ? 'Chay: <code style="color:#a78bfa">pip install openai-whisper torch</code>'
-          : d.message.slice(0, 100))
+          ? 'Chạy: <code style="color:#a78bfa">pip install openai-whisper torch</code>'
+          : errMsg.slice(0, 100))
         + '</span>';
-      toast('❌ ' + d.message.slice(0, 80), 'err');
+      toast('❌ ' + errMsg.slice(0, 80), 'err');
     }
   } catch(e) {
     icon.textContent = '❌';
