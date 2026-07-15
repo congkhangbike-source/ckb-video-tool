@@ -95,7 +95,7 @@ async def vs_rename(slot: str, body: dict = Body(default={})):
     try:
         from engines.voice_style_engine import load_style_profile, save_style_profile
         p = load_style_profile(slot)
-        # Frontend gÃ¡Â»Â­i {display_name: "..."} 
+        # Frontend gÃÂ¡ÃÂ»ÃÂ­i {display_name: "..."} 
         name = body.get("display_name") or body.get("name") or slot
         p["display_name"] = name
         save_style_profile(p, slot)
@@ -105,17 +105,17 @@ async def vs_rename(slot: str, body: dict = Body(default={})):
 
 
 @app.post("/api/voice_style/{slot}/add_sample")
-async def vs_add_sample(slot: str, file: UploadFile = File(...), label: str = Query(default="")):
+async def vs_add_sample(slot: str, body: dict = Body(default={})):
     if slot not in VALID_SLOTS:
         raise HTTPException(status_code=400, detail="Invalid slot")
     try:
+        text = (body.get("text") or "").strip()
+        label = body.get("label") or ""
+        if not text:
+            return {"ok": False, "message": "Noi dung mau khong duoc de trong"}
         from engines.voice_style_engine import add_sample
-        suffix = Path(file.filename or "a.mp3").suffix or ".mp3"
-        tmp = BASE_DIR / "temp" / f"vs_{slot}_{uuid.uuid4().hex[:8]}{suffix}"
-        tmp.parent.mkdir(exist_ok=True)
-        tmp.write_bytes(await file.read())
-        ok, msg, text = add_sample(slot, str(tmp))
-        return {"ok": ok, "message": msg, "transcription": text}
+        ok, msg = add_sample(text, label=label, slot=slot)
+        return {"ok": ok, "message": msg}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
