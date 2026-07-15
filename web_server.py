@@ -1,50 +1,84 @@
-"""
-CKB Video Tool - FastAPI Web Server
-"""
-import os, sys, json, uuid, asyncio, concurrent.futures
+import os
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR))
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from fastapi import FastAPI, UploadFile, File, HTTPException, Body
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import uvicorn
 
-import config
-from engines.ai_engine import get_ai_engine, reload_engine
+# --- Safe imports with error tracking ---
+_errors = {}
+
+try:
+    import config
+    _CONFIG_OK = True
+except Exception as e:
+    _CONFIG_OK = False
+    _errors['config'] = str(e)
+    class _FakeConfig:
+        CLAUDE_MODEL = "unknown"
+    config = _FakeConfig()
+
+try:
+    from engines.ai_engine import get_ai_engine, reload_engine
+    _AI_OK = True
+except Exception as e:
+    _AI_OK = False
+    _errors['ai_engine'] = str(e)
+    class _FakeAI:
+        def is_ready(self): return False
+    def get_ai_engine(): return _FakeAI()
+    def reload_engine(): pass
 
 app = FastAPI(title="CKB Video Tool")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-_executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
 VALID_SLOTS = ("person_1", "person_2", "person_3")
+
+import uuid
+import concurrent.futures
+_executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 
 
 @app.get("/api/status")
 def api_status():
     ai = get_ai_engine()
-    ffmpeg_ok = False
-    try:
-        from engines.video_engine import is_ffmpeg_available
-        ffmpeg_ok = is_ffmpeg_available()
-    except Exception:
-        pass
-    return {"api": ai.is_ready(), "model": config.CLAUDE_MODEL, "ffmpeg": ffmpeg_ok}
+    return {
+        "api": ai.is_ready(),
+        "model": config.CLAUDE_MODEL,
+        "ffmpeg": False,
+        "config_ok": _CONFIG_OK,
+        "ai_ok": _AI_OK,
+        "errors": _errors
+    }
+
+
+@app.get("/api/debug")
+def api_debug():
+    return {
+        "config_ok": _CONFIG_OK,
+        "ai_ok": _AI_OK,
+        "errors": _errors,
+        "python": sys.version,
+        "cwd": str(BASE_DIR)
+    }
 
 
 @app.get("/api/data")
 def api_data():
-    vehicles = ["V1 Plus Lihaze", "DK S3", "DK EZ3", "Dibao Rosa", "V1 Plus Livo",
-                "DK V2", "DK S5", "Weezee Plus 3", "Gogo Yaka", "Sky", "Lavia SX"]
-    colors = ["Trang", "Den", "Hong", "Xanh", "Do", "Vang", "Bac", "Xam", "Tim", "Cam"]
-    types = ["Review xe moi", "Ban giao xe", "Bao gia", "Khuyen mai", "So sanh xe",
-             "Xe hoc sinh", "Kach hang danh gia", "Huong dan su dung"]
-    audiences = ["Hoc sinh, sinh vien", "Phu nu noi tro", "Phu huynh mua cho con",
-                 "Cong nhan, van phong", "Nguoi ve huu", "Tat ca doi tuong"]
-    return {"vehicles": vehicles, "colors": colors, "types": types, "audiences": audiences}
+    return {
+        "vehicles": ["V1 Plus Lihaze", "DK S3", "DK EZ3", "Dibao Rosa", "V1 Plus Livo",
+                     "DK V2", "DK S5", "Weezee Plus 3", "Gogo Yaka", "Sky", "Lavia SX"],
+        "colors": ["Trang", "Den", "Hong", "Xanh", "Do", "Vang", "Bac", "Xam", "Tim", "Cam"],
+        "types": ["Review xe moi", "Ban giao xe", "Bao gia", "Khuyen mai",
+                  "So sanh xe", "Xe hoc sinh", "Khach hang danh gia", "Huong dan su dung"],
+        "audiences": ["Hoc sinh sinh vien", "Phu nu noi tro", "Phu huynh mua cho con",
+                      "Cong nhan van phong", "Nguoi ve huu", "Tat ca doi tuong"]
+    }
 
 
 @app.get("/api/voice_style/all")
@@ -54,8 +88,12 @@ def vs_all():
         result = []
         for slot in VALID_SLOTS:
             p = load_style_profile(slot)
-            result.append({"slot": slot, "display_name": p.get("display_name", slot),
-                           "sample_count": len(p.get("samples", [])), "analyzed": p.get("analyzed", False)})
+            result.append({
+                "slot": slot,
+                "display_name": p.get("display_name", slot),
+                "sample_count": len(p.get("samples", [])),
+                "analyzed": p.get("analyzed", False)
+            })
         return {"profiles": result}
     except Exception as e:
         return {"profiles": [], "error": str(e)}
@@ -69,20 +107,19 @@ def vs_get(slot: str):
         from engines.voice_style_engine import load_style_profile
         return load_style_profile(slot)
     except Exception as e:
-        return {"slot": slot, "samples": [], "analyzed": False}
+        return {"slot": slot, "samples": [], "analyzed": False, "error": str(e)}
 
 
 @app.post("/api/voice_style/{slot}/rename")
-async def vs_rename(slot: str, req: dict = None):
+async def vs_rename(slot: str, body: dict = Body(default={})):
     if slot not in VALID_SLOTS:
         raise HTTPException(400, "Invalid slot")
     try:
         from engines.voice_style_engine import load_style_profile, save_style_profile
         p = load_style_profile(slot)
-        name = (req or {}).get("name", slot)
-        p["display_name"] = name
+        p["display_name"] = body.get("name", slot)
         save_style_profile(p, slot)
-        return {"ok": True, "display_name": name}
+        return {"ok": True, "display_name": p["display_name"]}
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
@@ -125,8 +162,11 @@ def vs_analyze(slot: str):
 @app.post("/api/voice_style/{slot}/clear")
 def vs_clear(slot: str):
     try:
-        from engines.voice_style_engine import load_style_profile, save_style_profile, _default_profile
-        save_style_profile(_default_profile(slot), slot)
+        from engines.voice_style_engine import load_style_profile, save_style_profile
+        p = load_style_profile(slot)
+        p["samples"] = []
+        p["analyzed"] = False
+        save_style_profile(p, slot)
         return {"ok": True}
     except Exception as e:
         return {"ok": False, "error": str(e)}
@@ -152,7 +192,7 @@ def frontend():
     p = BASE_DIR / "pages" / "index.html"
     if p.exists():
         return HTMLResponse(p.read_text(encoding="utf-8"))
-    return HTMLResponse("<h1>CKB Video Tool</h1>")
+    return HTMLResponse("<h1>CKB Video Tool - OK</h1>")
 
 
 if __name__ == "__main__":
