@@ -1,24 +1,12 @@
-"""
-CKB Video Tool — Cấu hình toàn bộ hệ thống
-Chỉnh sửa file này để tùy chỉnh tool
-"""
+"""CKB Video Tool - Railway config"""
 import os
 
-# =============================================
-# API KEYS
-# =============================================
 CLAUDE_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL   = "claude-sonnet-5"
 
-# =============================================
-# FFMPEG
-# =============================================
-FFMPEG_PATH = os.environ.get("FFMPEG_PATH", "ffmpeg")
+FFMPEG_PATH  = os.environ.get("FFMPEG_PATH", "ffmpeg")
 FFPROBE_PATH = os.environ.get("FFPROBE_PATH", "ffprobe")
 
-# =============================================
-# THƪ MỤC
-# =============================================
 BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
 INPUT_DIR      = os.path.join(BASE_DIR, "input")
 OUTPUT_DIR     = os.path.join(BASE_DIR, "output")
@@ -31,37 +19,32 @@ THUMBNAILS_DIR = os.path.join(BASE_DIR, "thumbnails")
 CAPTIONS_DIR   = os.path.join(BASE_DIR, "captions")
 TEMP_DIR       = os.path.join(BASE_DIR, "temp")
 
-# =============================================
-# CÀI CQUOT VIDEO
-# =============================================
 VIDEO_WIDTH    = 1080
 VIDEO_HEIGHT   = 1920
 FONT_SIZE      = 38
 LOGO_WIDTH     = 120
 LOGO_HEIGHT    = 60
-MUSIC_VOLUME = 0.3
+MUSIC_VOLUME   = 0.3
 
-# =============================================
-# THÔNG TIN CỦA HÀNG
-# =============================================
-SHOP_NAME     = "Công Khang Bike"
-SHOP_ADDRESS  = "496 Đông Hải, Hai An, Hải Phong"
-SHOP_HOTLINE  = "0762030888"
-SHOP_ZALO     = "0762030888"
+WHISPER_MODEL  = os.environ.get("WHISPER_MODEL", "small")
+WHISPER_LANG   = os.environ.get("WHISPER_LANG", "vi")
 
-# =============================================
-# FEATURE FLAGS
-# =============================================
-ENABLE_VISION        = True
-ENABLE_MEMORY        = True
-ENABLE_DUPLICATE     = True
-ENABLE_SCORE         = True
+SHOP_NAME     = os.environ.get("SHOP_NAME", "Cong Khang Bike")
+SHOP_ADDRESS  = os.environ.get("SHOP_ADDRESS", "496 Dong Hai, Hai Phong")
+SHOP_HOTLINE  = os.environ.get("SHOP_HOTLINE", "0762030888")
+SHOP_ZALO     = os.environ.get("SHOP_ZALO", "0762030888")
+SHOP_TIKTOK   = os.environ.get("SHOP_TIKTOK", "@xediencongkhang")
+SHOP_YOUTUBE  = os.environ.get("SHOP_YOUTUBE", "@congkhangbike")
 
-# =============================================
-# EXPORT SPECS
-# =============================================
-EXPORT_SPEC = {
+ENABLE_VISION    = True
+ENABLE_MEMORY    = True
+ENABLE_DUPLICATE = True
+ENABLE_SCORE     = False
+ENABLE_WHISPER   = True
+
+EXPORT_SPECS = {
     "tiktok":    {"width": 1080, "height": 1920, "fps": 30, "bitrate": "8M"},
     "facebook":  {"width": 1080, "height": 1920, "fps": 30, "bitrate": "6M"},
     "youtube":   {"width": 1080, "height": 1920, "fps": 30, "bitrate": "8M"},
+    "instagram": {"width": 1080, "height": 1350, "fps": 30, "bitrate": "6M"},
 }
